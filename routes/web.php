@@ -6,17 +6,26 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('dashboard');
 });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::prefix('human-resources')->name('human-resources.')->group(function () {
+    Route::get('/employees', function () {
+        return Inertia::render('HumanResources/Index');
+    })->name('employees');
+
+    Route::get('/roles', function () {
+        return Inertia::render('HumanResources/Index');
+    })->name('roles');
+
+    Route::get('/permissions', function () {
+        return Inertia::render('HumanResources/Index');
+    })->name('permissions');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

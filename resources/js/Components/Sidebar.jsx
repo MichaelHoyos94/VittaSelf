@@ -43,23 +43,26 @@ export default function Sidebar() {
                     )}
                 </div>
 
-                {/* 👥 Otro menú */}
+                {/* 👥 Humane Resources */}
                 <div>
                     <button
-                        onClick={() => toggleMenu("usuarios")}
+                        onClick={() => toggleMenu("human-resources")}
                         className="w-full text-left p-2 rounded hover:bg-[var(--surface-variant)]"
                     >
-                        Usuarios
+                        Human Resources
                     </button>
 
-                    {openMenu === "usuarios" && (
+                    {openMenu === "human-resources" && (
                         <div className="ml-4 flex flex-col">
-                            <a href="#" className="p-2 text-sm hover:bg-[var(--surface-variant)] rounded">
-                                Lista
-                            </a>
-                            <a href="#" className="p-2 text-sm hover:bg-[var(--surface-variant)] rounded">
+                            <NavLink href="/human-resources/employees" active={route().current('human-resources.employees')}>
+                                Employees
+                            </NavLink>
+                            <NavLink href="/human-resources/roles" active={route().current('human-resources.roles')}>
                                 Roles
-                            </a>
+                            </NavLink>
+                            <NavLink href="/human-resources/permissions" active={route().current('human-resources.permissions')}>
+                                Permissions
+                            </NavLink>
                         </div>
                     )}
                 </div>

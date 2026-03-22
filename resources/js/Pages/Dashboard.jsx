@@ -5,7 +5,7 @@ import { Head } from '@inertiajs/react';
 
 export default function Dashboard({ auth }) {
     return (
-        <div>
+        <div className='p-4 bg-white rounded-lg'>
             <Head title="Dashboard" />
             <h1>Dashboard</h1>
         </div>
