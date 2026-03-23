@@ -1,0 +1,11 @@
+{
+    "name": "Sanctions",
+    "alias": "sanctions",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Sanctions\\Providers\\SanctionsServiceProvider"
+    ],
+    "files": []
+}
