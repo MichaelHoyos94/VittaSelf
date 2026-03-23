@@ -21,8 +21,8 @@ export default function Input({
                 placeholder={placeholder}
                 className={"w-full px-3 py-2 border rounded-md focus:outline-none focus:ring" + (error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-green-500")}
             >
-                {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </input>
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     );
 }

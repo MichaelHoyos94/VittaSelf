@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('human-resources')->group(function() {
     Route::get('/employees', [HumanResourcesController::class, 'index'])->name('human-resources.index');
+    Route::post('/employees', [HumanResourcesController::class, 'store'])->name('human-resources.store');
 });
 
 require __DIR__.'/auth.php';

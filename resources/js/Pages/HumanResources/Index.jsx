@@ -1,13 +1,22 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import Modal from "@/Components/Modal";
-import { usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 
 export default function Index() {
-    const { users } = usePage().props;
+    const { users, flash } = usePage().props;
+    const { data, setData, post, put, processing, errors, reset } = useForm({
+        name: '',
+        last_name: '',
+        document_number: '',
+        email: '',
+        phone: '',
+        password: '',
+        password_confirmation: '',
+    });
     const [ modalOpen, setModalOpen ] = useState(false);
     const [ modalMode, setModalMode ] = useState('create');
     const columns = [
@@ -30,7 +39,14 @@ export default function Index() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+        if (modalMode === 'create') {
+            post(route('human-resources.store'), {
+                onSuccess: () => {
+                    reset();
+                    setModalOpen(false);
+                }
+            });
+        }
     }
 
     return (
@@ -43,6 +59,7 @@ export default function Index() {
                 >
                     Create User
                 </button>
+                {flash.message && <div className="text-green-500">{flash.message}</div>}
             </div>
             <Table
                 columns={columns}
@@ -69,42 +86,50 @@ export default function Index() {
                             name = 'name'
                             type = 'text'
                             placeholder= 'John doe...'
+                            onChange={(e) => setData('name', e.target.value)}
+                            error={errors.name}
                         />
                         <Input 
                             label = 'Last Name'
                             name = 'last_name'
                             type = 'text'
                             placeholder = 'Smith...'
+                            onChange={(e) => setData('last_name', e.target.value)}
                         />
                         <Input 
                             label = 'Document Number'
                             name = 'document_number'
                             type = 'text'
                             placeholder = '97234241'
+                            onChange={(e) => setData('document_number', e.target.value)}
                         />
                         <Input 
                             label = 'Email'
                             name = 'email'
                             type = 'email'
                             placeholder = 'john.doe@example.com'
+                            onChange={(e) => setData('email', e.target.value)}
                         />
                         <Input 
                             label = 'Phone'
                             name = 'phone'
                             type = 'text'
                             placeholder= '321-807-9660'
+                            onChange={(e) => setData('phone', e.target.value)}
                         />
                         <Input 
                             label = 'Password'
                             name = 'password'
                             type = 'password'
                             placeholder= '********'
+                            onChange={(e) => setData('password', e.target.value)}
                         />
                         <Input 
                             label = 'Confirm Password'
                             name = 'password_confirmation'
                             type = 'password'
                             placeholder= '********'
+                            onChange={(e) => setData('password_confirmation', e.target.value)}
                         />
                         <button
                             type="submit"

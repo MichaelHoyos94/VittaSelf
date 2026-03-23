@@ -19,7 +19,7 @@ class HumanResourcesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(
+        $data_user = $request->validate(
             [
                 'name' => 'required',
                 'last_name' => 'required',
@@ -31,12 +31,13 @@ class HumanResourcesController extends Controller
         );
 
         User::create([
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'phone' => $request->phone,
-            'document_number' => $request->document_number
+            'name' => $data_user['name'],
+            'last_name' => $data_user['last_name'],
+            'email' => $data_user['email'],
+            'password' => bcrypt($data_user['password']),
+            'phone' => $data_user['phone'],
+            'document_number' => $data_user['document_number']
         ]);
+        return redirect()->route('human-resources.index')->with('message', 'User created successfully.');
     }
 }
