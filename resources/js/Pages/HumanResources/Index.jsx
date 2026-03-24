@@ -2,12 +2,14 @@ import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import Modal from "@/Components/Modal";
 import { useForm, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 
 export default function Index() {
     const { users, flash } = usePage().props;
+    const [message, setMessage] = useState(null);
+    console.log('the message: ' , message);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: '',
         last_name: '',
@@ -27,6 +29,16 @@ export default function Index() {
         { header: 'Phone', accessor: 'phone' },
         { header: 'Email', accessor: 'email' },
     ];
+
+    useEffect(() => {
+        if (flash.success) {
+            setMessage(flash.success);
+            const time = setTimeout(() => {
+                setMessage(null);
+            }, 3000);
+            return () => clearTimeout(time);
+        }
+    }, [flash.success])
 
     const openCreateModal = () => {
         setModalMode('create');
@@ -59,7 +71,11 @@ export default function Index() {
                 >
                     Create User
                 </button>
-                {flash.message && <div className="text-green-500">{flash.message}</div>}
+                {message && (
+                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg">
+                        {message}
+                    </div>
+                )}
             </div>
             <Table
                 columns={columns}

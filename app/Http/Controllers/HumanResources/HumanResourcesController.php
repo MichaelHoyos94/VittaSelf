@@ -14,7 +14,7 @@ class HumanResourcesController extends Controller
         $users = User::all();
         return Inertia::render('HumanResources/Index', [
             'users' => $users
-        ]);
+        ])->with('success', 'User created successfully.');
     }
 
     public function store(Request $request)
@@ -38,6 +38,6 @@ class HumanResourcesController extends Controller
             'phone' => $data_user['phone'],
             'document_number' => $data_user['document_number']
         ]);
-        return redirect()->route('human-resources.index')->with('message', 'User created successfully.');
+        return redirect()->route('human-resources.index')->with('success', 'User created successfully.');
     }
 }
