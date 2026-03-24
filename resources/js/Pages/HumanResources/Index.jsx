@@ -104,6 +104,13 @@ export default function Index() {
                     setModalOpen(false);
                 }
             });
+        } else if (modalMode === 'edit') {
+            put(route('human-resources.update', selectedUser.id), {
+                onSuccess: () => {
+                    reset();
+                    setModalOpen(false);
+                }
+            });
         }
     }
 

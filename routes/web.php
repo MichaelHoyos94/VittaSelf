@@ -14,20 +14,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('human-resources')->name('human-resources.')->group(function () {
-    Route::get('/employees', function () {
-        return Inertia::render('HumanResources/Index');
-    })->name('employees');
-
-    Route::get('/roles', function () {
-        return Inertia::render('HumanResources/Index');
-    })->name('roles');
-
-    Route::get('/permissions', function () {
-        return Inertia::render('HumanResources/Index');
-    })->name('permissions');
-});
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -37,6 +23,8 @@ Route::middleware('auth')->group(function () {
 Route::prefix('human-resources')->group(function() {
     Route::get('/employees', [HumanResourcesController::class, 'index'])->name('human-resources.index');
     Route::post('/employees', [HumanResourcesController::class, 'store'])->name('human-resources.store');
+    Route::put('/employees/{id}', [HumanResourcesController::class, 'update'])->name('human-resources.update');
+    Route::delete('/employees/{id}', [HumanResourcesController::class, 'destroy'])->name('human-resources.destroy');
 });
 
 require __DIR__.'/auth.php';
