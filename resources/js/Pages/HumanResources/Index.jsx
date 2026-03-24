@@ -5,11 +5,12 @@ import { useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
+import { EyeIcon, MinusIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
-    console.log('the message: ' , message);
+    const [selectedUser, setSelectedUser] = useState(null);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: '',
         last_name: '',
@@ -19,15 +20,60 @@ export default function Index() {
         password: '',
         password_confirmation: '',
     });
-    const [ modalOpen, setModalOpen ] = useState(false);
-    const [ modalMode, setModalMode ] = useState('create');
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMode, setModalMode] = useState('create');
     const columns = [
         { header: 'ID', accessor: 'id' },
-        { header: 'Name', accessor: 'name' },
+        {
+            header: 'Name', render: (row) => (
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <span>{row.name}</span>
+                    <button
+                        onClick={() => {
+                            setSelectedUser(row);
+                            setModalMode('view');
+                            setModalOpen(true);
+                        }}
+                        className="ml-2 bg-transparent rounded-full transform transition-transform duration-300 hover:scale-110"
+                    >
+                        <EyeIcon className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+                    </button>
+                </div>
+            )
+        },
         { header: 'Last Name', accessor: 'last_name' },
         { header: 'Document', accessor: 'document_number' },
         { header: 'Phone', accessor: 'phone' },
         { header: 'Email', accessor: 'email' },
+        {
+            header: 'Actions', render: (row) => (
+                <div className="flex space-x-2">
+                    <button
+                        onClick={() => {
+                            setSelectedUser(row);
+                            setModalMode('edit');
+                            setModalOpen(true);
+                        }}
+                        className="px-2 py-2 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transform transition-transform duration-300 hover:scale-110"
+                    >
+                        <PencilIcon className="h-5 w-5" />
+                    </button>
+                    <button
+                        onClick={() => {
+                            // Handle delete action
+                        }}
+                        className="px-2 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transform transition-transform duration-300 hover:scale-110"
+                    >
+                        <MinusIcon className="h-5 w-5" />
+                    </button>
+                </div>
+            )
+        }
     ];
 
     useEffect(() => {
@@ -88,73 +134,98 @@ export default function Index() {
                 onClose={closeModal}
                 maxWidth="lg"
             >
-                <div className="border-b px-6 py-4">
-                    <h2 className="text-lg font-semibold text-gray-800">
-                        {modalMode === 'create' ? 'Create User' : 'Edit User'}
-                    </h2>
-                </div>
-                <div className="mx-4 my-6">
-                    <Form
-                        onSubmit={handleSubmit}
-                    >
-                        <Input 
-                            label = 'Name'
-                            name = 'name'
-                            type = 'text'
-                            placeholder= 'John doe...'
-                            onChange={(e) => setData('name', e.target.value)}
-                            error={errors.name}
-                        />
-                        <Input 
-                            label = 'Last Name'
-                            name = 'last_name'
-                            type = 'text'
-                            placeholder = 'Smith...'
-                            onChange={(e) => setData('last_name', e.target.value)}
-                        />
-                        <Input 
-                            label = 'Document Number'
-                            name = 'document_number'
-                            type = 'text'
-                            placeholder = '97234241'
-                            onChange={(e) => setData('document_number', e.target.value)}
-                        />
-                        <Input 
-                            label = 'Email'
-                            name = 'email'
-                            type = 'email'
-                            placeholder = 'john.doe@example.com'
-                            onChange={(e) => setData('email', e.target.value)}
-                        />
-                        <Input 
-                            label = 'Phone'
-                            name = 'phone'
-                            type = 'text'
-                            placeholder= '321-807-9660'
-                            onChange={(e) => setData('phone', e.target.value)}
-                        />
-                        <Input 
-                            label = 'Password'
-                            name = 'password'
-                            type = 'password'
-                            placeholder= '********'
-                            onChange={(e) => setData('password', e.target.value)}
-                        />
-                        <Input 
-                            label = 'Confirm Password'
-                            name = 'password_confirmation'
-                            type = 'password'
-                            placeholder= '********'
-                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                        />
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 hover:shadow-md transition duration-300"
-                        >
-                            {modalMode === 'create' ? 'Create User' : 'Update User'}
-                        </button>
-                    </Form>
-                </div>
+                { /* Show if is edit or create */}
+                {modalMode === 'edit' || modalMode === 'create' ? (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                {modalMode === 'create' ? 'Create User' : 'Edit User'}
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <Form
+                                onSubmit={handleSubmit}
+                            >
+                                <Input
+                                    label='Name'
+                                    name='name'
+                                    type='text'
+                                    value={modalMode === 'edit' ? selectedUser?.name : data.name}
+                                    placeholder='John doe...'
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    error={errors.name}
+                                />
+                                <Input
+                                    label='Last Name'
+                                    name='last_name'
+                                    type='text'
+                                    value={modalMode === 'edit' ? selectedUser?.last_name : data.last_name}
+                                    placeholder='Smith...'
+                                    onChange={(e) => setData('last_name', e.target.value)}
+                                />
+                                <Input
+                                    label='Document Number'
+                                    name='document_number'
+                                    type='text'
+                                    value={modalMode === 'edit' ? selectedUser?.document_number : data.document_number}
+                                    placeholder='97234241'
+                                    onChange={(e) => setData('document_number', e.target.value)}
+                                />
+                                <Input
+                                    label='Email'
+                                    name='email'
+                                    type='email'
+                                    value={modalMode === 'edit' ? selectedUser?.email : data.email}
+                                    placeholder='john.doe@example.com'
+                                    onChange={(e) => setData('email', e.target.value)}
+                                />
+                                <Input
+                                    label='Phone'
+                                    name='phone'
+                                    type='text'
+                                    value={modalMode === 'edit' ? selectedUser?.phone : data.phone}
+                                    placeholder='321-807-9660'
+                                    onChange={(e) => setData('phone', e.target.value)}
+                                />
+                                <Input
+                                    label='Password'
+                                    name='password'
+                                    type='password'
+                                    placeholder='********'
+                                    onChange={(e) => setData('password', e.target.value)}
+                                />
+                                <Input
+                                    label='Confirm Password'
+                                    name='password_confirmation'
+                                    type='password'
+                                    placeholder='********'
+                                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                                />
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 hover:shadow-md transition duration-300"
+                                >
+                                    {modalMode === 'create' ? 'Create User' : 'Update User'}
+                                </button>
+                            </Form>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                User Details
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <p><strong>Name:</strong> {selectedUser?.name}</p>
+                            <p><strong>Last Name:</strong> {selectedUser?.last_name}</p>
+                            <p><strong>Document Number:</strong> {selectedUser?.document_number}</p>
+                            <p><strong>Email:</strong> {selectedUser?.email}</p>
+                            <p><strong>Phone:</strong> {selectedUser?.phone}</p>
+                        </div>
+                    </>
+                )}
             </Modal>
         </div>
     );

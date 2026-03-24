@@ -1,3 +1,4 @@
+import { EyeIcon } from "@heroicons/react/24/outline";
 
 export default function Table({
     columns = [],
@@ -36,6 +37,11 @@ export default function Table({
                                             {column.render
                                                 ? column.render(row)
                                                 : row[column.accessor]}
+                                            {column.details == true && (
+                                                <button className="ml-2 bg-transparent rounded-full transform transition-transform duration-300 hover:scale-110">
+                                                    <EyeIcon className="h-3 w-3 text-gray-700 hover:text-gray-900" />
+                                                </button>
+                                            )}
                                         </td>
                                     ))}
                                 </tr>
