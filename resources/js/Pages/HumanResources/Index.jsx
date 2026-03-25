@@ -1,7 +1,7 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import Modal from "@/Components/Modal";
-import { useForm, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
@@ -61,7 +61,9 @@ export default function Index() {
                     </button>
                     <button
                         onClick={() => {
-                            // Handle delete action
+                            setSelectedUser(row);
+                            setModalMode('delete');
+                            setModalOpen(true);
                         }}
                         className="px-2 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transform transition-transform duration-300 hover:scale-110"
                     >
@@ -134,6 +136,15 @@ export default function Index() {
         }
     }
 
+    const handleDelete = () => {
+        console.log('Deleting user with ID:', selectedUser.id);
+        router.delete(route('human-resources.destroy', selectedUser.id), {
+            onSuccess: () => {
+                setModalOpen(false);
+            }
+        });
+    }
+
     return (
         <div className="p-4 bg-white rounded-lg">
             <h1 className="text-green-500">Human Resources</h1>
@@ -161,8 +172,7 @@ export default function Index() {
                 onClose={closeModal}
                 maxWidth="lg"
             >
-                { /* Show if is edit or create */}
-                {modalMode === 'edit' || modalMode === 'create' ? (
+                {(modalMode === 'create' || modalMode === 'edit') && (
                     <div>
                         <div className="border-b px-6 py-4">
                             <h2 className="text-lg font-semibold text-gray-800">
@@ -237,21 +247,48 @@ export default function Index() {
                             </Form>
                         </div>
                     </div>
-                ) : (
-                    <>
+                )}
+                {modalMode === 'view' && selectedUser && (
+                    <div>
                         <div className="border-b px-6 py-4">
                             <h2 className="text-lg font-semibold text-gray-800">
                                 User Details
                             </h2>
                         </div>
-                        <div className="mx-4 my-6">
-                            <p><strong>Name:</strong> {selectedUser?.name}</p>
-                            <p><strong>Last Name:</strong> {selectedUser?.last_name}</p>
-                            <p><strong>Document Number:</strong> {selectedUser?.document_number}</p>
-                            <p><strong>Email:</strong> {selectedUser?.email}</p>
-                            <p><strong>Phone:</strong> {selectedUser?.phone}</p>
+                        <div className="mx-4 my-6 space-y-4">
+                            <p><strong>Name:</strong> {selectedUser.name}</p>
+                            <p><strong>Last Name:</strong> {selectedUser.last_name}</p>
+                            <p><strong>Document Number:</strong> {selectedUser.document_number}</p>
+                            <p><strong>Email:</strong> {selectedUser.email}</p>
+                            <p><strong>Phone:</strong> {selectedUser.phone}</p>
                         </div>
-                    </>
+                    </div>
+                )}
+                {modalMode === 'delete' && selectedUser && (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Confirm Deletion
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <p>Are you sure you want to delete {selectedUser.name}?</p>
+                            <button
+                                onClick={() => {
+                                    handleDelete();
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 hover:shadow-md transition duration-300"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={closeModal}
+                                className="ml-2 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 hover:shadow-md transition duration-300"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 )}
             </Modal>
         </div>
