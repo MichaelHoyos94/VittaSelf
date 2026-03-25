@@ -19,7 +19,7 @@ export default function Input({
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className={"w-full px-3 py-2 border rounded-md focus:outline-none focus:ring" + (error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-green-500")}
+                className={"w-full px-3 py-2 border rounded-md focus:outline-none focus:ring " + (error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-green-500")}
             >
             </input>
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}

@@ -54,11 +54,7 @@ export default function Index() {
             header: 'Actions', render: (row) => (
                 <div className="flex space-x-2">
                     <button
-                        onClick={() => {
-                            setSelectedUser(row);
-                            setModalMode('edit');
-                            setModalOpen(true);
-                        }}
+                        onClick={() => openEditModal(row)}
                         className="px-2 py-2 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transform transition-transform duration-300 hover:scale-110"
                     >
                         <PencilIcon className="h-5 w-5" />
@@ -88,6 +84,30 @@ export default function Index() {
 
     const openCreateModal = () => {
         setModalMode('create');
+        setModalOpen(true);
+        setData({
+            name: '',
+            last_name: '',
+            document_number: '',
+            email: '',
+            phone: '',
+            password: '',
+            password_confirmation: '',
+        });
+    }
+
+    const openEditModal = ($user) => {
+        setModalMode('edit');
+        setSelectedUser($user);
+
+        setData({
+            name: $user.name,
+            last_name: $user.last_name,
+            document_number: $user.document_number,
+            email: $user.email,
+            phone: $user.phone,
+        });
+
         setModalOpen(true);
     }
 
@@ -157,7 +177,7 @@ export default function Index() {
                                     label='Name'
                                     name='name'
                                     type='text'
-                                    value={modalMode === 'edit' ? selectedUser?.name : data.name}
+                                    value={data.name}
                                     placeholder='John doe...'
                                     onChange={(e) => setData('name', e.target.value)}
                                     error={errors.name}
@@ -166,7 +186,7 @@ export default function Index() {
                                     label='Last Name'
                                     name='last_name'
                                     type='text'
-                                    value={modalMode === 'edit' ? selectedUser?.last_name : data.last_name}
+                                    value={data.last_name}
                                     placeholder='Smith...'
                                     onChange={(e) => setData('last_name', e.target.value)}
                                 />
@@ -174,7 +194,7 @@ export default function Index() {
                                     label='Document Number'
                                     name='document_number'
                                     type='text'
-                                    value={modalMode === 'edit' ? selectedUser?.document_number : data.document_number}
+                                    value={data.document_number}
                                     placeholder='97234241'
                                     onChange={(e) => setData('document_number', e.target.value)}
                                 />
@@ -182,7 +202,7 @@ export default function Index() {
                                     label='Email'
                                     name='email'
                                     type='email'
-                                    value={modalMode === 'edit' ? selectedUser?.email : data.email}
+                                    value={data.email}
                                     placeholder='john.doe@example.com'
                                     onChange={(e) => setData('email', e.target.value)}
                                 />
@@ -190,7 +210,7 @@ export default function Index() {
                                     label='Phone'
                                     name='phone'
                                     type='text'
-                                    value={modalMode === 'edit' ? selectedUser?.phone : data.phone}
+                                    value={data.phone}
                                     placeholder='321-807-9660'
                                     onChange={(e) => setData('phone', e.target.value)}
                                 />
