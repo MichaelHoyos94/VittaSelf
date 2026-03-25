@@ -11,10 +11,10 @@ class HumanResourcesController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(10);
         return Inertia::render('HumanResources/Index', [
             'users' => $users
-        ])->with('success', 'User created successfully.');
+        ]);
     }
 
     public function store(Request $request)

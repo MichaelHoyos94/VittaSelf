@@ -11,6 +11,7 @@ export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
+    console.log('links:', users.links);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: '',
         last_name: '',
@@ -83,6 +84,10 @@ export default function Index() {
             return () => clearTimeout(time);
         }
     }, [flash.success])
+
+    const handlePageChange = (url) => {
+        if (url) router.visit(url);
+    }
 
     const openCreateModal = () => {
         setModalMode('create');
@@ -163,8 +168,10 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
-                data={users}
+                data={users.data}
                 emptyText="No employees found"
+                links={users.links}
+                onPageChange={handlePageChange}
             >
             </Table>
             <Modal
