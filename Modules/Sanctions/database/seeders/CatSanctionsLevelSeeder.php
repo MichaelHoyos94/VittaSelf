@@ -3,6 +3,7 @@
 namespace Modules\Sanctions\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\Sanctions\Models\CatSanctionLevel;
 
 class CatSanctionsLevelSeeder extends Seeder
 {
@@ -29,7 +30,10 @@ class CatSanctionsLevelSeeder extends Seeder
             ],
         ];
 
-        // Completa las demás columnas requeridas antes de insertar.
-        // \Modules\Sanctions\Models\CatSanctionLevel::query()->upsert($records, ['code']);
+        CatSanctionLevel::query()->upsert(
+            $records,
+            ['code'],
+            ['sanction_level', 'sanction_level_description']
+        );
     }
 }

@@ -48,7 +48,7 @@ class CatComplianceSourcesSeeder extends Seeder
         CatComplianceSource::query()->upsert(
             $records,
             ['code'],
-            ['source', ]
-        )
+            ['source', 'description', 'active']
+        );
     }
 }
