@@ -11,6 +11,12 @@ class SanctionsDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            CatSanctionsSeeder::class,
+            CatMitigationsSeeder::class,
+            CatComplianceSourcesSeeder::class,
+            CatSanctionsLevelSeeder::class,
+            CatCaseStatusesSeeder::class,
+        ]);
     }
 }

@@ -42,7 +42,7 @@ Table cat_policies [headercolor: #7a1717] {
 
 Table cat_sanctions [headercolor: #7a1717] {
 	id integer [ pk, increment, not null ]
-	code varchar(64) [ not null, unique ]
+	code varchar(64) [ not null, unique, note: 'FREEZE_PLAN | FREEZE_POINTS | SUSPEND_ACCOUNT | SUSPEND_CODE | DOWNGRADE_PLAN | TERMINATE_ACCOUNT' ]
 	sanction varchar(128) [ not null, unique ]
 	description varchar(255) [ not null ]
 	active boolean [ not null, default: true ]
@@ -52,7 +52,7 @@ Table cat_sanctions [headercolor: #7a1717] {
 
 Table cat_mitigations [headercolor: #7a1717] {
 	id integer [ pk, increment, not null ]
-	code varchar(64) [ not null, unique ]
+	code varchar(64) [ not null, unique, note: 'COPERATES | ACCEPT_FAULT | FIRST_INFRACTION | COMPENSATES_VITTASELF | COMPENSATES_CUSTOMER'  ]
 	mitigation varchar(64) [ not null, unique ]
 	description varchar(128)
 	active boolean [ not null, default: true ]
@@ -65,7 +65,7 @@ Table cat_mitigations [headercolor: #7a1717] {
 
 Table cat_compliance_sources [headercolor: #7a1717] {
 	id integer [ pk, increment, not null ]
-	code varchar(64) [ not null, unique ]
+	code varchar(64) [ not null, unique, note: 'INTERNAL_INVESTIGATION | SOCIAL_MEDIA | CUSTOMER_COMPLAINT | EUI_COMPLAINT | NEWS'  ]
 	source varchar(64) [ not null, unique ]
 	description varchar(128) [ not null ]
 	active boolean [ not null ]
