@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\SanctionEvidence;
+use Modules\Sanctions\Models\SanctionEvidence;
 
 class SanctionEvidenceRepository
 {

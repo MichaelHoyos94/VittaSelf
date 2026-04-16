@@ -1,7 +1,6 @@
-<?php 
-
+<?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\CatCaseStatus;
+use Modules\Sanctions\Models\CatCaseStatus;
 
 class CatCaseStatusRepository
 {

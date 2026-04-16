@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\Sanctions\Services;
-Use Modules\Sanctions\Repositories\CatComplianceSourceRepository;
+use Modules\Sanctions\Repositories\CatComplianceSourceRepository;
 
 class CatComplianceSourceService
 {

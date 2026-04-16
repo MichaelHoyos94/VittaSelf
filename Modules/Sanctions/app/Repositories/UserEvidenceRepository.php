@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\UserEvidence;
+use Modules\Sanctions\Models\UserEvidence;
 class UserEvidenceRepository
 {
     public function create(array $data)

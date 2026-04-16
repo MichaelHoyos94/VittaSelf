@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\Resolution;
+use Modules\Sanctions\Models\Resolution;
 class ResolutionRepository
 {
     public function getAll()

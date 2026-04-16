@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\DisciplinaryCase;
+use Modules\Sanctions\Models\DisciplinaryCase;
 class DisciplinaryCaseRepository
 {
     public function getAll($sort = null, $filter = null, $pagination = null)

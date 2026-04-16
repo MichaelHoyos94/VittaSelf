@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\CatPolicy;
+use Modules\Sanctions\Models\CatPolicy;
 class CatPolicyRepository
 {
     public function getAll()

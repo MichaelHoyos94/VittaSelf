@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Sanctions\Repositories;
-Use Modules\Sanctions\Models\CatMitigation;
+use Modules\Sanctions\Models\CatMitigation;
 class CatMitigationRepository
 {
     public function getAll()
