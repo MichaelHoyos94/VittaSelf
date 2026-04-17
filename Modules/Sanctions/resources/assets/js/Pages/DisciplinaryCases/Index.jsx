@@ -93,7 +93,7 @@ export default function Index() {
                                 <Select 
                                     label="Policy"
                                     name="policy_id"
-                                    options={policies.map(policy => ({ value: policy.id, label: policy.name }))}
+                                    options={policies.map(policy => ({ value: policy.id, label: policy.policy }))}
                                     placeholder="Select a policy"
                                 />
                             </div>

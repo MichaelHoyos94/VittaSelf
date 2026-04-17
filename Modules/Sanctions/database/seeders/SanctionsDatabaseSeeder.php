@@ -17,6 +17,7 @@ class SanctionsDatabaseSeeder extends Seeder
             CatComplianceSourcesSeeder::class,
             CatSanctionsLevelSeeder::class,
             CatCaseStatusesSeeder::class,
+            CatPoliciesSeeder::class,
         ]);
     }
 }

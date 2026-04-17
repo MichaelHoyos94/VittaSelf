@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use Modules\Sanctions\Services\CatComplianceSourceService;
 use Modules\Sanctions\Services\CatPolicyService;
 
+use function Psy\debug;
+
 class DisciplinaryCasesController extends Controller
 {
     public function __construct(protected CatPolicyService $policiesService, protected CatComplianceSourceService $compliancesService) {}
