@@ -5,15 +5,23 @@ namespace Modules\Sanctions\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Sanctions\Services\CatComplianceSourceService;
+use Modules\Sanctions\Services\CatPolicyService;
 
 class DisciplinaryCasesController extends Controller
 {
+    public function __construct(protected CatPolicyService $policiesService, protected CatComplianceSourceService $compliancesService) {}
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Sanctions/DisciplinaryCases/Index');
+        $policies = $this->policiesService->getAll();
+        $complianceSources = $this->compliancesService->getAll();
+        return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
+            'policies' => $policies,
+            'complianceSources' => $complianceSources,
+        ]);
     }
 
     /**

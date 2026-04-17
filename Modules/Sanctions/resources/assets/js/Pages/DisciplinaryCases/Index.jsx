@@ -1,5 +1,6 @@
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
+import Select from "@/Components/Form/Select";
 import TextArea from "@/Components/Form/TextArea";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
@@ -7,9 +8,11 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Index() {
+    const { policies, complianceSources } = usePage().props;
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
     const columns = [
@@ -24,6 +27,11 @@ export default function Index() {
         setModalMode("create");
         setModalOpen(true);
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+    }
     return (
         <div className="p-4 rounded bg-white shadow">
             <div>
@@ -51,8 +59,10 @@ export default function Index() {
                         New Disciplinary Case
                     </h2>
                 </div>
-                <div className="mx-4 my-6">
-                    <Form>
+                <div className="mx-4 my-6 display-none">
+                    <Form
+                        onSubmit={handleSubmit}
+                    >
                         <div className="grid grid-cols-2 gap-4">
                             <div className="col-span-2 grid grid-cols-8 gap-4">
                                 <div className="col-span-7">
@@ -80,18 +90,20 @@ export default function Index() {
                                 />
                             </div>
                             <div>
-                                <select className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500">
-                                    <option value="">Select Policy</option>
-                                    <option value="1">Policy 1</option>
-                                    <option value="2">Policy 2</option>
-                                </select>
+                                <Select 
+                                    label="Policy"
+                                    name="policy_id"
+                                    options={policies.map(policy => ({ value: policy.id, label: policy.name }))}
+                                    placeholder="Select a policy"
+                                />
                             </div>
                             <div>
-                                <select className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500">
-                                    <option value="">Select Compliance Source</option>
-                                    <option value="1">Source 1</option>
-                                    <option value="2">Source 2</option>
-                                </select>
+                                <Select 
+                                    label="Compliance Source"
+                                    name="compliance_source_id"
+                                    options={complianceSources.map(source => ({ value: source.id, label: source.source }))}
+                                    placeholder="Select a compliance source"
+                                />
                             </div>
                             <div className="col-span-2">
                                 <TextArea 
@@ -100,6 +112,14 @@ export default function Index() {
                                     placeholder="Compliant by COL-59120, Internal investigation number 2024-0001, etc..."
                                 />
                             </div>
+                        </div>
+                        <div className="flex flex-row items-center justify-end gap-2 mt-4">
+                            <SecondaryButton onClick={() => setModalOpen(false)}>
+                                Cancel
+                            </SecondaryButton>
+                            <PrimaryButton type="submit">
+                                Create Case
+                            </PrimaryButton>
                         </div>
                     </Form>
                 </div>
