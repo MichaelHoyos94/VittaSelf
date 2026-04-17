@@ -3,35 +3,47 @@ import '../css/app.css';
 
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    //resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
     resolve: async (name) => {
         const pages = import.meta.glob([
             './Pages/**/*.jsx',
-            '../../Modules/*/resources/js/Pages/**/*.jsx',
+            '../../Modules/*/resources/assets/js/Pages/**/*.jsx',
         ]);
 
-        // 1. Buscar en app principal
-        if (pages[`./Pages/${name}.jsx`]) {
-            return pages[`./Pages/${name}.jsx`]();
+        const loadPage = (path) => {
+            if (pages[path]) {
+                return pages[path]();
+            }
+
+            return null;
+        };
+
+        const appPage = loadPage(`./Pages/${name}.jsx`);
+
+        if (appPage) {
+            return appPage;
         }
 
-        // 2. Buscar en módulos
         const [moduleName, ...rest] = name.split('/');
         const relative = rest.join('/');
 
-        const modulePath = `../../Modules/${moduleName}/resources/js/Pages/${relative}.jsx`;
+        if (relative) {
+            const modulePage = loadPage(
+                `../../Modules/${moduleName}/resources/assets/js/Pages/${relative}.jsx`
+            );
 
-        if (pages[modulePath]) {
-            return pages[modulePath]();
+            if (modulePage) {
+                return modulePage;
+            }
         }
 
-        throw new Error(`Page not found: ${name}`);
+        throw new Error(
+            `Page not found: ${name}. Expected module pages in Modules/<Module>/resources/assets/js/Pages/**`
+        );
     },
     setup({ el, App, props }) {
         const root = createRoot(el);

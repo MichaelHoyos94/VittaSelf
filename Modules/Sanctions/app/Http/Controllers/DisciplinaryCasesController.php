@@ -4,15 +4,16 @@ namespace Modules\Sanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class DisciplnaryCasesController extends Controller
+class DisciplinaryCasesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('sanctions::index');
+        return Inertia::render('Sanctions/DisciplinaryCases/Index');
     }
 
     /**

@@ -13,7 +13,25 @@
         <!-- Scripts -->
         @routes
         @viteReactRefresh
-        @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
+        @php
+            $component = $page['component'];
+            $segments = explode('/', $component);
+            $modulePagePath = null;
+            $appPagePath = "resources/js/Pages/{$component}.jsx";
+
+            if (count($segments) > 1) {
+                $module = array_shift($segments);
+                $candidateModulePagePath = "Modules/{$module}/resources/assets/js/Pages/" . implode('/', $segments) . '.jsx';
+
+                if (file_exists(base_path($candidateModulePagePath))) {
+                    $modulePagePath = $candidateModulePagePath;
+                }
+            }
+        @endphp
+        @vite(array_filter([
+            'resources/js/app.jsx',
+            $modulePagePath ?? $appPagePath,
+        ]))
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
