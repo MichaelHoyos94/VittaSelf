@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        /*
+         * Paleta monocromatica base: #78e89f
+         * Direccion visual: fresca, natural y suave para salud/belleza/cuidado.
+         */
+        --primary-50: #f4fdf7;
+        --primary-100: #e3fbe9;
+        --primary-200: #c8f7d5;
+        --primary-300: #a6f0bb;
+        --primary-400: #78e89f;
+        --primary-500: #4ed27f;
+        --primary-600: #33b466;
+        --primary-700: #288f52;
+        --primary-800: #237143;
+        --primary-900: #205d39;
+        --primary: var(--primary-400);
+        --primary-foreground: #10341f;
+    }
+}
