@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import NavLink from './NavLink';
+import { useState } from "react";
+import NavLink from "./NavLink";
 
 export default function Sidebar() {
     const [openMenu, setOpenMenu] = useState(null);
@@ -9,15 +9,49 @@ export default function Sidebar() {
     };
     return (
         <aside className="w-64 h-screen bg-[var(--surface-container-low)] border-r border-[var(--outline-variant)] p-4">
-
+            <img src="/images/logo/logo2.png" alt="LOGO" />
             <h2 className="text-lg font-bold mb-4">Mi App</h2>
 
             <nav className="flex flex-col gap-2">
-
                 {/* 🏠 Simple link */}
-                <NavLink href="/dashboard" active={route().current('dashboard')}>
+                <NavLink
+                    href="/dashboard"
+                    active={route().current("dashboard")}
+                >
                     Dashboard
                 </NavLink>
+
+                <div>
+                    <button
+                        onClick={() => toggleMenu("sanctions")}
+                        className="w-full text-left p-2 rounded hover:bg-[var(--surface-variant)]"
+                    >
+                        Sanctions
+                    </button>
+
+                    {openMenu === "sanctions" && (
+                        <div className="ml-4 flex flex-col">
+                            <NavLink
+                                href="/sanctions/disciplinary-cases"
+                                active={route().current("sanctions.disciplinary-cases")}
+                            >
+                                Disciplinary Cases
+                            </NavLink>
+                            <NavLink
+                                href="/dashboard"
+                                active={route().current("products")}
+                            >
+                                Resolutions History
+                            </NavLink>
+                            <NavLink
+                                href="/dashboard"
+                                active={route().current("products")}
+                            >
+                                Settings
+                            </NavLink>
+                        </div>
+                    )}
+                </div>
 
                 {/* 📦 Parent menu */}
                 <div>
@@ -30,13 +64,22 @@ export default function Sidebar() {
 
                     {openMenu === "inventario" && (
                         <div className="ml-4 flex flex-col">
-                            <NavLink href="/dashboard" active={route().current('products')}>
+                            <NavLink
+                                href="/dashboard"
+                                active={route().current("products")}
+                            >
                                 Products
                             </NavLink>
-                            <NavLink href="/dashboard" active={route().current('products')}>
+                            <NavLink
+                                href="/dashboard"
+                                active={route().current("products")}
+                            >
                                 Products
                             </NavLink>
-                            <NavLink href="/dashboard" active={route().current('products')}>
+                            <NavLink
+                                href="/dashboard"
+                                active={route().current("products")}
+                            >
                                 Products
                             </NavLink>
                         </div>
@@ -54,13 +97,28 @@ export default function Sidebar() {
 
                     {openMenu === "human-resources" && (
                         <div className="ml-4 flex flex-col">
-                            <NavLink href="/human-resources/employees" active={route().current('human-resources.employees')}>
+                            <NavLink
+                                href="/human-resources/employees"
+                                active={route().current(
+                                    "human-resources.employees",
+                                )}
+                            >
                                 Employees
                             </NavLink>
-                            <NavLink href="/human-resources/roles" active={route().current('human-resources.roles')}>
+                            <NavLink
+                                href="/human-resources/roles"
+                                active={route().current(
+                                    "human-resources.roles",
+                                )}
+                            >
                                 Roles
                             </NavLink>
-                            <NavLink href="/human-resources/permissions" active={route().current('human-resources.permissions')}>
+                            <NavLink
+                                href="/human-resources/permissions"
+                                active={route().current(
+                                    "human-resources.permissions",
+                                )}
+                            >
                                 Permissions
                             </NavLink>
                         </div>
