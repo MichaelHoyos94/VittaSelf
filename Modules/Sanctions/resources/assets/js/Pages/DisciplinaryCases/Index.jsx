@@ -7,13 +7,14 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import { EllipsisHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Index() {
-    const { policies, complianceSources } = usePage().props;
-    const { data, setData, post, errors } = useForm({
+    const { policies, complianceSources, disciplinaryCases } = usePage().props;
+    console.log(disciplinaryCases);
+    const { data, setData, post, errors, reset } = useForm({
         'facts_description': '',
         'details': '',
         'user_id': '',
@@ -24,10 +25,61 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const columns = [
         { header: "ID", accessor: "id" },
-        { header: "CUSTOMER", accessor: "customer" },
-        { header: "POLICY", accessor: "policy" },
-        { header: "ADMINISTRATOR", accessor: "administrator" },
-        { header: "STATUS", accessor: "status" },
+        {
+            header: "EUI", render: (row) => (
+                <div className="flex items-center gap-3">
+                    {/* Avatar con inicial */}
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.user?.name?.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+
+                    {/* Información textual */}
+                    <div className="flex flex-col">
+                        <strong className="font-medium">
+                            {row.user?.name}
+                        </strong>
+                        <span className="text-sm text-gray-500">
+                            {row.user?.email}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                            {row.user?.document_number}
+                        </span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            header: "POLICY", render: (row) => (
+                <div>
+                    {row.policy.policy}
+                </div>
+            )
+        },
+        {
+            header: "ADMINISTRATOR", render: (row) => (
+                <div>
+                    {row.admin?.name}
+                </div>
+            )
+        },
+        {
+            header: "STATUS", render: (row) => (
+                <div className="p-2 rounded-full bg-primary-200 text-center">
+                    {row.case_status?.case_status}
+                </div>
+            )
+        },
+        {
+            header: "ACTIONS", render: (row) => (
+                <div>
+                    <button className="px-2 py-2 bg-primary-700 rounded-full hover:bg-primary-800 transform transition-transform duration-300 hover:scale-110">
+                        <EllipsisHorizontalIcon className="h-4 w-4 text-primary-50"></EllipsisHorizontalIcon>
+                    </button>
+                </div>
+            )
+        },
     ];
     const handleOpenCreateModal = () => {
         console.log("Opening create modal");
@@ -40,7 +92,12 @@ export default function Index() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Submitting form with data:", data);
+        post(route('sanctions.disciplinary-cases.store'), {
+            onSuccess: () => {
+                setModalOpen(false);
+                reset();
+            }
+        });
     }
     return (
         <div className="p-4 rounded bg-white shadow">
@@ -56,7 +113,7 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
-                data={[]}
+                data={disciplinaryCases}
                 emptyText="No disciplinary cases found"
             ></Table>
             <Modal
@@ -80,7 +137,7 @@ export default function Index() {
                                         label="Eui Code"
                                         name="user_id"
                                         value={data.user_id}
-                                        onChange={(e) => setData('user_id', e.target.value)}
+                                        onChange={(e) => setData('user_id', parseInt(e.target.value) || '')}
                                         error={errors.user_id}
                                         type="text"
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"

@@ -8,4 +8,5 @@ Route::prefix('sanctions')->middleware(['auth', 'verified'])->as('sanctions.')->
 
     // ============================================== Disciplinary Cases ===================================================== //
     Route::get('/disciplinary-cases', [DisciplinaryCasesController::class, 'index'])->name('disciplinary-cases.index');
+    Route::post('/disciplinary-cases', [DisciplinaryCasesController::class, 'store'])->name('disciplinary-cases.store');
 });

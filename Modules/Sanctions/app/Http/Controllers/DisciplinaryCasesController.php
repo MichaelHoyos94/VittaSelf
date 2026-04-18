@@ -10,8 +10,6 @@ use Modules\Sanctions\Services\CatComplianceSourceService;
 use Modules\Sanctions\Services\CatPolicyService;
 use Modules\Sanctions\Services\DisciplinaryCaseService;
 
-use function Psy\debug;
-
 class DisciplinaryCasesController extends Controller
 {
     public function __construct(
@@ -26,9 +24,11 @@ class DisciplinaryCasesController extends Controller
     {
         $policies = $this->policiesService->getAll();
         $complianceSources = $this->compliancesService->getAll();
+        $disciplinaryCases = $this->service->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
             'policies' => $policies,
             'complianceSources' => $complianceSources,
+            'disciplinaryCases' => $disciplinaryCases,
         ]);
     }
 
@@ -38,6 +38,7 @@ class DisciplinaryCasesController extends Controller
     public function store(DisciplinaryCaseRequest $request)
     {
         $validatedData = $request->validated();
+        $validatedData['admin_id'] = $request->user()->id;
         $disciplinaryCase = $this->service->create($validatedData);
         return redirect()->route('sanctions.disciplinary-cases.index')->with('success', 'Disciplinary case created successfully.');
     }

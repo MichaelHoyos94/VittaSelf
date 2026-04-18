@@ -15,7 +15,6 @@ class DisciplinaryCaseRequest extends FormRequest
             'facts_description' => 'required|min:20',
             'details' => 'required',
             'user_id' => 'required|exists:users,id',
-            'admin_id' => 'required|exists:users,id',
             'policy_id' => 'required|exists:cat_policies,id',
             'compliance_source_id' => 'required|exists:cat_compliance_sources,id',
         ];
@@ -29,10 +28,11 @@ class DisciplinaryCaseRequest extends FormRequest
 
             'details.required' => 'Details are required.',
             'user_id.required' => 'You must search an user.',
-            'admin_id.required' => 'Admin is required.',
 
             'policy_id.required' => 'You must select a policy.',
             'compliance_source_id.required' => 'You must select a source.',
+
+            'user_id.exists' => 'Selected user does not exist.',
         ];
     }
 
