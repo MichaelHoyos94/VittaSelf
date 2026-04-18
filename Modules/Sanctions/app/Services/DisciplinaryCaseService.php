@@ -10,4 +10,8 @@ class DisciplinaryCaseService
     {
         return $this->repository->getAll();
     }
+    public function create(array $data)
+    {
+        return $this->repository->create($data);
+    }
 }

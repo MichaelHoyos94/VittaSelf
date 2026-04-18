@@ -8,11 +8,18 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
-import { usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Index() {
     const { policies, complianceSources } = usePage().props;
+    const { data, setData, post, errors } = useForm({
+        'facts_description': '',
+        'details': '',
+        'user_id': '',
+        'policy_id': '',
+        'compliance_source_id': '',
+    });
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
     const columns = [
@@ -27,10 +34,13 @@ export default function Index() {
         setModalMode("create");
         setModalOpen(true);
     };
+    const searchUser = () => {
+        console.log("Searching user with Eui Code:", data.user_id);
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        console.log("Submitting form with data:", data);
     }
     return (
         <div className="p-4 rounded bg-white shadow">
@@ -68,14 +78,17 @@ export default function Index() {
                                 <div className="col-span-7">
                                     <Input
                                         label="Eui Code"
-                                        name="eui_code"
+                                        name="user_id"
+                                        value={data.user_id}
+                                        onChange={(e) => setData('user_id', e.target.value)}
+                                        error={errors.user_id}
                                         type="text"
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
                                         placeholder="COL-51578"
                                     />
                                 </div>
                                 <div className="flex col-span-1">
-                                    <button>
+                                    <button type="button" onClick={searchUser}>
                                         <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800"></MagnifyingGlassIcon>
                                     </button>
                                 </div>
@@ -84,32 +97,44 @@ export default function Index() {
                             </div>
                             <div className="col-span-2">
                                 <TextArea
-                                    label="Facts Description"
+                                    label="Facts Description *"
                                     name="facts_description"
+                                    value={data.facts_description}
+                                    onChange={(e) => setData('facts_description', e.target.value)}
                                     placeholder="Describe the facts of the case here..."
+                                    error={errors.facts_description}
                                 />
                             </div>
                             <div>
-                                <Select 
+                                <Select
                                     label="Policy"
                                     name="policy_id"
+                                    value={data.policy_id}
+                                    onChange={(e) => setData('policy_id', e.target.value)}
+                                    error={errors.policy_id}
                                     options={policies.map(policy => ({ value: policy.id, label: policy.policy }))}
                                     placeholder="Select a policy"
                                 />
                             </div>
                             <div>
-                                <Select 
+                                <Select
                                     label="Compliance Source"
                                     name="compliance_source_id"
+                                    value={data.compliance_source_id}
+                                    onChange={(e) => setData('compliance_source_id', e.target.value)}
+                                    error={errors.compliance_source_id}
                                     options={complianceSources.map(source => ({ value: source.id, label: source.source }))}
                                     placeholder="Select a compliance source"
                                 />
                             </div>
                             <div className="col-span-2">
-                                <TextArea 
+                                <TextArea
                                     label="Additional Details"
                                     name="details"
+                                    value={data.details}
+                                    onChange={(e) => setData('details', e.target.value)}
                                     placeholder="Compliant by COL-59120, Internal investigation number 2024-0001, etc..."
+                                    error={errors.details}
                                 />
                             </div>
                         </div>

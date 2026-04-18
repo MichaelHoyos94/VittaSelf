@@ -5,14 +5,20 @@ namespace Modules\Sanctions\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
 use Modules\Sanctions\Services\CatComplianceSourceService;
 use Modules\Sanctions\Services\CatPolicyService;
+use Modules\Sanctions\Services\DisciplinaryCaseService;
 
 use function Psy\debug;
 
 class DisciplinaryCasesController extends Controller
 {
-    public function __construct(protected CatPolicyService $policiesService, protected CatComplianceSourceService $compliancesService) {}
+    public function __construct(
+        protected DisciplinaryCaseService $service,
+        protected CatPolicyService $policiesService,
+        protected CatComplianceSourceService $compliancesService
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -27,17 +33,14 @@ class DisciplinaryCasesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('sanctions::create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(DisciplinaryCaseRequest $request)
+    {
+        $validatedData = $request->validated();
+        $disciplinaryCase = $this->service->create($validatedData);
+        return redirect()->route('sanctions.disciplinary-cases.index')->with('success', 'Disciplinary case created successfully.');
+    }
 
     /**
      * Show the specified resource.
