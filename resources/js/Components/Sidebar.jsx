@@ -44,8 +44,8 @@ export default function Sidebar() {
                                 Resolutions History
                             </NavLink>
                             <NavLink
-                                href="/dashboard"
-                                active={route().current("products")}
+                                href="/sanctions/settings"
+                                active={route().current("sanctions.settings")}
                             >
                                 Settings
                             </NavLink>
