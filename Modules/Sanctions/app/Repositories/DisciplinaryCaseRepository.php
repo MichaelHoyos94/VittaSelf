@@ -41,4 +41,11 @@ class DisciplinaryCaseRepository
         $disciplinaryCase->delete();
         return true;
     }
+    public function progressCase($id)
+    {
+        $disciplinaryCase = DisciplinaryCase::findOrFail($id);
+        $disciplinaryCase->case_status_id = 2;
+        $disciplinaryCase->save();
+        return $disciplinaryCase;
+    }
 }
