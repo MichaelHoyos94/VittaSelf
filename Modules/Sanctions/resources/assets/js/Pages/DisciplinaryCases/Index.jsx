@@ -6,9 +6,10 @@ import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
+import Dropdown from "@/Components/Dropdown";
 import MainLayout from "@/Layouts/MainLayout";
 import { EllipsisHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
-import { useForm, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Index() {
@@ -73,10 +74,33 @@ export default function Index() {
         },
         {
             header: "ACTIONS", render: (row) => (
-                <div>
-                    <button className="px-2 py-2 bg-primary-700 rounded-full hover:bg-primary-800 transform transition-transform duration-300 hover:scale-110">
-                        <EllipsisHorizontalIcon className="h-4 w-4 text-primary-50"></EllipsisHorizontalIcon>
-                    </button>
+                <div className="flex justify-center">
+                    <Dropdown>
+                        <Dropdown.Trigger>
+                            <button
+                                type="button"
+                                className="px-2 py-2 bg-primary-700 rounded-full hover:bg-primary-800 transform transition-transform duration-300 hover:scale-110"
+                            >
+                                <EllipsisHorizontalIcon className="h-4 w-4 text-primary-50" />
+                            </button>
+                        </Dropdown.Trigger>
+                        <Dropdown.Content align="right" width="48">
+                            <button
+                                type="button"
+                                onClick={() => handleViewCase(row)}
+                                className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
+                            >
+                                View case
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleManageCase(row.id)}
+                                className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
+                            >
+                                Manage case
+                            </button>
+                        </Dropdown.Content>
+                    </Dropdown>
                 </div>
             )
         },
@@ -85,6 +109,12 @@ export default function Index() {
         console.log("Opening create modal");
         setModalMode("create");
         setModalOpen(true);
+    };
+    const handleViewCase = (row) => {
+        console.log("Viewing disciplinary case:", row.id);
+    };
+    const handleManageCase = (id) => {
+        router.get(route('sanctions.manage-case', id));
     };
     const searchUser = () => {
         console.log("Searching user with Eui Code:", data.user_id);

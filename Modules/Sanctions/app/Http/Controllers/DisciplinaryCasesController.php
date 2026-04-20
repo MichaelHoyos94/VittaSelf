@@ -43,6 +43,11 @@ class DisciplinaryCasesController extends Controller
         return redirect()->route('sanctions.disciplinary-cases.index')->with('success', 'Disciplinary case created successfully.');
     }
 
+    public function manageCase($id)
+    {
+        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase');
+    }
+
     /**
      * Show the specified resource.
      */
