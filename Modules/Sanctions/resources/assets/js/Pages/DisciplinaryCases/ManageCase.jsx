@@ -1,14 +1,62 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { useState } from "react";
+import { router, usePage } from "@inertiajs/react";
 
-const steps = ["OPEN", "EVIDENCES", "INVESTIGATION", "RESOLUTION"];
 const stepSections = [
-    { title: "OPEN", content: "hola" },
-    { title: "EVIDENCES", content: "hola" },
-    { title: "INVESTIGATION", content: "hola" },
-    { title: "RESOLUTION", content: "hola" },
+    {
+        title: "OPEN",
+        content: ({ disciplinaryCase }) => (
+            <div className="grid grid-cols-2 gap-y-4">
+                <div>
+                    <p>EUI Involved</p>
+                </div>
+                <div>
+                    <p>NAME</p>
+                    <span>email</span>
+                    <span>phone</span>
+                </div>
+                <div>
+                    <p>Admin in charge</p>
+                </div>
+                <div>
+                    <p>ADMIN</p>
+                </div>
+                <div>
+                    <p>Policy</p>
+                </div>
+                <div>
+                    <p>POLICY</p>
+                </div>
+                <div>
+                    <p>Opened At</p>
+                </div>
+                <div>
+                    <p>DATE</p>
+                </div>
+                <div className="col-span-2">
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Vero culpa quasi dicta dolores, consequuntur ex suscipit
+                        animi doloremque eveniet quaerat sint voluptates, nobis
+                        blanditiis voluptatibus a minima nesciunt ducimus quas.
+                    </p>
+                </div>
+            </div>
+        ),
+    },
+    {
+        title: "EVIDENCES",
+        content: () => <div>evidences</div>,
+    },
+    {
+        title: "ON RESOLUTION",
+        content: () => <div>evidences</div>,
+    },
+    {
+        title: "CLOSED",
+        content: () => <div>evidences</div>,
+    },
 ];
 
 const stepSpanClasses = {
@@ -19,18 +67,42 @@ const stepSpanClasses = {
 };
 
 export default function ManageCase() {
+    const { disciplinaryCase, caseStatuses } = usePage().props;
+    const currentStep =
+        caseStatuses.findIndex(
+            (status) => status.id === disciplinaryCase.case_status_id,
+        ) + 1;
+    const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
-    const [currentStep, setCurrentStep] = useState(1);
+    console.log(caseStatuses);
+    console.log(disciplinaryCase);
+    console.log(currentStep);
+
+    console.log(
+        caseStatuses.map((s) => ({
+            id: s.id,
+            type: typeof s.id,
+        })),
+    );
+
+    console.log({
+        case_status_id: disciplinaryCase.case_status_id,
+        type: typeof disciplinaryCase.case_status_id,
+    });
 
     const handleClickNext = () => {
-        setCurrentStep((previousStep) => Math.min(previousStep + 1, totalSteps));
+        router.post(
+            route("sanctions.progress-case", {
+                id: disciplinaryCase.id
+            }),
+        );
     };
 
     return (
         <div className="p-4 bg-white shadow-md rounded">
             <div>
                 <h1>Manage Case</h1>
-                <p>Managing case #1254</p>
+                <p>Managing case {disciplinaryCase.id}</p>
             </div>
 
             <div className="mt-6">
@@ -42,8 +114,11 @@ export default function ManageCase() {
                         return (
                             <div key={step} className="text-center">
                                 <h3
-                                    className={`text-sm font-semibold ${isActive ? "text-primary-600" : "text-gray-400"
-                                        }`}
+                                    className={`text-sm font-semibold ${
+                                        isActive
+                                            ? "text-primary-600"
+                                            : "text-gray-400"
+                                    }`}
                                 >
                                     {step}
                                 </h3>
@@ -66,26 +141,25 @@ export default function ManageCase() {
                 return (
                     <div
                         key={section.title}
-                        className={`border rounded mt-6 p-4 ${isVisible ? "block" : "hidden"}`}
+                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${isVisible ? "block" : "hidden"}`}
                     >
-                        <h4 className="font-semibold text-primary-700">{section.title}</h4>
-                        <p>{section.content}</p>
+                        <h4 className="font-semibold text-primary-700">
+                            {section.title}
+                        </h4>
+                        {section.content({ disciplinaryCase })}
                     </div>
                 );
             })}
 
             <div className="mt-6">
                 <div className="flex flex-wrap justify-evenly gap-1">
-
                     <PrimaryButton
                         onClick={handleClickNext}
                         disabled={currentStep === totalSteps}
                     >
                         Next
                     </PrimaryButton>
-                    <SecondaryButton
-                        disabled={!(currentStep === totalSteps)}
-                    >
+                    <SecondaryButton disabled={!(currentStep === totalSteps)}>
                         Resolution
                     </SecondaryButton>
                 </div>

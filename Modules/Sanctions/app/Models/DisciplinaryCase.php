@@ -26,6 +26,10 @@ class DisciplinaryCase extends Model
         'case_status_id',
     ];
 
+    protected $casts = [
+        'case_status_id' => 'integer'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

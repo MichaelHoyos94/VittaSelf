@@ -21,6 +21,10 @@ class DisciplinaryCaseRepository
         }
         return $query->get();
     }
+    public function getById($id)
+    {
+        return DisciplinaryCase::findOrFail($id);
+    }
     public function create(array $data)
     {
         return DisciplinaryCase::create($data);
@@ -36,5 +40,12 @@ class DisciplinaryCaseRepository
         $disciplinaryCase = DisciplinaryCase::findOrFail($id);
         $disciplinaryCase->delete();
         return true;
+    }
+    public function progressCase($id)
+    {
+        $disciplinaryCase = DisciplinaryCase::findOrFail($id);
+        $disciplinaryCase->case_status_id = 2;
+        $disciplinaryCase->save();
+        return $disciplinaryCase;
     }
 }

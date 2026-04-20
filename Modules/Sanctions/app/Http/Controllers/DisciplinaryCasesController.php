@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
+use Modules\Sanctions\Services\CatCaseStatusService;
 use Modules\Sanctions\Services\CatComplianceSourceService;
 use Modules\Sanctions\Services\CatPolicyService;
 use Modules\Sanctions\Services\DisciplinaryCaseService;
@@ -15,7 +16,8 @@ class DisciplinaryCasesController extends Controller
     public function __construct(
         protected DisciplinaryCaseService $service,
         protected CatPolicyService $policiesService,
-        protected CatComplianceSourceService $compliancesService
+        protected CatComplianceSourceService $compliancesService,
+        protected CatCaseStatusService $caseStatusService
     ) {}
     /**
      * Display a listing of the resource.
@@ -45,7 +47,12 @@ class DisciplinaryCasesController extends Controller
 
     public function manageCase($id)
     {
-        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase');
+        $disciplinaryCase = $this->service->getById($id);
+        $statuses = $this->caseStatusService->getAllStatuses();
+        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
+            'disciplinaryCase' => $disciplinaryCase,
+            'caseStatuses' => $statuses
+        ]);
     }
 
     /**
@@ -73,4 +80,14 @@ class DisciplinaryCasesController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id) {}
+
+    public function progressCase($id)
+    {
+        $disciplinaryCase = $this->service->progressCase($id);
+        $statuses = $this->caseStatusService->getAllStatuses();
+        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
+            'disciplinaryCase' => $disciplinaryCase,
+            'caseStatuses' => $statuses
+        ]);
+    }
 }
