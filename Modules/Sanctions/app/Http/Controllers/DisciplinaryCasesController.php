@@ -45,7 +45,10 @@ class DisciplinaryCasesController extends Controller
 
     public function manageCase($id)
     {
-        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase');
+        $disciplinaryCase = $this->service->getById($id);
+        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
+            'disciplinaryCase' => $disciplinaryCase
+        ]);
     }
 
     /**

@@ -1,6 +1,7 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
+import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const steps = ["OPEN", "EVIDENCES", "INVESTIGATION", "RESOLUTION"];
@@ -21,7 +22,8 @@ const stepSpanClasses = {
 export default function ManageCase() {
     const totalSteps = steps.length;
     const [currentStep, setCurrentStep] = useState(1);
-
+    const { disciplinaryCase } = usePage().props; 
+    console.log(disciplinaryCase);
     const handleClickNext = () => {
         setCurrentStep((previousStep) => Math.min(previousStep + 1, totalSteps));
     };

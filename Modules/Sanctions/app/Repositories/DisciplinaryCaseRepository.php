@@ -21,6 +21,10 @@ class DisciplinaryCaseRepository
         }
         return $query->get();
     }
+    public function getById($id)
+    {
+        return DisciplinaryCase::findOrFail($id);
+    }
     public function create(array $data)
     {
         return DisciplinaryCase::create($data);
