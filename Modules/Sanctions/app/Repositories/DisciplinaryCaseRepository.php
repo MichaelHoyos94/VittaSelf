@@ -7,6 +7,7 @@ class DisciplinaryCaseRepository
     {
         // handle sort, filter, pagination
         $query = DisciplinaryCase::query();
+        $query->with(['user', 'policy', 'admin', 'caseStatus']);
         if ($sort) {
             $query->orderBy($sort['field'], $sort['direction']);
         }

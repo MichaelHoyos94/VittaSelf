@@ -5,12 +5,18 @@ namespace Modules\Sanctions\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
 use Modules\Sanctions\Services\CatComplianceSourceService;
 use Modules\Sanctions\Services\CatPolicyService;
+use Modules\Sanctions\Services\DisciplinaryCaseService;
 
 class DisciplinaryCasesController extends Controller
 {
-    public function __construct(protected CatPolicyService $policiesService, protected CatComplianceSourceService $compliancesService) {}
+    public function __construct(
+        protected DisciplinaryCaseService $service,
+        protected CatPolicyService $policiesService,
+        protected CatComplianceSourceService $compliancesService
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -18,24 +24,29 @@ class DisciplinaryCasesController extends Controller
     {
         $policies = $this->policiesService->getAll();
         $complianceSources = $this->compliancesService->getAll();
+        $disciplinaryCases = $this->service->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
             'policies' => $policies,
             'complianceSources' => $complianceSources,
+            'disciplinaryCases' => $disciplinaryCases,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('sanctions::create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(DisciplinaryCaseRequest $request)
+    {
+        $validatedData = $request->validated();
+        $validatedData['admin_id'] = $request->user()->id;
+        $disciplinaryCase = $this->service->create($validatedData);
+        return redirect()->route('sanctions.disciplinary-cases.index')->with('success', 'Disciplinary case created successfully.');
+    }
+
+    public function manageCase($id)
+    {
+        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase');
+    }
 
     /**
      * Show the specified resource.
