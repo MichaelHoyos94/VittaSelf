@@ -1,6 +1,9 @@
 <?php
+
 namespace Modules\Sanctions\Repositories;
+
 use Modules\Sanctions\Models\DisciplinaryCase;
+
 class DisciplinaryCaseRepository
 {
     public function getAll($sort = null, $filter = null, $pagination = null)
@@ -23,7 +26,15 @@ class DisciplinaryCaseRepository
     }
     public function getById($id)
     {
-        return DisciplinaryCase::findOrFail($id);
+        // Retorning always ID 1, need to fix this
+
+        return DisciplinaryCase::with([
+            'user',
+            'policy',
+            'admin',
+            'caseStatus',
+            'complianceSource'
+        ])->findOrFail($id);
     }
     public function create(array $data)
     {
