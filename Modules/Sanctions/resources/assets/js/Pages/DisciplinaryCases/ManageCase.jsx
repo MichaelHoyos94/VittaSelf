@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { ArrowUpOnSquareIcon } from "@heroicons/react/16/solid";
-import { router, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const stepSections = [
@@ -86,9 +86,14 @@ const stepSections = [
     },
     {
         title: "ON RESOLUTION",
-        content: ({ sanctions, sanctionLevels }) => (
+        content: ({
+            sanctions,
+            sanctionLevels,
+            mitigations,
+            handleClickResolution,
+        }) => (
             <div>
-                <form className="space-y-4">
+                <form onSubmit={handleClickResolution} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2">
                             <TextArea
@@ -147,39 +152,25 @@ const stepSections = [
                             </div>
                         </div>
                         <div className="col-span-2">
-                            {/* Multi checkbox with mitigation measures options */}
-                            <p className="mb-2">Mitigation measures</p>
-                            <div className="flex flex-row gap-2">
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        name="mitigation_1"
-                                        value="1"
-                                        onChange={() => {}}
-                                        className="form-checkbox h-4 w-4 text-primary"
-                                    />
-                                    <span>Mitigation measure 1</span>
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        name="mitigation_2"
-                                        value="2"
-                                        onChange={() => {}}
-                                        className="form-checkbox h-4 w-4 text-primary"
-                                    />
-                                    <span>Mitigation measure 2</span>
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        name="mitigation_3"
-                                        value="3"
-                                        onChange={() => {}}
-                                        className="form-checkbox h-4 w-4 text-primary"
-                                    />
-                                    <span>Mitigation measure 3</span>
-                                </label>
+                            {/* Multi checkbox with the mitigation options */}
+                            <p className="mb-2">Mitigations</p>
+                            {/* flex container avoiding to stack the checkboxes */}
+                            <div className="flex flex-wrap gap-2">
+                                {mitigations.map((mitigation) => (
+                                    <label
+                                        key={mitigation.id}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            name={`mitigation_${mitigation.id}`}
+                                            value={mitigation.id}
+                                            onChange={() => {}}
+                                            className="form-checkbox h-4 w-4 text-primary"
+                                        />
+                                        <span>{mitigation.mitigation}</span>
+                                    </label>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -201,12 +192,23 @@ const stepSpanClasses = {
 };
 
 export default function ManageCase() {
-    const { disciplinaryCase, caseStatuses, sanctionLevels, sanctions } =
-        usePage().props;
+    const {
+        disciplinaryCase,
+        caseStatuses,
+        sanctionLevels,
+        sanctions,
+        mitigations,
+    } = usePage().props;
+
+    const { data, setData, post } = useForm({
+        resolution_text: "",
+        resolution_type: "",
+        sanction_level_id: "",
+        sanctions: [],
+        mitigations: [],
+    });
+
     const [modalOpen, setModalOpen] = useState(false);
-    console.log(disciplinaryCase);
-    console.log(sanctions);
-    console.log(sanctionLevels);
     const currentStep =
         caseStatuses.findIndex(
             (status) => status.id === disciplinaryCase.case_status_id,
@@ -221,6 +223,19 @@ export default function ManageCase() {
                 id: disciplinaryCase.id,
             }),
         );
+    };
+
+    const handleClickResolution = () => {
+        console.log("Resolution data:", data);
+        /*
+        router.post(
+            route("sanctions.resolve-case", {
+                id: disciplinaryCase.id,
+            }),
+            {
+                ...data,
+            },
+        ); */
     };
 
     return (
@@ -259,6 +274,79 @@ export default function ManageCase() {
                 />
             </div>
 
+            {/* Step #1 */}
+            <div
+                className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
+            >
+                <div className="grid grid-cols-2 gap-y-4">
+                    <div>
+                        <p>EUI Involved</p>
+                    </div>
+                    <div>
+                        <p>{disciplinaryCase.user?.name}</p>
+                        <div>
+                            <span className="text-sm text-gray-500">
+                                {disciplinaryCase.user?.email}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-sm text-gray-500">
+                                {disciplinaryCase.user?.phone}
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Admin in charge</p>
+                    </div>
+                    <div>
+                        <p>ADMIN</p>
+                    </div>
+                    <div>
+                        <p>Policy</p>
+                    </div>
+                    <div>
+                        <p>{disciplinaryCase.policy?.policy}</p>
+                    </div>
+                    <div>
+                        <p>Opened At</p>
+                    </div>
+                    <div>
+                        <p>
+                            {new Date(
+                                disciplinaryCase.created_at,
+                            ).toLocaleDateString()}
+                        </p>
+                    </div>
+                    <div className="col-span-2">
+                        <p>
+                            Opening of the case, check the details are correct
+                            before proceeding. This will assign the case to you
+                            and you will be responsible for progressing the case
+                            to the next status.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Step #2 */}
+            <div className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 2 ? "block" : "hidden"}`}>
+                {/* File icon */}
+                <ArrowUpOnSquareIcon className="w-32 h-32 text-primary mx-auto mb-4" />
+                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary-100 mx-auto mb-4 gap-1">
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-pulse [animation-duration:1.2s] opacity-100"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-pulse [animation-duration:1.2s] opacity-30 [animation-delay:0.2s]"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-pulse [animation-duration:1.2s] opacity-30 [animation-delay:0.4s]"></div>
+                </div>
+
+                <p>
+                    During this stage, EUI and the admin in charge will be able
+                    to upload evidences to the case. This can be done by
+                    clicking the "Add Evidence" button and selecting the file to
+                    upload. Once the file is uploaded, it will be visible to
+                    both parties and can be downloaded or deleted if necessary.
+                </p>
+            </div>
+            {/* }
             {stepSections.map((section, index) => {
                 const stepNumber = index + 1;
                 const isVisible = currentStep === stepNumber;
@@ -275,10 +363,12 @@ export default function ManageCase() {
                             disciplinaryCase,
                             sanctions,
                             sanctionLevels,
+                            mitigations,
+                            handleClickResolution,
                         })}
                     </div>
                 );
-            })}
+            })} */}
 
             <div className="mt-6">
                 <div className="flex flex-wrap justify-evenly gap-1">
@@ -288,7 +378,10 @@ export default function ManageCase() {
                     >
                         Next
                     </PrimaryButton>
-                    <SecondaryButton disabled={!(currentStep === totalSteps)}>
+                    <SecondaryButton
+                        disabled={!(currentStep === totalSteps - 1)}
+                        onClick={handleClickResolution}
+                    >
                         Resolution
                     </SecondaryButton>
                 </div>
