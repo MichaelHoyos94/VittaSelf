@@ -8,4 +8,8 @@ class CatCaseStatusRepository
     {
         return CatCaseStatus::all();
     }
+    public function getById($id)
+    {
+        return CatCaseStatus::findOrFail($id);
+    }
 }

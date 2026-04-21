@@ -1,7 +1,9 @@
+import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
+import { useState } from "react";
 
 const stepSections = [
     {
@@ -68,29 +70,16 @@ const stepSpanClasses = {
 
 export default function ManageCase() {
     const { disciplinaryCase, caseStatuses } = usePage().props;
+    const [modalOpen, setModalOpen] = useState(false);
     const currentStep =
         caseStatuses.findIndex(
             (status) => status.id === disciplinaryCase.case_status_id,
         ) + 1;
     const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
-    console.log(caseStatuses);
-    console.log(disciplinaryCase);
-    console.log(currentStep);
-
-    console.log(
-        caseStatuses.map((s) => ({
-            id: s.id,
-            type: typeof s.id,
-        })),
-    );
-
-    console.log({
-        case_status_id: disciplinaryCase.case_status_id,
-        type: typeof disciplinaryCase.case_status_id,
-    });
 
     const handleClickNext = () => {
+        setModalOpen(false);
         router.post(
             route("sanctions.progress-case", {
                 id: disciplinaryCase.id
@@ -114,11 +103,10 @@ export default function ManageCase() {
                         return (
                             <div key={step} className="text-center">
                                 <h3
-                                    className={`text-sm font-semibold ${
-                                        isActive
-                                            ? "text-primary-600"
-                                            : "text-gray-400"
-                                    }`}
+                                    className={`text-sm font-semibold ${isActive
+                                        ? "text-primary-600"
+                                        : "text-gray-400"
+                                        }`}
                                 >
                                     {step}
                                 </h3>
@@ -154,7 +142,7 @@ export default function ManageCase() {
             <div className="mt-6">
                 <div className="flex flex-wrap justify-evenly gap-1">
                     <PrimaryButton
-                        onClick={handleClickNext}
+                        onClick={() => setModalOpen(true)}
                         disabled={currentStep === totalSteps}
                     >
                         Next
@@ -164,6 +152,31 @@ export default function ManageCase() {
                     </SecondaryButton>
                 </div>
             </div>
+            <Modal
+                show={modalOpen}
+                onClose={() => setModalOpen(false)}
+                maxWidth="lg"
+            >
+                <div className="border-b px-6 py-4">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                        Switch case status
+                    </h2>
+                </div>
+                <div className="mx-4 my-6">
+                    <p><strong className="font-bold">Warning!</strong> This will take the current status of the case to the next status. This can't be undone.</p>
+                    <div className="flex flex-row items-center justify-end gap-2 mt-4">
+                        <SecondaryButton onClick={() => setModalOpen(false)}>
+                            Cancel
+                        </SecondaryButton>
+                        <PrimaryButton
+                            onClick={handleClickNext}
+                            type="button"
+                        >
+                            Continue
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

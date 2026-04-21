@@ -156,7 +156,7 @@ export default function Index() {
                         New Disciplinary Case
                     </h2>
                 </div>
-                <div className="mx-4 my-6 display-none">
+                <div className="mx-4 my-6">
                     <Form
                         onSubmit={handleSubmit}
                     >
