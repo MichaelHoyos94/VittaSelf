@@ -4,9 +4,13 @@ namespace Modules\Sanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Sanctions\Http\Requests\ResolutionRequest;
+use Modules\Sanctions\Services\ResolutionService;
 
 class ResolutionsController extends Controller
 {
+
+    public function __construct(protected ResolutionService $service) {}
     /**
      * Display a listing of the resource.
      */
@@ -16,17 +20,13 @@ class ResolutionsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('sanctions::create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(ResolutionRequest $request)
+    {
+        $validated = $request->validated();
+        $resolution = $this->service->store($validated);
+    }
 
     /**
      * Show the specified resource.
