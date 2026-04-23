@@ -97,9 +97,15 @@ class DisciplinaryCasesController extends Controller
     {
         $disciplinaryCase = $this->service->progressCase($id);
         $statuses = $this->caseStatusService->getAllStatuses();
+        $sanctions = $this->sanctionsService->getAll();
+        $sanctionLevels = $this->sanctionLevelsService->getAll();
+        $mitigations = $this->mitigationsService->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
             'disciplinaryCase' => $disciplinaryCase,
-            'caseStatuses' => $statuses
+            'caseStatuses' => $statuses,
+            'sanctions' => $sanctions,
+            'sanctionLevels' => $sanctionLevels,
+            'mitigations' => $mitigations
         ]);
     }
 }
