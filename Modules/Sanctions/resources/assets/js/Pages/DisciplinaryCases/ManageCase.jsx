@@ -25,12 +25,13 @@ export default function ManageCase() {
         mitigations,
     } = usePage().props;
 
-    const { data, setData, post } = useForm({
+    const { data, setData, post, reset } = useForm({
         resolution_text: "",
         resolution_type: "",
         sanction_level_id: "",
         sanctions: [],
         mitigations: [],
+        disciplinary_case_id: "",
     });
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -54,15 +55,11 @@ export default function ManageCase() {
     const handleClickResolution = (e) => {
         e.preventDefault();
         console.log("Resolution data:", data);
-        /*
-        router.post(
-            route("sanctions.resolve-case", {
-                id: disciplinaryCase.id,
-            }),
-            {
-                ...data,
+        post(route("sanctions.resolutions.store", { disciplinaryCaseId: disciplinaryCase.id }), {
+            onSuccess: () => {
+                reset();
             },
-        ); */
+        });
     };
 
     return (
@@ -103,6 +100,11 @@ export default function ManageCase() {
 
             <div>
                 <Form onSubmit={handleClickResolution}>
+                    <input
+                        type="hidden"
+                        name="disciplinary_case_id"
+                        value={disciplinaryCase.id}
+                    />
                     {/* Step #1 */}
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
@@ -190,7 +192,12 @@ export default function ManageCase() {
                                     label="Resolution details"
                                     name="resolution_text"
                                     value={data.resolution_text}
-                                    onChange={(e) => setData("resolution_text", e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "resolution_text",
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="Enter the details of the resolution here..."
                                     rows={5}
                                 />
@@ -200,7 +207,12 @@ export default function ManageCase() {
                                     label="Resolution"
                                     name="resolution_type"
                                     value={data.resolution_type}
-                                    onChange={(e) => setData("resolution_type", e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "resolution_type",
+                                            e.target.value,
+                                        )
+                                    }
                                     options={[
                                         { value: "PROCEDE", label: "Procede" },
                                         {
@@ -215,7 +227,12 @@ export default function ManageCase() {
                                     label="Resolution Severity"
                                     name="sanction_level_id"
                                     value={data.sanction_level_id}
-                                    onChange={(e) => setData("sanction_level_id", e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "sanction_level_id",
+                                            e.target.value,
+                                        )
+                                    }
                                     options={sanctionLevels?.map((level) => ({
                                         value: level.id,
                                         label: level.sanction_level,
@@ -236,12 +253,29 @@ export default function ManageCase() {
                                                 type="checkbox"
                                                 name={`sanction_${sanction.id}`}
                                                 value={sanction.id}
-                                                checked={data.sanctions?.includes(sanction.id)}
+                                                checked={data.sanctions?.includes(
+                                                    sanction.id,
+                                                )}
                                                 onChange={(e) => {
-                                                    const appliedSanctions = e.target.checked
-                                                        ? [...(data.sanctions || []), sanction.id]
-                                                        : (data.sanctions || []).filter((id) => id !== sanction.id);
-                                                    setData("sanctions", appliedSanctions);
+                                                    const appliedSanctions = e
+                                                        .target.checked
+                                                        ? [
+                                                              ...(data.sanctions ||
+                                                                  []),
+                                                              sanction.id,
+                                                          ]
+                                                        : (
+                                                              data.sanctions ||
+                                                              []
+                                                          ).filter(
+                                                              (id) =>
+                                                                  id !==
+                                                                  sanction.id,
+                                                          );
+                                                    setData(
+                                                        "sanctions",
+                                                        appliedSanctions,
+                                                    );
                                                 }}
                                                 className="form-checkbox h-4 w-4 text-primary"
                                             />
@@ -264,12 +298,29 @@ export default function ManageCase() {
                                                 type="checkbox"
                                                 name={`mitigation_${mitigation.id}`}
                                                 value={mitigation.id}
-                                                checked={data.mitigations?.includes(mitigation.id)}
+                                                checked={data.mitigations?.includes(
+                                                    mitigation.id,
+                                                )}
                                                 onChange={(e) => {
-                                                    const appliedMitigations = e.target.checked
-                                                        ? [...(data.mitigations || []), mitigation.id]
-                                                        : (data.mitigations || []).filter((id) => id !== mitigation.id);
-                                                    setData("mitigations", appliedMitigations);
+                                                    const appliedMitigations = e
+                                                        .target.checked
+                                                        ? [
+                                                              ...(data.mitigations ||
+                                                                  []),
+                                                              mitigation.id,
+                                                          ]
+                                                        : (
+                                                              data.mitigations ||
+                                                              []
+                                                          ).filter(
+                                                              (id) =>
+                                                                  id !==
+                                                                  mitigation.id,
+                                                          );
+                                                    setData(
+                                                        "mitigations",
+                                                        appliedMitigations,
+                                                    );
                                                 }}
                                                 className="form-checkbox h-4 w-4 text-primary"
                                             />
@@ -301,7 +352,6 @@ export default function ManageCase() {
                             </PrimaryButton>
                             <SecondaryButton
                                 disabled={!(currentStep === totalSteps - 1)}
-                                onClick={handleClickResolution}
                                 type="submit"
                             >
                                 Resolution

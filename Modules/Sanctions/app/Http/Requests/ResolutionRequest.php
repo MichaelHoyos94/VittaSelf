@@ -14,7 +14,7 @@ class ResolutionRequest extends FormRequest
         return [
             'resolution_text' => 'required|min:10',
             'resolution_type' => 'required|in:PROCEDE,NOT_PROCEDE',
-            'sanction_level_id' => 'required|exists:cat_sanction_levels,id',
+            'sanction_level_id' => 'required|exists:cat_sanctions_level,id',
             'sanctions' => 'array',
             'sanctions.*' => 'exists:cat_sanctions,id',
             'mitigations' => 'array',

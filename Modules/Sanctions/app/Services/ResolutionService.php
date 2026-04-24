@@ -11,7 +11,7 @@ class ResolutionService
     {
         return $this->repository->getAll();
     }
-    public function store($data)
+    public function create($data)
     {
         //#TODO: Validaciones de negocio
         return $this->repository->create($data);

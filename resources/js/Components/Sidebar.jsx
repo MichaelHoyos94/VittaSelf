@@ -33,13 +33,13 @@ export default function Sidebar() {
                         <div className="ml-4 flex flex-col">
                             <NavLink
                                 href="/sanctions/disciplinary-cases"
-                                active={route().current("sanctions.disciplinary-cases")}
+                                active={route().current("sanctions.disciplinary-cases.index")}
                             >
                                 Disciplinary Cases
                             </NavLink>
                             <NavLink
-                                href="/dashboard"
-                                active={route().current("products")}
+                                href="/sanctions/resolutions"
+                                active={route().current("sanctions.resolutions.index")}
                             >
                                 Resolutions History
                             </NavLink>

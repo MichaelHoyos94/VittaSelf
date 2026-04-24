@@ -5,7 +5,7 @@ class ResolutionRepository
 {
     public function getAll()
     {
-        return Resolution::where('active', true)->get();
+        return Resolution::all();
     }
     public function create(array $data)
     {

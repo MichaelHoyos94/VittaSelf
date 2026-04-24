@@ -4,6 +4,7 @@ namespace Modules\Sanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Modules\Sanctions\Http\Requests\ResolutionRequest;
 use Modules\Sanctions\Services\ResolutionService;
 
@@ -16,7 +17,9 @@ class ResolutionsController extends Controller
      */
     public function index()
     {
-        return view('sanctions::index');
+        return Inertia::render('Sanctions/Resolutions/Index')->with([
+            'resolutions' => $this->service->getAll(),
+        ]);
     }
 
     /**
@@ -25,7 +28,8 @@ class ResolutionsController extends Controller
     public function store(ResolutionRequest $request)
     {
         $validated = $request->validated();
-        $resolution = $this->service->store($validated);
+        $resolution = $this->service->create($validated);
+        return redirect()->route('sanctions.resolutions.index')->with('success', 'Resolution created successfully.');
     }
 
     /**
