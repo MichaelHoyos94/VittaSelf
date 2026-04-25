@@ -5,6 +5,6 @@ class CatSanctionLevelRepository
 {
     public function getAll()
     {
-        return CatSanctionLevel::where('active', true)->get();
+        return CatSanctionLevel::all();
     }
 }

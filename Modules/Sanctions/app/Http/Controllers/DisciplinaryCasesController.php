@@ -8,7 +8,10 @@ use Inertia\Inertia;
 use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
 use Modules\Sanctions\Services\CatCaseStatusService;
 use Modules\Sanctions\Services\CatComplianceSourceService;
+use Modules\Sanctions\Services\CatMitigationService;
 use Modules\Sanctions\Services\CatPolicyService;
+use Modules\Sanctions\Services\CatSanctionLevelService;
+use Modules\Sanctions\Services\CatSanctionService;
 use Modules\Sanctions\Services\DisciplinaryCaseService;
 
 class DisciplinaryCasesController extends Controller
@@ -17,7 +20,10 @@ class DisciplinaryCasesController extends Controller
         protected DisciplinaryCaseService $service,
         protected CatPolicyService $policiesService,
         protected CatComplianceSourceService $compliancesService,
-        protected CatCaseStatusService $caseStatusService
+        protected CatCaseStatusService $caseStatusService,
+        protected CatSanctionService $sanctionsService,
+        protected CatSanctionLevelService $sanctionLevelsService,
+        protected CatMitigationService $mitigationsService
     ) {}
     /**
      * Display a listing of the resource.
@@ -49,9 +55,15 @@ class DisciplinaryCasesController extends Controller
     {
         $disciplinaryCase = $this->service->getById($id);
         $statuses = $this->caseStatusService->getAllStatuses();
+        $sanctions = $this->sanctionsService->getAll();
+        $sanctionLevels = $this->sanctionLevelsService->getAll();
+        $mitigations = $this->mitigationsService->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
             'disciplinaryCase' => $disciplinaryCase,
-            'caseStatuses' => $statuses
+            'caseStatuses' => $statuses,
+            'sanctions' => $sanctions,
+            'sanctionLevels' => $sanctionLevels,
+            'mitigations' => $mitigations
         ]);
     }
 
@@ -85,9 +97,15 @@ class DisciplinaryCasesController extends Controller
     {
         $disciplinaryCase = $this->service->progressCase($id);
         $statuses = $this->caseStatusService->getAllStatuses();
+        $sanctions = $this->sanctionsService->getAll();
+        $sanctionLevels = $this->sanctionLevelsService->getAll();
+        $mitigations = $this->mitigationsService->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
             'disciplinaryCase' => $disciplinaryCase,
-            'caseStatuses' => $statuses
+            'caseStatuses' => $statuses,
+            'sanctions' => $sanctions,
+            'sanctionLevels' => $sanctionLevels,
+            'mitigations' => $mitigations
         ]);
     }
 }
