@@ -28,7 +28,7 @@ export default function Table({
                             data.map((row, rowIndex) => (
                                 <tr
                                     key={row[rowIndex] ?? rowIndex}
-                                    className="hover:bg-gray-200 hover:border-b-gray-400"
+                                    className={`hover:bg-gray-200 hover:border-b-gray-400 transition duration-300 cursor-pointer ${rowIndex % 2 === 0 ? 'bg-slate-50' : 'bg-slate-200'}`}
                                 >
                                     {columns.map((column, colIndex) => (
                                         <td

@@ -14,9 +14,11 @@ class CatPolicy extends Model
     protected $table = 'cat_policies';
 
     protected $fillable = [
+        'code',
         'policy',
         'section',
         'numeral',
+        'description',
         'active',
     ];
 
