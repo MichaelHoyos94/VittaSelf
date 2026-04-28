@@ -24,4 +24,12 @@ class CatCaseStatus extends Model
     {
         return $this->hasMany(DisciplinaryCase::class, 'case_status_id');
     }
+
+    public function nextStatus()
+    {
+        return $this->belongsTo(
+            CatCaseStatus::class,
+            "next_status_id"
+        );
+    }
 }
