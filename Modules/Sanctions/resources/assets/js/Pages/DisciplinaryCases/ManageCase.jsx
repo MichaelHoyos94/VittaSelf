@@ -26,13 +26,13 @@ export default function ManageCase() {
         mitigations,
     } = usePage().props;
 
-    const { data, setData, post, reset } = useForm({
+    const { data, setData, post, reset, errors } = useForm({
         resolution_text: "",
         resolution_type: "",
         sanction_level_id: "",
         sanctions: [],
         mitigations: [],
-        disciplinary_case_id: "",
+        disciplinary_case_id: disciplinaryCase.id,
     });
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -119,7 +119,18 @@ export default function ManageCase() {
                         name="disciplinary_case_id"
                         value={disciplinaryCase.id}
                     />
-
+                    {Object.keys(errors).length > 0 && (
+                        <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            <p className="font-semibold">
+                                Please review the resolution form.
+                            </p>
+                            <ul className="mt-2 list-disc pl-5">
+                                {Object.values(errors).map((error) => (
+                                    <li key={error}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                     {/* Step #1 */}
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
@@ -272,6 +283,7 @@ export default function ManageCase() {
                                             e.target.value,
                                         )
                                     }
+                                    error={errors.resolution_text}
                                     placeholder="Enter the details of the resolution here..."
                                     rows={5}
                                 />
@@ -287,6 +299,7 @@ export default function ManageCase() {
                                             e.target.value,
                                         )
                                     }
+                                    error={errors.resolution_type}
                                     options={[
                                         { value: "PROCEDE", label: "Procede" },
                                         {
@@ -307,6 +320,7 @@ export default function ManageCase() {
                                             e.target.value,
                                         )
                                     }
+                                    error={errors.sanction_level_id}
                                     options={sanctionLevels?.map((level) => ({
                                         value: level.id,
                                         label: level.sanction_level,
@@ -419,6 +433,7 @@ export default function ManageCase() {
                     <div className="mt-6">
                         <div className="flex flex-wrap justify-evenly gap-1">
                             <PrimaryButton
+                                type="button"
                                 onClick={() => setModalOpen(true)}
                                 disabled={currentStep === totalSteps}
                             >
