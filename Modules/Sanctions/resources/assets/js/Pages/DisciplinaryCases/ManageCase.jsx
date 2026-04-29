@@ -24,6 +24,7 @@ export default function ManageCase() {
         sanctionLevels,
         sanctions,
         mitigations,
+        flash,
     } = usePage().props;
 
     const { data, setData, post, reset, errors } = useForm({
@@ -48,6 +49,16 @@ export default function ManageCase() {
         setModalOpen(false);
         router.post(
             route("sanctions.progress-case", {
+                id: disciplinaryCase.id,
+            }),
+        );
+    };
+
+    const handleClickAcceptCase = (e) => {
+        e.preventDefault();
+        setModalOpen(false);
+        router.post(
+            route("sanctions.assign-case", {
                 id: disciplinaryCase.id,
             }),
         );
@@ -79,6 +90,11 @@ export default function ManageCase() {
             <div>
                 <h1>Manage Case</h1>
                 <p>Managing case {disciplinaryCase.id}</p>
+                {flash.success && (
+                    <div className="mt-4 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                        {flash.success}
+                    </div>
+                )}
             </div>
 
             {/* Steps texts */}
@@ -504,10 +520,10 @@ export default function ManageCase() {
                                     Cancel
                                 </SecondaryButton>
                                 <PrimaryButton
-                                    onClick={handleClickNext}
+                                    onClick={handleClickAcceptCase}
                                     type="button"
                                 >
-                                    Continue
+                                    Accept
                                 </PrimaryButton>
                             </div>
                         </div>

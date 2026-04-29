@@ -13,7 +13,8 @@ class ResolutionService
     }
     public function create($data)
     {
-        //#TODO: Validaciones de negocio
+        //#TODO: Crear sanction enforcements relacionados a la resolution creada y con las sanciones seleccionadas TRUE
+        $sanctionEnforcementsData = [];
         return $this->repository->create($data);
     }
 }

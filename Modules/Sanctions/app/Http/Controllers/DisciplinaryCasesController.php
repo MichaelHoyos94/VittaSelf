@@ -46,7 +46,6 @@ class DisciplinaryCasesController extends Controller
     public function store(DisciplinaryCaseRequest $request)
     {
         $validatedData = $request->validated();
-        $validatedData['admin_id'] = $request->user()->id;
         $disciplinaryCase = $this->service->create($validatedData);
         return redirect()->route('sanctions.disciplinary-cases.index')->with('success', 'Disciplinary case created successfully.');
     }
@@ -70,6 +69,7 @@ class DisciplinaryCasesController extends Controller
     public function assignCase(Request $request, $id)
     {
         $disciplinaryCase = $this->service->assignCase($id, $request->user()->id);
+        $disciplinaryCase = $this->service->progressCase($disciplinaryCase->id);
         return back()->with('success', 'Case assigned to you successfully.');
     }
 
