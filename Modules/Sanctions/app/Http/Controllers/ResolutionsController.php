@@ -29,7 +29,7 @@ class ResolutionsController extends Controller
     {
         $validated = $request->validated();
         $resolution = $this->service->create($validated);
-        return redirect()->route('sanctions.resolutions.index')->with('success', 'Resolution created successfully.');
+        return back()->with('success', 'Disciplinary case solved successfully. Resolution ID: ' . $resolution->id);
     }
 
     /**

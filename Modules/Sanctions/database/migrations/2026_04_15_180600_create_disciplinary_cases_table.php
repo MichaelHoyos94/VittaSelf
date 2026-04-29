@@ -15,7 +15,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('admin_id')->constrained('users');
+            $table->foreignId('admin_id')->nullable()->constrained('users');
             $table->foreignId('policy_id')->constrained('cat_policies');
             $table->foreignId('compliance_source_id')->constrained('cat_compliance_sources');
             $table->foreignId('case_status_id')->constrained('cat_case_statuses');

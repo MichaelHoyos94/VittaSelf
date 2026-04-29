@@ -13,6 +13,7 @@ Route::prefix('sanctions')->middleware(['auth', 'verified'])->as('sanctions.')->
     Route::post('/disciplinary-cases', [DisciplinaryCasesController::class, 'store'])->name('disciplinary-cases.store');
     Route::get('/manage-case/{id}', [DisciplinaryCasesController::class, 'manageCase'])->name('manage-case');
     Route::post('/progress-case/{id}', [DisciplinaryCasesController::class, 'progressCase'])->name('progress-case');
+    Route::post('/assign-case/{id}', [DisciplinaryCasesController::class, 'assignCase'])->name('assign-case');
 
     // =============================================== RESOLUTIONS ========================================================= //
     Route::get('/resolutions', [ResolutionsController::class, 'index'])->name('resolutions.index');

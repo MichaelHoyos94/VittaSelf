@@ -10,4 +10,8 @@ class SanctionEnforcementService
     {
         return $this->repository->getAll();
     }
+    public function create($data)
+    {
+        return $this->repository->create($data);
+    }
 }

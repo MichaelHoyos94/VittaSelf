@@ -14,6 +14,7 @@ const stepSpanClasses = {
     2: "col-span-2",
     3: "col-span-3",
     4: "col-span-4",
+    5: "col-span-5",
 };
 
 export default function ManageCase() {
@@ -23,6 +24,7 @@ export default function ManageCase() {
         sanctionLevels,
         sanctions,
         mitigations,
+        flash,
     } = usePage().props;
 
     const { data, setData, post, reset, errors } = useForm({
@@ -35,12 +37,12 @@ export default function ManageCase() {
     });
 
     const [modalOpen, setModalOpen] = useState(false);
-    const currentStep =
-        caseStatuses.findIndex(
-            (status) => status.id === disciplinaryCase.case_status_id,
-        ) + 1;
+    const [modalMode, setModalMode] = useState("progress");
+    const currentStep = disciplinaryCase.case_status_id;
     const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
+
+    console.log("Disciplinary Case:", disciplinaryCase);
 
     const handleClickNext = (e) => {
         e.preventDefault();
@@ -52,16 +54,35 @@ export default function ManageCase() {
         );
     };
 
+    const handleClickAcceptCase = (e) => {
+        e.preventDefault();
+        setModalOpen(false);
+        router.post(
+            route("sanctions.assign-case", {
+                id: disciplinaryCase.id,
+            }),
+        );
+    };
+
     const handleClickResolution = (e) => {
         e.preventDefault();
-        post(route("sanctions.resolutions.store"), {
-            onSuccess: () => {
-                reset();
+        console.log("Resolution data:", data);
+        post(
+            route("sanctions.resolutions.store", {
+                disciplinaryCaseId: disciplinaryCase.id,
+            }),
+            {
+                onSuccess: () => {
+                    reset();
+                },
             },
-            onError: (errors) => {
-                console.error("Resolution validation errors:", errors);
-            },
-        });
+        );
+    };
+
+    const handleClickTakeCase = (e) => {
+        e.preventDefault();
+        setModalMode("assign");
+        setModalOpen(true);
     };
 
     return (
@@ -69,10 +90,16 @@ export default function ManageCase() {
             <div>
                 <h1>Manage Case</h1>
                 <p>Managing case {disciplinaryCase.id}</p>
+                {flash.success && (
+                    <div className="mt-4 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                        {flash.success}
+                    </div>
+                )}
             </div>
 
+            {/* Steps texts */}
             <div className="mt-6">
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-5 gap-4">
                     {steps.map((step, index) => {
                         const stepNumber = index + 1;
                         const isActive = stepNumber <= currentStep;
@@ -94,7 +121,8 @@ export default function ManageCase() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-4 mt-3 rounded-full bg-gray-200 overflow-hidden">
+            {/* Steps progress bar */}
+            <div className="grid grid-cols-5 mt-3 rounded-full bg-gray-200 overflow-hidden">
                 <div
                     className={`h-1.5 bg-primary-400 transition-all duration-300 ${stepSpanClasses[currentStep]}`}
                 />
@@ -122,6 +150,65 @@ export default function ManageCase() {
                     {/* Step #1 */}
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
+                    >
+                        <div className="grid grid-cols-2 gap-y-4">
+                            <div>
+                                <p>EUI Involved</p>
+                            </div>
+                            <div>
+                                <p>{disciplinaryCase.user?.name}</p>
+                                <div>
+                                    <span className="text-sm text-gray-500">
+                                        {disciplinaryCase.user?.email}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span className="text-sm text-gray-500">
+                                        {disciplinaryCase.user?.phone}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Take the case</p>
+                            </div>
+                            <div>
+                                <PrimaryButton
+                                    onClick={handleClickTakeCase}
+                                    disabled={currentStep !== 1}
+                                >
+                                    Take case
+                                </PrimaryButton>
+                            </div>
+                            <div>
+                                <p>Policy</p>
+                            </div>
+                            <div>
+                                <p>{disciplinaryCase.policy?.policy}</p>
+                            </div>
+                            <div>
+                                <p>Opened At</p>
+                            </div>
+                            <div>
+                                <p>
+                                    {new Date(
+                                        disciplinaryCase.created_at,
+                                    ).toLocaleDateString()}
+                                </p>
+                            </div>
+                            <div className="col-span-2">
+                                <p>
+                                    Opening of the case, check the details are
+                                    correct before proceeding. This will assign
+                                    the case to you and you will be responsible
+                                    for progressing the case to the next status.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Step #2 */}
+                    <div
+                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 2 ? "block" : "hidden"}`}
                     >
                         <div className="grid grid-cols-2 gap-y-4">
                             <div>
@@ -173,9 +260,9 @@ export default function ManageCase() {
                         </div>
                     </div>
 
-                    {/* Step #2 */}
+                    {/* Step #3 */}
                     <div
-                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 2 ? "block" : "hidden"}`}
+                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 3 ? "block" : "hidden"}`}
                     >
                         {/* File icon */}
                         <ArrowUpOnSquareIcon className="w-32 h-32 text-primary mx-auto mb-4" />
@@ -195,10 +282,10 @@ export default function ManageCase() {
                         </p>
                     </div>
 
-                    {/* Step #3 */}
+                    {/* Step #4 */}
 
                     <div
-                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 3 ? "block" : "hidden"}`}
+                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 4 ? "block" : "hidden"}`}
                     >
                         <div className="grid grid-cols-2 gap-4">
                             <div className="col-span-2">
@@ -349,9 +436,9 @@ export default function ManageCase() {
                         </div>
                     </div>
 
-                    {/* step #4 */}
+                    {/* step #5 */}
                     <div
-                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 4 ? "block" : "hidden"}`}
+                        className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 5 ? "block" : "hidden"}`}
                     >
                         <p>
                             Resolution closed with details and
@@ -384,26 +471,64 @@ export default function ManageCase() {
                 onClose={() => setModalOpen(false)}
                 maxWidth="lg"
             >
-                <div className="border-b px-6 py-4">
-                    <h2 className="text-lg font-semibold text-gray-800">
-                        Switch case status
-                    </h2>
-                </div>
-                <div className="mx-4 my-6">
-                    <p>
-                        <strong className="font-bold">Warning!</strong> This
-                        will take the current status of the case to the next
-                        status. This can't be undone.
-                    </p>
-                    <div className="flex flex-row items-center justify-end gap-2 mt-4">
-                        <SecondaryButton onClick={() => setModalOpen(false)}>
-                            Cancel
-                        </SecondaryButton>
-                        <PrimaryButton onClick={handleClickNext} type="button">
-                            Continue
-                        </PrimaryButton>
+                {modalMode === "progress" && (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Switch case status
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <p>
+                                <strong className="font-bold">Warning!</strong>{" "}
+                                This will take the current status of the case to
+                                the next status. This can't be undone.
+                            </p>
+                            <div className="flex flex-row items-center justify-end gap-2 mt-4">
+                                <SecondaryButton
+                                    onClick={() => setModalOpen(false)}
+                                >
+                                    Cancel
+                                </SecondaryButton>
+                                <PrimaryButton
+                                    onClick={handleClickNext}
+                                    type="button"
+                                >
+                                    Continue
+                                </PrimaryButton>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
+                {modalMode === "assign" && (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Assign case
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <p>
+                                Are you sure you want to take this case? This will
+                                assign the case to you and you will be responsible
+                                for progressing the case to the next status.
+                            </p>
+                            <div className="flex flex-row items-center justify-end gap-2 mt-4">
+                                <SecondaryButton
+                                    onClick={() => setModalOpen(false)}
+                                >
+                                    Cancel
+                                </SecondaryButton>
+                                <PrimaryButton
+                                    onClick={handleClickAcceptCase}
+                                    type="button"
+                                >
+                                    Accept
+                                </PrimaryButton>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </Modal>
         </div>
     );

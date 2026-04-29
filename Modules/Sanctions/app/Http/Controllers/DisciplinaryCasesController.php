@@ -46,7 +46,6 @@ class DisciplinaryCasesController extends Controller
     public function store(DisciplinaryCaseRequest $request)
     {
         $validatedData = $request->validated();
-        $validatedData['admin_id'] = $request->user()->id;
         $disciplinaryCase = $this->service->create($validatedData);
         return redirect()->route('sanctions.disciplinary-cases.index')->with('success', 'Disciplinary case created successfully.');
     }
@@ -65,6 +64,13 @@ class DisciplinaryCasesController extends Controller
             'sanctionLevels' => $sanctionLevels,
             'mitigations' => $mitigations
         ]);
+    }
+    #TODO: Terminar el metodo y avanzar en el progress
+    public function assignCase(Request $request, $id)
+    {
+        $disciplinaryCase = $this->service->assignCase($id, $request->user()->id);
+        $disciplinaryCase = $this->service->progressCase($disciplinaryCase->id);
+        return back()->with('success', 'Case assigned to you successfully.');
     }
 
     /**
@@ -96,16 +102,6 @@ class DisciplinaryCasesController extends Controller
     public function progressCase($id)
     {
         $disciplinaryCase = $this->service->progressCase($id);
-        $statuses = $this->caseStatusService->getAllStatuses();
-        $sanctions = $this->sanctionsService->getAll();
-        $sanctionLevels = $this->sanctionLevelsService->getAll();
-        $mitigations = $this->mitigationsService->getAll();
-        return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
-            'disciplinaryCase' => $disciplinaryCase,
-            'caseStatuses' => $statuses,
-            'sanctions' => $sanctions,
-            'sanctionLevels' => $sanctionLevels,
-            'mitigations' => $mitigations
-        ]);
+        return back()->with('success', 'Case progressed to next stage successfully.');
     }
 }

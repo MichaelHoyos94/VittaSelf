@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('code', 64)->unique();
             $table->string('case_status', 64)->unique();
             $table->string('case_status_description', 128);
+            $table->foreignId('next_status_id')->nullable()->constrained('cat_case_statuses');
         });
     }
 
