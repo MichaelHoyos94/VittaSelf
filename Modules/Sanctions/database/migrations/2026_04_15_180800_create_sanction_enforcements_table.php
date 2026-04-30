@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('sanction_enforcements', function (Blueprint $table) {
             $table->id();
-            $table->boolean('suspend_account')->default(false);
-            $table->boolean('suspend_benefits')->default(false);
-            $table->boolean('freeze_earnings')->default(false);
-            $table->boolean('block_qualification')->default(false);
-            $table->boolean('suspend_code')->default(false);
+            $table->boolean('SUSPEND_ACCOUNT')->default(false);
+            $table->boolean('FREEZE_PLAN')->default(false);
+            $table->boolean('FREEZE_BONUSES')->default(false);
+            $table->boolean('FREEZE_POINTS')->default(false);
+            $table->boolean('SUSPEND_CODE')->default(false);
+            $table->boolean('DOWNGRADE_PLAN')->default(false);
+            $table->boolean('TERMINATE_ACCOUNT')->default(false);
             $table->dateTime('applied_at');
             $table->dateTime('lifted_at')->nullable();
             $table->timestamps();

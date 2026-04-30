@@ -20,6 +20,12 @@ class CatSanctionsSeeder extends Seeder
                 'active' => true,
             ],
             [
+                'code' => 'FREEZE_BONUSES',
+                'sanction' => 'Bloqueo de bonificaciones.',
+                'description' => 'Se congelan las bonificaciones del empresario.',
+                'active' => true,
+            ],
+            [
                 'code' => 'FREEZE_POINTS',
                 'sanction' => 'Congelación de puntos.',
                 'description' => 'Se detiene la obtención de puntos y la progresion de plan del empresario.',

@@ -23,7 +23,7 @@ class ResolutionRepository
             $resolution->sanctions()->sync($sanctions);
             $resolution->mitigations()->sync($mitigations);
 
-            return $resolution->load(['sanctions', 'mitigations']);
+            return $resolution->load(['sanctions', 'mitigations', 'disciplinaryCase', 'sanctionLevel']);
         });
     }
     public function update($id, array $data)
