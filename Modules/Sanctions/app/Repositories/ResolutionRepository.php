@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Sanctions\Repositories;
 
 use Illuminate\Support\Facades\DB;
@@ -6,9 +7,16 @@ use Modules\Sanctions\Models\Resolution;
 
 class ResolutionRepository
 {
-    public function getAll()
+    public function getAll($filters = [], $sort = null, $perPage = null)
     {
-        return Resolution::all();
+        $query = Resolution::query()->with([
+            'sanctions',
+            'mitigations',
+            'disciplinaryCase.user',
+            'disciplinaryCase.admin',
+            'sanctionEnforcements'
+        ]);
+        return $query->get();
     }
     public function create(array $data)
     {
