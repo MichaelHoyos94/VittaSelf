@@ -15,11 +15,13 @@ class SanctionEnforcement extends Model
     protected $table = 'sanction_enforcements';
 
     protected $fillable = [
-        'suspend_account',
-        'suspend_benefits',
-        'freeze_earnings',
-        'block_qualification',
-        'suspend_code',
+        'SUSPEND_ACCOUNT',
+        'FREEZE_PLAN',
+        'FREEZE_BONUSES',
+        'FREEZE_POINTS',
+        'SUSPEND_CODE',
+        'DOWNGRADE_PLAN',
+        'TERMINATE_ACCOUNT',
         'applied_at',
         'lifted_at',
         'resolution_id',
@@ -29,11 +31,13 @@ class SanctionEnforcement extends Model
     protected function casts(): array
     {
         return [
-            'suspend_account' => 'boolean',
-            'suspend_benefits' => 'boolean',
-            'freeze_earnings' => 'boolean',
-            'block_qualification' => 'boolean',
-            'suspend_code' => 'boolean',
+            'SUSPEND_ACCOUNT' => 'boolean',
+            'FREEZE_PLAN' => 'boolean',
+            'FREEZE_BONUSES' => 'boolean',
+            'FREEZE_POINTS' => 'boolean',
+            'SUSPEND_CODE' => 'boolean',
+            'DOWNGRADE_PLAN' => 'boolean',
+            'TERMINATE_ACCOUNT' => 'boolean',
             'applied_at' => 'datetime',
             'lifted_at' => 'datetime',
         ];

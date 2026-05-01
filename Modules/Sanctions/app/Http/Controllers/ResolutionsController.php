@@ -17,8 +17,9 @@ class ResolutionsController extends Controller
      */
     public function index()
     {
+        $resolutions = $this->service->getAll();
         return Inertia::render('Sanctions/Resolutions/Index')->with([
-            'resolutions' => $this->service->getAll(),
+            'resolutions' => $resolutions,
         ]);
     }
 
