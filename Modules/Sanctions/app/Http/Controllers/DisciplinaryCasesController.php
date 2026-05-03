@@ -5,6 +5,7 @@ namespace Modules\Sanctions\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Sanctions\Exceptions\UserSanctionedException;
 use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
 use Modules\Sanctions\Services\CatCaseStatusService;
 use Modules\Sanctions\Services\CatComplianceSourceService;

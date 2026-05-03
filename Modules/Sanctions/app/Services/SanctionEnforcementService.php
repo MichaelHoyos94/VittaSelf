@@ -15,7 +15,7 @@ class SanctionEnforcementService
     {
         return $this->repository->create($data);
     }
-    public function getUserSanctions($userId): array
+    public function getUserSanctions($userId)
     {
         return $this->repository->getUserSanctions($userId);
     }

@@ -26,7 +26,7 @@ class SanctionEnforcementRepository
         $enforcement->delete();
         return true;
     }
-    public function getUserSanctions($userId): array
+    public function getUserSanctions($userId)
     {
         return SanctionEnforcement::query()
             ->where('user_id', $userId)
