@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Sanctions\Http\Controllers\DisciplinaryCasesController;
 use Modules\Sanctions\Http\Controllers\ResolutionsController;
+use Modules\Sanctions\Http\Controllers\SanctionEvidencesController;
 use Modules\Sanctions\Http\Controllers\SanctionsController;
 use Modules\Sanctions\Http\Controllers\SettingsController;
 
@@ -15,6 +16,8 @@ Route::prefix('sanctions')->middleware(['auth', 'verified'])->as('sanctions.')->
     Route::post('/progress-case/{id}', [DisciplinaryCasesController::class, 'progressCase'])->name('progress-case');
     Route::post('/assign-case/{id}', [DisciplinaryCasesController::class, 'assignCase'])->name('assign-case');
 
+    // =============================================== EVIDENCES ========================================================= //
+    Route::post('/disciplinary-cases/{disciplinaryCaseId}/evidences', [SanctionEvidencesController::class, 'store'])->name('evidences.store');
     // =============================================== RESOLUTIONS ========================================================= //
     Route::get('/resolutions', [ResolutionsController::class, 'index'])->name('resolutions.index');
     Route::post('/resolutions', [ResolutionsController::class, 'store'])->name('resolutions.store');
