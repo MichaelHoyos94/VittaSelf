@@ -12,16 +12,14 @@ class SanctionEvidenceRepository
     {
         return SanctionEvidence::where('case_id', $caseId)->get();
     }
-    public function update($id, array $data)
+    public function storeEvidence($caseId, $file)
     {
-        $evidence = SanctionEvidence::findOrFail($id);
-        $evidence->update($data);
-        return $evidence;
-    }
-    public function delete($id)
-    {
-        $evidence = SanctionEvidence::findOrFail($id);
-        $evidence->delete();
-        return true;
+        $path = $file->store('sanction_evidences', 'public');
+
+        return $this->create([
+            'case_id' => $caseId,
+            'file_path' => $path,
+            'original_name' => $file->getClientOriginalName(),
+        ]);
     }
 }
