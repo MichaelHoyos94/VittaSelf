@@ -22,12 +22,14 @@ class SanctionEvidencesController extends Controller
      */
     public function store(Request $request, $disciplinaryCaseId) {
         $request->validate([
+            'evidence_description' => 'required|string|max:255',
             'evidences.*' => 'required|file|max:10240', // Max 10MB per file
         ]);
 
         $evidences = $request->file('evidences');
+        $description = $request->input('evidence_description');
 
-        $this->service->storeEvidences($disciplinaryCaseId, $evidences);
+        $this->service->storeEvidences($disciplinaryCaseId, $evidences, $description);
 
         return redirect()->route('sanctions.manage-case', ['id' => $disciplinaryCaseId])
                          ->with('success', 'Evidences uploaded successfully.');

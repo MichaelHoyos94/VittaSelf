@@ -56,7 +56,7 @@ export default function Index() {
 
         return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
     };
-
+    // Set evidencesData with selected files and other form data, then submit
     const addFiles = (files) => {
         const incomingFiles = Array.from(files || []);
 
@@ -81,7 +81,7 @@ export default function Index() {
                 fileKeys.add(key);
                 return true;
             });
-
+            setEvidenceData("evidences", [...currentFiles, ...uniqueIncomingFiles]);
             return [...currentFiles, ...uniqueIncomingFiles];
         });
     };
@@ -233,6 +233,7 @@ export default function Index() {
     const handleSubmitEvidences = (e) => {
         e.preventDefault();
         setEvidenceData("evidences", selectedFiles);
+        console.log("Submitting evidences:", evidenceData);
         postEvidence(route("sanctions.evidences.store", { disciplinaryCaseId: 1 }), {
             onSuccess: () => {
                 setModalOpen(false);
@@ -451,6 +452,20 @@ export default function Index() {
                                         onChange={handleFileInputChange}
                                     />
                                 </label>
+
+                                <Input
+                                    label="Evidence Description"
+                                    name="evidence_description"
+                                    value={evidenceData.evidence_description}
+                                    onChange={(e) =>
+                                        setEvidenceData(
+                                            "evidence_description",
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Briefly describe the evidences you're uploading..."
+                                    error={evidenceErrors.evidence_description}
+                                />
 
                                 {selectedFiles.length > 0 && (
                                     <div className="rounded-lg border border-gray-200 bg-white">

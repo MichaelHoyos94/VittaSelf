@@ -10,13 +10,17 @@ class SanctionEvidenceService
     {
         return $this->repository->getByCaseId($caseId);
     }
-    public function storeEvidences($caseId, $evidences)
+    public function storeEvidences($caseId, $evidences, $description)
     {
-        // ERROR AQUI
         foreach ($evidences as $evidence) {
-            $path = "sanction_evidences/{$caseId}";
+            $path = "sanction_evidences/{$caseId}/evidences";
             $fileName = time() . '_' . $evidence->getClientOriginalName();
             $filePath = $evidence->storeAs($path, $fileName, 'public');
+            $this->repository->create([
+                'disciplinary_case_id' => $caseId,
+                'file' => $filePath,
+                'description' => $description,
+            ]);
         }
     }
 }
