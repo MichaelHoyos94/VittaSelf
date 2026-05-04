@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Sanctions\Repositories;
+
 use Modules\Sanctions\Models\SanctionEnforcement;
 
 class SanctionEnforcementRepository
@@ -23,5 +25,17 @@ class SanctionEnforcementRepository
         $enforcement = SanctionEnforcement::findOrFail($id);
         $enforcement->delete();
         return true;
+    }
+    public function getUserSanctions($userId)
+    {
+        return SanctionEnforcement::query()
+            ->where('user_id', $userId)
+            ->whereNull('deleted_at')
+            ->where('applied_at', '<=', now())
+            ->where(function ($query) {
+                $query->whereNull('lifted_at')
+                    ->orWhere('lifted_at', '>', now());
+            })
+            ->get();
     }
 }
