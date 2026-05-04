@@ -8,7 +8,12 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import Dropdown from "@/Components/Dropdown";
 import MainLayout from "@/Layouts/MainLayout";
-import { EllipsisHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
+import {
+    ArrowUpOnSquareIcon,
+    EllipsisHorizontalIcon,
+    MagnifyingGlassIcon,
+    XMarkIcon,
+} from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
@@ -24,6 +29,79 @@ export default function Index() {
     });
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [isDraggingFiles, setIsDraggingFiles] = useState(false);
+
+    const formatFileSize = (bytes) => {
+        if (!bytes) {
+            return "0 KB";
+        }
+
+        const units = ["B", "KB", "MB", "GB"];
+        const unitIndex = Math.min(
+            Math.floor(Math.log(bytes) / Math.log(1024)),
+            units.length - 1,
+        );
+        const size = bytes / 1024 ** unitIndex;
+
+        return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+    };
+
+    const addFiles = (files) => {
+        const incomingFiles = Array.from(files || []);
+
+        if (!incomingFiles.length) {
+            return;
+        }
+
+        setSelectedFiles((currentFiles) => {
+            const fileKeys = new Set(
+                currentFiles.map(
+                    (file) => `${file.name}-${file.size}-${file.lastModified}`,
+                ),
+            );
+
+            const uniqueIncomingFiles = incomingFiles.filter((file) => {
+                const key = `${file.name}-${file.size}-${file.lastModified}`;
+
+                if (fileKeys.has(key)) {
+                    return false;
+                }
+
+                fileKeys.add(key);
+                return true;
+            });
+
+            return [...currentFiles, ...uniqueIncomingFiles];
+        });
+    };
+
+    const handleFileInputChange = (e) => {
+        addFiles(e.target.files);
+        e.target.value = "";
+    };
+
+    const handleDropFiles = (e) => {
+        e.preventDefault();
+        setIsDraggingFiles(false);
+        addFiles(e.dataTransfer.files);
+    };
+
+    const removeFile = (fileToRemove) => {
+        setSelectedFiles((currentFiles) =>
+            currentFiles.filter(
+                (file) =>
+                    `${file.name}-${file.size}-${file.lastModified}` !==
+                    `${fileToRemove.name}-${fileToRemove.size}-${fileToRemove.lastModified}`,
+            ),
+        );
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+        setIsDraggingFiles(false);
+    };
+
     const columns = [
         { header: "ID", accessor: "id" },
         {
@@ -99,6 +177,15 @@ export default function Index() {
                             >
                                 Manage case
                             </button>
+                            {row.case_status?.code === 'AWAITING_EVIDENCES' && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenUploadEvidences(row)}
+                                    className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
+                                >
+                                    Upload evidences
+                                </button>
+                            )}
                         </Dropdown.Content>
                     </Dropdown>
                 </div>
@@ -106,7 +193,6 @@ export default function Index() {
         },
     ];
     const handleOpenCreateModal = () => {
-        console.log("Opening create modal");
         setModalMode("create");
         setModalOpen(true);
     };
@@ -118,6 +204,11 @@ export default function Index() {
     };
     const searchUser = () => {
         console.log("Searching user with Eui Code:", data.user_id);
+    }
+    const handleOpenUploadEvidences = (row) => {
+        setModalMode("upload");
+        setSelectedFiles([]);
+        setModalOpen(true);
     }
 
     const handleSubmit = (e) => {
@@ -148,93 +239,210 @@ export default function Index() {
             ></Table>
             <Modal
                 show={modalOpen}
-                onClose={() => setModalOpen(false)}
-                maxWidth="2xl"
+                onClose={closeModal}
+                maxWidth="xl"
             >
-                <div className="border-b px-6 py-4">
-                    <h2 className="text-lg font-semibold text-gray-800">
-                        New Disciplinary Case
-                    </h2>
-                </div>
-                <div className="mx-4 my-6">
-                    <Form
-                        onSubmit={handleSubmit}
-                    >
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="col-span-2 grid grid-cols-8 gap-4">
-                                <div className="col-span-7">
-                                    <Input
-                                        label="Eui Code"
-                                        name="user_id"
-                                        value={data.user_id}
-                                        onChange={(e) => setData('user_id', parseInt(e.target.value) || '')}
-                                        error={errors.user_id}
-                                        type="text"
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
-                                        placeholder="COL-51578"
-                                    />
+                {modalMode === "create" && (
+                    <div>
+
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                New Disciplinary Case
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <Form
+                                onSubmit={handleSubmit}
+                            >
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="col-span-2 grid grid-cols-8 gap-4">
+                                        <div className="col-span-7">
+                                            <Input
+                                                label="Eui Code"
+                                                name="user_id"
+                                                value={data.user_id}
+                                                onChange={(e) => setData('user_id', parseInt(e.target.value) || '')}
+                                                error={errors.user_id}
+                                                type="text"
+                                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
+                                                placeholder="COL-51578"
+                                            />
+                                        </div>
+                                        <div className="flex col-span-1">
+                                            <button type="button" onClick={searchUser}>
+                                                <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800"></MagnifyingGlassIcon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-span-2 user-info">
+                                    </div>
+                                    <div className="col-span-2">
+                                        <TextArea
+                                            label="Facts Description *"
+                                            name="facts_description"
+                                            value={data.facts_description}
+                                            onChange={(e) => setData('facts_description', e.target.value)}
+                                            placeholder="Describe the facts of the case here..."
+                                            error={errors.facts_description}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Select
+                                            label="Policy"
+                                            name="policy_id"
+                                            value={data.policy_id}
+                                            onChange={(e) => setData('policy_id', e.target.value)}
+                                            error={errors.policy_id}
+                                            options={policies.map(policy => ({ value: policy.id, label: policy.policy }))}
+                                            placeholder="Select a policy"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Select
+                                            label="Compliance Source"
+                                            name="compliance_source_id"
+                                            value={data.compliance_source_id}
+                                            onChange={(e) => setData('compliance_source_id', e.target.value)}
+                                            error={errors.compliance_source_id}
+                                            options={complianceSources.map(source => ({ value: source.id, label: source.source }))}
+                                            placeholder="Select a compliance source"
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <TextArea
+                                            label="Additional Details"
+                                            name="details"
+                                            value={data.details}
+                                            onChange={(e) => setData('details', e.target.value)}
+                                            placeholder="Compliant by COL-59120, Internal investigation number 2024-0001, etc..."
+                                            error={errors.details}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="flex col-span-1">
-                                    <button type="button" onClick={searchUser}>
-                                        <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800"></MagnifyingGlassIcon>
-                                    </button>
+                                <div className="flex flex-row items-center justify-end gap-2 mt-4">
+                                    <SecondaryButton onClick={() => setModalOpen(false)}>
+                                        Cancel
+                                    </SecondaryButton>
+                                    <PrimaryButton type="submit">
+                                        Create Case
+                                    </PrimaryButton>
                                 </div>
-                            </div>
-                            <div className="col-span-2 user-info">
-                            </div>
-                            <div className="col-span-2">
-                                <TextArea
-                                    label="Facts Description *"
-                                    name="facts_description"
-                                    value={data.facts_description}
-                                    onChange={(e) => setData('facts_description', e.target.value)}
-                                    placeholder="Describe the facts of the case here..."
-                                    error={errors.facts_description}
+                            </Form>
+                        </div>
+                    </div>
+                )}
+                {modalMode === "upload" && (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Upload Evidences
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6 space-y-4">
+                            <label
+                                htmlFor="evidence-files"
+                                onDragEnter={(e) => {
+                                    e.preventDefault();
+                                    setIsDraggingFiles(true);
+                                }}
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    setIsDraggingFiles(true);
+                                }}
+                                onDragLeave={(e) => {
+                                    e.preventDefault();
+
+                                    if (
+                                        e.relatedTarget &&
+                                        e.currentTarget.contains(e.relatedTarget)
+                                    ) {
+                                        return;
+                                    }
+
+                                    setIsDraggingFiles(false);
+                                }}
+                                onDrop={handleDropFiles}
+                                className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition ${
+                                    isDraggingFiles
+                                        ? "border-primary-600 bg-primary-50"
+                                        : "border-primary-300 bg-gray-50 hover:border-primary-500 hover:bg-primary-50/50"
+                                }`}
+                            >
+                                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-primary-100">
+                                    <ArrowUpOnSquareIcon className="h-7 w-7 text-primary-700" />
+                                </div>
+                                <p className="text-sm font-semibold text-gray-800">
+                                    Drag and drop files here
+                                </p>
+                                <p className="mt-1 text-sm text-gray-500">
+                                    or click to select evidence files from your device
+                                </p>
+                                <p className="mt-3 text-xs text-gray-400">
+                                    PDF, images, documents, audio or video files
+                                </p>
+                                <input
+                                    id="evidence-files"
+                                    name="evidences[]"
+                                    type="file"
+                                    multiple
+                                    className="sr-only"
+                                    onChange={handleFileInputChange}
                                 />
-                            </div>
-                            <div>
-                                <Select
-                                    label="Policy"
-                                    name="policy_id"
-                                    value={data.policy_id}
-                                    onChange={(e) => setData('policy_id', e.target.value)}
-                                    error={errors.policy_id}
-                                    options={policies.map(policy => ({ value: policy.id, label: policy.policy }))}
-                                    placeholder="Select a policy"
-                                />
-                            </div>
-                            <div>
-                                <Select
-                                    label="Compliance Source"
-                                    name="compliance_source_id"
-                                    value={data.compliance_source_id}
-                                    onChange={(e) => setData('compliance_source_id', e.target.value)}
-                                    error={errors.compliance_source_id}
-                                    options={complianceSources.map(source => ({ value: source.id, label: source.source }))}
-                                    placeholder="Select a compliance source"
-                                />
-                            </div>
-                            <div className="col-span-2">
-                                <TextArea
-                                    label="Additional Details"
-                                    name="details"
-                                    value={data.details}
-                                    onChange={(e) => setData('details', e.target.value)}
-                                    placeholder="Compliant by COL-59120, Internal investigation number 2024-0001, etc..."
-                                    error={errors.details}
-                                />
+                            </label>
+
+                            {selectedFiles.length > 0 && (
+                                <div className="rounded-lg border border-gray-200 bg-white">
+                                    <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                                        <p className="text-sm font-semibold text-gray-800">
+                                            Selected files ({selectedFiles.length})
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedFiles([])}
+                                            className="text-xs font-medium text-primary-700 hover:text-primary-900"
+                                        >
+                                            Clear all
+                                        </button>
+                                    </div>
+                                    <ul className="max-h-56 divide-y divide-gray-100 overflow-y-auto">
+                                        {selectedFiles.map((file) => (
+                                            <li
+                                                key={`${file.name}-${file.size}-${file.lastModified}`}
+                                                className="flex items-center justify-between gap-3 px-4 py-3"
+                                            >
+                                                <div className="min-w-0">
+                                                    <p className="truncate text-sm font-medium text-gray-700">
+                                                        {file.name}
+                                                    </p>
+                                                    <p className="text-xs text-gray-400">
+                                                        {formatFileSize(file.size)}
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFile(file)}
+                                                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-400 transition hover:bg-red-50 hover:text-red-600"
+                                                    aria-label={`Remove ${file.name}`}
+                                                >
+                                                    <XMarkIcon className="h-4 w-4" />
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            <div className="flex flex-row items-center justify-end gap-2">
+                                <SecondaryButton onClick={closeModal}>
+                                    Cancel
+                                </SecondaryButton>
+                                <PrimaryButton type="button" disabled={!selectedFiles.length}>
+                                    Upload Files
+                                </PrimaryButton>
                             </div>
                         </div>
-                        <div className="flex flex-row items-center justify-end gap-2 mt-4">
-                            <SecondaryButton onClick={() => setModalOpen(false)}>
-                                Cancel
-                            </SecondaryButton>
-                            <PrimaryButton type="submit">
-                                Create Case
-                            </PrimaryButton>
-                        </div>
-                    </Form>
-                </div>
+                    </div>
+                )}
             </Modal>
         </div>
     );

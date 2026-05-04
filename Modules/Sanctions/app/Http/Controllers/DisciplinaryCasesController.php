@@ -66,7 +66,7 @@ class DisciplinaryCasesController extends Controller
             'mitigations' => $mitigations
         ]);
     }
-    #TODO: Terminar el metodo y avanzar en el progress
+    
     public function assignCase(Request $request, $id)
     {
         $disciplinaryCase = $this->service->assignCase($id, $request->user()->id);
