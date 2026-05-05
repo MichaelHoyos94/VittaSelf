@@ -5,7 +5,13 @@ import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { ArrowUpOnSquareIcon } from "@heroicons/react/16/solid";
+import {
+    ArrowDownTrayIcon,
+    ArrowUpOnSquareIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    DocumentIcon,
+} from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
@@ -38,11 +44,78 @@ export default function ManageCase() {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("progress");
+    const [activeEvidenceIndex, setActiveEvidenceIndex] = useState(0);
     const currentStep = disciplinaryCase.case_status_id;
     const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
+    const evidences =
+        disciplinaryCase.evidences ||
+        disciplinaryCase.sanction_evidences ||
+        disciplinaryCase.sanctionEvidences ||
+        [];
+    const activeEvidence = evidences[activeEvidenceIndex];
 
     console.log("Disciplinary Case:", disciplinaryCase);
+
+    const getEvidenceUrl = (evidence) => {
+        if (!evidence?.file) {
+            return "";
+        }
+
+        if (/^https?:\/\//i.test(evidence.file)) {
+            return evidence.file;
+        }
+
+        return `/storage/${evidence.file.replace(/^\/?storage\//, "")}`;
+    };
+
+    const getEvidenceName = (evidence) => {
+        if (!evidence?.file) {
+            return "Evidence file";
+        }
+
+        return evidence.file.split("/").pop();
+    };
+
+    const getEvidenceType = (evidence) => {
+        const extension = getEvidenceName(evidence).split(".").pop()?.toLowerCase();
+
+        if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"].includes(extension)) {
+            return "image";
+        }
+
+        if (extension === "pdf") {
+            return "pdf";
+        }
+
+        if (["mp4", "webm", "ogg", "mov"].includes(extension)) {
+            return "video";
+        }
+
+        if (["mp3", "wav", "m4a", "aac", "flac"].includes(extension)) {
+            return "audio";
+        }
+
+        return "file";
+    };
+
+    const handleOpenEvidences = () => {
+        setModalMode("evidences");
+        setActiveEvidenceIndex(0);
+        setModalOpen(true);
+    };
+
+    const handlePreviousEvidence = () => {
+        setActiveEvidenceIndex((currentIndex) =>
+            currentIndex === 0 ? evidences.length - 1 : currentIndex - 1,
+        );
+    };
+
+    const handleNextEvidence = () => {
+        setActiveEvidenceIndex((currentIndex) =>
+            currentIndex === evidences.length - 1 ? 0 : currentIndex + 1,
+        );
+    };
 
     const handleClickNext = (e) => {
         e.preventDefault();
@@ -107,11 +180,10 @@ export default function ManageCase() {
                         return (
                             <div key={step} className="text-center">
                                 <h3
-                                    className={`text-sm font-semibold ${
-                                        isActive
+                                    className={`text-sm font-semibold ${isActive
                                             ? "text-primary-600"
                                             : "text-gray-400"
-                                    }`}
+                                        }`}
                                 >
                                     {step}
                                 </h3>
@@ -288,6 +360,19 @@ export default function ManageCase() {
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 4 ? "block" : "hidden"}`}
                     >
                         <div className="grid grid-cols-2 gap-4">
+
+                            <div className="col-span-1">
+                                <PrimaryButton 
+                                    type="button"
+                                    onClick={handleOpenEvidences}
+                                >
+                                    Evidences
+                                </PrimaryButton>
+                            </div>
+                            <div className="col-span-1">
+                                TEXT
+                            </div>
+
                             <div className="col-span-2">
                                 <TextArea
                                     label="Resolution details"
@@ -364,18 +449,18 @@ export default function ManageCase() {
                                                     const appliedSanctions = e
                                                         .target.checked
                                                         ? [
-                                                              ...(data.sanctions ||
-                                                                  []),
-                                                              sanction.id,
-                                                          ]
+                                                            ...(data.sanctions ||
+                                                                []),
+                                                            sanction.id,
+                                                        ]
                                                         : (
-                                                              data.sanctions ||
-                                                              []
-                                                          ).filter(
-                                                              (id) =>
-                                                                  id !==
-                                                                  sanction.id,
-                                                          );
+                                                            data.sanctions ||
+                                                            []
+                                                        ).filter(
+                                                            (id) =>
+                                                                id !==
+                                                                sanction.id,
+                                                        );
                                                     setData(
                                                         "sanctions",
                                                         appliedSanctions,
@@ -409,18 +494,18 @@ export default function ManageCase() {
                                                     const appliedMitigations = e
                                                         .target.checked
                                                         ? [
-                                                              ...(data.mitigations ||
-                                                                  []),
-                                                              mitigation.id,
-                                                          ]
+                                                            ...(data.mitigations ||
+                                                                []),
+                                                            mitigation.id,
+                                                        ]
                                                         : (
-                                                              data.mitigations ||
-                                                              []
-                                                          ).filter(
-                                                              (id) =>
-                                                                  id !==
-                                                                  mitigation.id,
-                                                          );
+                                                            data.mitigations ||
+                                                            []
+                                                        ).filter(
+                                                            (id) =>
+                                                                id !==
+                                                                mitigation.id,
+                                                        );
                                                     setData(
                                                         "mitigations",
                                                         appliedMitigations,
@@ -450,7 +535,10 @@ export default function ManageCase() {
                         <div className="flex flex-wrap justify-evenly gap-1">
                             <PrimaryButton
                                 type="button"
-                                onClick={() => setModalOpen(true)}
+                                onClick={() => {
+                                    setModalMode("progress");
+                                    setModalOpen(true);
+                                }}
                                 disabled={currentStep === totalSteps}
                             >
                                 Next
@@ -526,6 +614,157 @@ export default function ManageCase() {
                                     Accept
                                 </PrimaryButton>
                             </div>
+                        </div>
+                    </div>
+                )}
+                {modalMode === "evidences" && (
+                    <div>
+                        <div className="flex items-center justify-between border-b px-6 py-4">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    Case evidences
+                                </h2>
+                                <p className="text-sm text-gray-500">
+                                    {evidences.length
+                                        ? `${activeEvidenceIndex + 1} of ${evidences.length}`
+                                        : "No evidences uploaded yet"}
+                                </p>
+                            </div>
+                            <SecondaryButton
+                                onClick={() => setModalOpen(false)}
+                                type="button"
+                            >
+                                Close
+                            </SecondaryButton>
+                        </div>
+
+                        <div className="px-6 py-5">
+                            {!evidences.length && (
+                                <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-10 text-center">
+                                    <DocumentIcon className="mx-auto h-12 w-12 text-gray-400" />
+                                    <p className="mt-3 text-sm font-medium text-gray-700">
+                                        This case has no evidences to preview.
+                                    </p>
+                                </div>
+                            )}
+
+                            {activeEvidence && (
+                                <div className="space-y-4">
+                                    <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                                        {evidences.length > 1 && (
+                                            <>
+                                                <button
+                                                    type="button"
+                                                    onClick={handlePreviousEvidence}
+                                                    className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow transition hover:bg-white hover:text-primary-700"
+                                                    aria-label="Previous evidence"
+                                                >
+                                                    <ChevronLeftIcon className="h-5 w-5" />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleNextEvidence}
+                                                    className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow transition hover:bg-white hover:text-primary-700"
+                                                    aria-label="Next evidence"
+                                                >
+                                                    <ChevronRightIcon className="h-5 w-5" />
+                                                </button>
+                                            </>
+                                        )}
+
+                                        {getEvidenceType(activeEvidence) === "image" && (
+                                            <img
+                                                src={getEvidenceUrl(activeEvidence)}
+                                                alt={activeEvidence.description || getEvidenceName(activeEvidence)}
+                                                className="mx-auto h-[420px] w-full object-contain"
+                                            />
+                                        )}
+
+                                        {getEvidenceType(activeEvidence) === "pdf" && (
+                                            <iframe
+                                                src={getEvidenceUrl(activeEvidence)}
+                                                title={getEvidenceName(activeEvidence)}
+                                                className="h-[420px] w-full"
+                                            />
+                                        )}
+
+                                        {getEvidenceType(activeEvidence) === "video" && (
+                                            <video
+                                                src={getEvidenceUrl(activeEvidence)}
+                                                controls
+                                                className="mx-auto h-[420px] w-full bg-black object-contain"
+                                            />
+                                        )}
+
+                                        {getEvidenceType(activeEvidence) === "audio" && (
+                                            <div className="flex h-48 items-center justify-center px-8">
+                                                <audio
+                                                    src={getEvidenceUrl(activeEvidence)}
+                                                    controls
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {getEvidenceType(activeEvidence) === "file" && (
+                                            <div className="flex h-64 flex-col items-center justify-center px-6 text-center">
+                                                <DocumentIcon className="h-16 w-16 text-gray-400" />
+                                                <p className="mt-4 max-w-sm truncate text-sm font-medium text-gray-700">
+                                                    {getEvidenceName(activeEvidence)}
+                                                </p>
+                                                <a
+                                                    href={getEvidenceUrl(activeEvidence)}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-800"
+                                                >
+                                                    <ArrowDownTrayIcon className="h-4 w-4" />
+                                                    Open file
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="rounded-lg border border-gray-200 px-4 py-3">
+                                        <p className="truncate text-sm font-semibold text-gray-800">
+                                            {getEvidenceName(activeEvidence)}
+                                        </p>
+                                        {activeEvidence.description && (
+                                            <p className="mt-1 text-sm text-gray-600">
+                                                {activeEvidence.description}
+                                            </p>
+                                        )}
+                                        <a
+                                            href={getEvidenceUrl(activeEvidence)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="mt-2 inline-flex text-sm font-medium text-primary-700 hover:text-primary-900"
+                                        >
+                                            Open in a new tab
+                                        </a>
+                                    </div>
+
+                                    {evidences.length > 1 && (
+                                        <div className="flex justify-center gap-2">
+                                            {evidences.map((evidence, index) => (
+                                                <button
+                                                    key={evidence.id || evidence.file}
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setActiveEvidenceIndex(index)
+                                                    }
+                                                    className={`h-2.5 rounded-full transition-all ${
+                                                        index === activeEvidenceIndex
+                                                            ? "w-8 bg-primary-700"
+                                                            : "w-2.5 bg-gray-300 hover:bg-gray-400"
+                                                    }`}
+                                                    aria-label={`Show evidence ${index + 1}`}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
