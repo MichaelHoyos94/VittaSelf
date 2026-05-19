@@ -33,7 +33,8 @@ class DisciplinaryCaseRepository
             'policy',
             'admin',
             'caseStatus',
-            'complianceSource'
+            'complianceSource',
+            'sanctionEvidences',
         ])->findOrFail($id);
     }
     public function create(array $data)
