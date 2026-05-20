@@ -17,6 +17,14 @@ import {
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
+const TEST_USER = {
+    name: "Laura Martinez",
+    email: "laura.martinez@vittaself.com",
+    euiCode: "COL-51578",
+    documentNumber: "1012345678",
+    position: "Operations Analyst",
+};
+
 export default function Index() {
     const { policies, complianceSources, disciplinaryCases } = usePage().props;
     console.log(disciplinaryCases);
@@ -41,6 +49,7 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isDraggingFiles, setIsDraggingFiles] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const formatFileSize = (bytes) => {
         if (!bytes) {
@@ -110,6 +119,7 @@ export default function Index() {
     const closeModal = () => {
         setModalOpen(false);
         setIsDraggingFiles(false);
+        setSelectedUser(null);
     };
 
     const columns = [
@@ -146,7 +156,7 @@ export default function Index() {
         },
         {
             header: "ADMINISTRATOR",
-            render: (row) => <div>{row.admin?.name}</div>,
+            render: (row) => <div>{row.admin?.name || "Sin administrador asignado"}</div>,
         },
         {
             header: "STATUS",
@@ -212,7 +222,13 @@ export default function Index() {
         router.get(route("sanctions.manage-case", id));
     };
     const searchUser = () => {
+        if (selectedUser) {
+            setSelectedUser(null);
+            return;
+        }
+
         console.log("Searching user with Eui Code:", data.user_id);
+        setSelectedUser(TEST_USER);
     };
     const handleOpenUploadEvidences = (row) => {
         setModalMode("upload");
@@ -225,6 +241,7 @@ export default function Index() {
         post(route("sanctions.disciplinary-cases.store"), {
             onSuccess: () => {
                 setModalOpen(false);
+                setSelectedUser(null);
                 reset();
             },
         });
@@ -295,12 +312,70 @@ export default function Index() {
                                             <button
                                                 type="button"
                                                 onClick={searchUser}
+                                                aria-label={
+                                                    selectedUser
+                                                        ? "Remove selected user"
+                                                        : "Search user"
+                                                }
+                                                className="mt-8 flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-primary-50"
                                             >
-                                                <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800"></MagnifyingGlassIcon>
+                                                {selectedUser ? (
+                                                    <XMarkIcon className="h-4 w-4 text-red-600 hover:text-red-700" />
+                                                ) : (
+                                                    <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800" />
+                                                )}
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="col-span-2 user-info"></div>
+                                    {selectedUser && (
+                                        <div className="col-span-2 user-info">
+                                            <div className="rounded-lg border border-primary-100 bg-primary-50/60 p-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-700 text-sm font-semibold text-white">
+                                                        {selectedUser.name
+                                                            .charAt(0)
+                                                            .toUpperCase()}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="truncate text-sm font-semibold text-gray-900">
+                                                            {selectedUser.name}
+                                                        </p>
+                                                        <p className="truncate text-sm text-gray-500">
+                                                            {selectedUser.email}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                                                    <div>
+                                                        <p className="text-xs font-medium uppercase text-gray-400">
+                                                            EUI Code
+                                                        </p>
+                                                        <p className="font-medium text-gray-700">
+                                                            {selectedUser.euiCode}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs font-medium uppercase text-gray-400">
+                                                            Document
+                                                        </p>
+                                                        <p className="font-medium text-gray-700">
+                                                            {
+                                                                selectedUser.documentNumber
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-xs font-medium uppercase text-gray-400">
+                                                            Position
+                                                        </p>
+                                                        <p className="font-medium text-gray-700">
+                                                            {selectedUser.position}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                     <div className="col-span-2">
                                         <TextArea
                                             label="Facts Description *"

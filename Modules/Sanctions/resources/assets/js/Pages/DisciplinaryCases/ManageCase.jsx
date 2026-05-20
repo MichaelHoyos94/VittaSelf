@@ -15,14 +15,6 @@ import {
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
-const stepSpanClasses = {
-    1: "col-span-1",
-    2: "col-span-2",
-    3: "col-span-3",
-    4: "col-span-4",
-    5: "col-span-5",
-};
-
 export default function ManageCase() {
     const {
         disciplinaryCase,
@@ -48,6 +40,13 @@ export default function ManageCase() {
     const currentStep = disciplinaryCase.case_status_id;
     const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
+    const clampedCurrentStep = Math.min(Math.max(currentStep, 1), totalSteps);
+    const stepGridColumns = `repeat(${Math.max(totalSteps, 1)}, minmax(0, 1fr))`;
+    const lineInsetPercent = totalSteps > 0 ? 50 / totalSteps : 0;
+    const progressPercent =
+        totalSteps > 1 ? ((clampedCurrentStep - 1) / (totalSteps - 1)) * 100 : 0;
+    const activeLineWidthPercent =
+        progressPercent * (1 - (lineInsetPercent * 2) / 100);
     const evidences =
         disciplinaryCase.evidences ||
         disciplinaryCase.sanction_evidences ||
@@ -172,10 +171,15 @@ export default function ManageCase() {
 
             {/* Steps texts */}
             <div className="mt-6">
-                <div className="grid grid-cols-5 gap-4">
+                <div
+                    className="grid gap-4"
+                    style={{
+                        gridTemplateColumns: stepGridColumns,
+                    }}
+                >
                     {steps.map((step, index) => {
                         const stepNumber = index + 1;
-                        const isActive = stepNumber <= currentStep;
+                        const isActive = stepNumber <= clampedCurrentStep;
 
                         return (
                             <div key={step} className="text-center">
@@ -194,10 +198,49 @@ export default function ManageCase() {
             </div>
 
             {/* Steps progress bar */}
-            <div className="grid grid-cols-5 mt-3 rounded-full bg-gray-200 overflow-hidden">
+            <div className="relative my-5 h-8">
                 <div
-                    className={`h-1.5 bg-primary-400 transition-all duration-300 ${stepSpanClasses[currentStep]}`}
+                    className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-gray-200"
+                    style={{
+                        left: `${lineInsetPercent}%`,
+                        right: `${lineInsetPercent}%`,
+                    }}
                 />
+                <div
+                    className="absolute left-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-primary-400 transition-all duration-300"
+                    style={{
+                        left: `${lineInsetPercent}%`,
+                        width: `${activeLineWidthPercent}%`,
+                    }}
+                />
+                <div
+                    className="relative z-10 grid"
+                    style={{
+                        gridTemplateColumns: stepGridColumns,
+                    }}
+                >
+                    {steps.map((step, index) => {
+                        const stepNumber = index + 1;
+                        const isActive = stepNumber <= clampedCurrentStep;
+
+                        return (
+                            <div
+                                key={`${step}-indicator`}
+                                className="flex justify-center"
+                            >
+                                <span
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${
+                                        isActive
+                                            ? "border-primary-500 bg-primary-500 text-white"
+                                            : "border-gray-300 bg-white text-gray-400"
+                                    }`}
+                                >
+                                    {stepNumber}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
 
             <div>
