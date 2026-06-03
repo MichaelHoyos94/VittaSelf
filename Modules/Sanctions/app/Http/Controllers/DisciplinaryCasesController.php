@@ -61,6 +61,9 @@ class DisciplinaryCasesController extends Controller
     public function manageCase($id)
     {
         $disciplinaryCase = $this->service->getById($id);
+        if ($disciplinaryCase->caseStatus->case_status !== 'Sin asignar' && $disciplinaryCase->admin_id !== auth()->id()) {
+            abort(403, 'You are not authorized to manage this case.');
+        }
         $statuses = $this->caseStatusService->getAllStatuses();
         $sanctions = $this->sanctionsService->getAll();
         $sanctionLevels = $this->sanctionLevelsService->getAll();
