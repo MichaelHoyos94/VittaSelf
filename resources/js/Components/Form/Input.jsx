@@ -2,6 +2,7 @@
 export default function Input({
     label,
     name,
+    disabled = false,
     type = "text",
     value,
     onChange,
@@ -20,7 +21,8 @@ export default function Input({
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className={"w-full px-3 py-2 border rounded-md focus:outline-none focus:ring placeholder:text-gray-300 " + (error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-green-500")}
+                disabled={disabled}
+                className={"w-full px-3 py-2 border rounded-md focus:outline-none focus:ring placeholder:text-gray-300 " + (disabled ? "opacity-20 cursor-not-allowed" : "") + (error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-green-500")}
             >
             </input>
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}

@@ -17,17 +17,8 @@ import {
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
-const TEST_USER = {
-    name: "Laura Martinez",
-    email: "laura.martinez@vittaself.com",
-    euiCode: "COL-51578",
-    documentNumber: "1012345678",
-    position: "Operations Analyst",
-};
-
 export default function Index() {
-    const { policies, complianceSources, disciplinaryCases } = usePage().props;
-    console.log(disciplinaryCases);
+    const { policies, complianceSources, disciplinaryCases, userToSanction } = usePage().props;
     const { data, setData, post, errors, reset } = useForm({
         facts_description: "",
         details: "",
@@ -49,7 +40,7 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isDraggingFiles, setIsDraggingFiles] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const user = usePage().props.auth.user;
 
     const formatFileSize = (bytes) => {
         if (!bytes) {
@@ -119,7 +110,6 @@ export default function Index() {
     const closeModal = () => {
         setModalOpen(false);
         setIsDraggingFiles(false);
-        setSelectedUser(null);
     };
 
     const columns = [
@@ -187,13 +177,15 @@ export default function Index() {
                             >
                                 View case
                             </button>
-                            <button
-                                type="button"
-                                onClick={() => handleManageCase(row.id)}
-                                className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
-                            >
+                            {(row.case_status?.code !== "CLOSED") && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleManageCase(row.id)}
+                                    className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
+                                >
                                 Manage case
                             </button>
+                            )}
                             {row.case_status?.code === "AWAITING_EVIDENCES" && (
                                 <button
                                     type="button"
@@ -222,13 +214,25 @@ export default function Index() {
         router.get(route("sanctions.manage-case", id));
     };
     const searchUser = () => {
-        if (selectedUser) {
-            setSelectedUser(null);
+        if (userToSanction) {
+            router.get(route("sanctions.disciplinary-cases.index"), {}, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ["userToSanction"],
+            });
+            setData("user_id", "");
             return;
         }
-
-        console.log("Searching user with Eui Code:", data.user_id);
-        setSelectedUser(TEST_USER);
+        if (!data.user_id) {
+            return;
+        }
+        router.get(route("sanctions.disciplinary-cases.index"), { user_id: data.user_id }, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+            only: ["userToSanction"],
+        });
     };
     const handleOpenUploadEvidences = (row) => {
         setModalMode("upload");
@@ -241,7 +245,6 @@ export default function Index() {
         post(route("sanctions.disciplinary-cases.store"), {
             onSuccess: () => {
                 setModalOpen(false);
-                setSelectedUser(null);
                 reset();
             },
         });
@@ -294,6 +297,7 @@ export default function Index() {
                                                 label="Eui Code"
                                                 name="user_id"
                                                 value={data.user_id}
+                                                disabled={!!userToSanction}
                                                 onChange={(e) =>
                                                     setData(
                                                         "user_id",
@@ -313,13 +317,13 @@ export default function Index() {
                                                 type="button"
                                                 onClick={searchUser}
                                                 aria-label={
-                                                    selectedUser
-                                                        ? "Remove selected user"
+                                                    userToSanction
+                                                        ? "Remove user"
                                                         : "Search user"
                                                 }
                                                 className="mt-8 flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-primary-50"
                                             >
-                                                {selectedUser ? (
+                                                {userToSanction ? (
                                                     <XMarkIcon className="h-4 w-4 text-red-600 hover:text-red-700" />
                                                 ) : (
                                                     <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800" />
@@ -327,21 +331,21 @@ export default function Index() {
                                             </button>
                                         </div>
                                     </div>
-                                    {selectedUser && (
+                                    {userToSanction && (
                                         <div className="col-span-2 user-info">
                                             <div className="rounded-lg border border-primary-100 bg-primary-50/60 p-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-700 text-sm font-semibold text-white">
-                                                        {selectedUser.name
+                                                        {userToSanction.name
                                                             .charAt(0)
                                                             .toUpperCase()}
                                                     </div>
                                                     <div className="min-w-0">
                                                         <p className="truncate text-sm font-semibold text-gray-900">
-                                                            {selectedUser.name}
+                                                            {userToSanction.name}
                                                         </p>
                                                         <p className="truncate text-sm text-gray-500">
-                                                            {selectedUser.email}
+                                                            {userToSanction.email}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -351,7 +355,7 @@ export default function Index() {
                                                             EUI Code
                                                         </p>
                                                         <p className="font-medium text-gray-700">
-                                                            {selectedUser.euiCode}
+                                                            {userToSanction.id}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -360,7 +364,7 @@ export default function Index() {
                                                         </p>
                                                         <p className="font-medium text-gray-700">
                                                             {
-                                                                selectedUser.documentNumber
+                                                                userToSanction.document_number
                                                             }
                                                         </p>
                                                     </div>
@@ -369,7 +373,7 @@ export default function Index() {
                                                             Position
                                                         </p>
                                                         <p className="font-medium text-gray-700">
-                                                            {selectedUser.position}
+                                                            position
                                                         </p>
                                                     </div>
                                                 </div>

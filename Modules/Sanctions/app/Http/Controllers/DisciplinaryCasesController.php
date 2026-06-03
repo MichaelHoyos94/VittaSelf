@@ -3,6 +3,7 @@
 namespace Modules\Sanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Sanctions\Exceptions\UserSanctionedException;
@@ -24,17 +25,23 @@ class DisciplinaryCasesController extends Controller
         protected CatCaseStatusService $caseStatusService,
         protected CatSanctionService $sanctionsService,
         protected CatSanctionLevelService $sanctionLevelsService,
-        protected CatMitigationService $mitigationsService
+        protected CatMitigationService $mitigationsService,
+        protected UserService $userService
     ) {}
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $userToSanction = null;
+        if ($request->filled('user_id')) {
+            $userToSanction = $this->userService->getById($request->user_id);
+        }
         $policies = $this->policiesService->getAll();
         $complianceSources = $this->compliancesService->getAll();
         $disciplinaryCases = $this->service->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
+            'userToSanction' => $userToSanction,
             'policies' => $policies,
             'complianceSources' => $complianceSources,
             'disciplinaryCases' => $disciplinaryCases,
