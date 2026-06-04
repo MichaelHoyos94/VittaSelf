@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CostCenter;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,6 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(20)->create();
+        //User::factory(20)->create();
+        CostCenter::factory(10)->create();
     }
 }
