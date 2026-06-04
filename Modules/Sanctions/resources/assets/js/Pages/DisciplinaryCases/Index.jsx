@@ -15,14 +15,16 @@ import {
     XMarkIcon,
 } from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Index() {
-    const { policies, complianceSources, disciplinaryCases, userToSanction } = usePage().props;
+    const { policies, complianceSources, disciplinaryCases, userToSanction } =
+        usePage().props;
     const { data, setData, post, errors, reset } = useForm({
         facts_description: "",
         details: "",
-        user_id: "",
+        user_id: userToSanction ? userToSanction.id : "",
+        eui_code: "",
         policy_id: "",
         compliance_source_id: "",
     });
@@ -81,7 +83,10 @@ export default function Index() {
                 fileKeys.add(key);
                 return true;
             });
-            setEvidenceData("evidences", [...currentFiles, ...uniqueIncomingFiles]);
+            setEvidenceData("evidences", [
+                ...currentFiles,
+                ...uniqueIncomingFiles,
+            ]);
             return [...currentFiles, ...uniqueIncomingFiles];
         });
     };
@@ -146,7 +151,9 @@ export default function Index() {
         },
         {
             header: "ADMINISTRATOR",
-            render: (row) => <div>{row.admin?.name || "Sin administrador asignado"}</div>,
+            render: (row) => (
+                <div>{row.admin?.name || "Sin administrador asignado"}</div>
+            ),
         },
         {
             header: "STATUS",
@@ -177,14 +184,14 @@ export default function Index() {
                             >
                                 View case
                             </button>
-                            {(row.case_status?.code !== "CLOSED") && (
+                            {row.case_status?.code !== "CLOSED" && (
                                 <button
                                     type="button"
                                     onClick={() => handleManageCase(row.id)}
                                     className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
                                 >
-                                Manage case
-                            </button>
+                                    Manage case
+                                </button>
                             )}
                             {row.case_status?.code === "AWAITING_EVIDENCES" && (
                                 <button
@@ -215,24 +222,31 @@ export default function Index() {
     };
     const searchUser = () => {
         if (userToSanction) {
-            router.get(route("sanctions.disciplinary-cases.index"), {}, {
+            router.get(
+                route("sanctions.disciplinary-cases.index"),
+                {},
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                    only: ["userToSanction"],
+                },
+            );
+            return;
+        }
+        if (!data.eui_code) {
+            return;
+        }
+        router.get(
+            route("sanctions.disciplinary-cases.index"),
+            { eui_code: data.eui_code },
+            {
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
                 only: ["userToSanction"],
-            });
-            setData("user_id", "");
-            return;
-        }
-        if (!data.user_id) {
-            return;
-        }
-        router.get(route("sanctions.disciplinary-cases.index"), { user_id: data.user_id }, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-            only: ["userToSanction"],
-        });
+            },
+        );
     };
     const handleOpenUploadEvidences = (row) => {
         setModalMode("upload");
@@ -242,6 +256,7 @@ export default function Index() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Submitting disciplinary case:", data);
         post(route("sanctions.disciplinary-cases.store"), {
             onSuccess: () => {
                 setModalOpen(false);
@@ -254,14 +269,21 @@ export default function Index() {
         e.preventDefault();
         setEvidenceData("evidences", selectedFiles);
         console.log("Submitting evidences:", evidenceData);
-        postEvidence(route("sanctions.evidences.store", { disciplinaryCaseId: 1 }), {
-            onSuccess: () => {
-                setModalOpen(false);
-                resetEvidence();
-                setSelectedFiles([]);
+        postEvidence(
+            route("sanctions.evidences.store", { disciplinaryCaseId: 1 }),
+            {
+                onSuccess: () => {
+                    setModalOpen(false);
+                    resetEvidence();
+                    setSelectedFiles([]);
+                },
             },
-        });
+        );
     };
+
+    useEffect(() => {
+        setData("user_id", userToSanction ? userToSanction.id : "");
+    }, [userToSanction]);
 
     return (
         <div className="p-4 rounded bg-white shadow">
@@ -293,20 +315,23 @@ export default function Index() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="col-span-2 grid grid-cols-8 gap-4">
                                         <div className="col-span-7">
-                                            <Input
-                                                label="Eui Code"
+                                            <input
+                                                type="hidden"
                                                 name="user_id"
                                                 value={data.user_id}
+                                            />
+                                            <Input
+                                                label="Eui Code"
+                                                name="eui_code"
+                                                value={data.eui_code}
                                                 disabled={!!userToSanction}
                                                 onChange={(e) =>
                                                     setData(
-                                                        "user_id",
-                                                        parseInt(
-                                                            e.target.value,
-                                                        ) || "",
+                                                        "eui_code",
+                                                        e.target.value || "",
                                                     )
                                                 }
-                                                error={errors.user_id}
+                                                error={errors.eui_code}
                                                 type="text"
                                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
                                                 placeholder="COL-51578"
@@ -342,10 +367,14 @@ export default function Index() {
                                                     </div>
                                                     <div className="min-w-0">
                                                         <p className="truncate text-sm font-semibold text-gray-900">
-                                                            {userToSanction.name}
+                                                            {
+                                                                userToSanction.name
+                                                            }
                                                         </p>
                                                         <p className="truncate text-sm text-gray-500">
-                                                            {userToSanction.email}
+                                                            {
+                                                                userToSanction.email
+                                                            }
                                                         </p>
                                                     </div>
                                                 </div>

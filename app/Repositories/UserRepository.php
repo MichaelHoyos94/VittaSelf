@@ -20,4 +20,9 @@ class UserRepository
     {
         return User::find($id);
     }
+
+    public function getByEuiCode($euiCode)
+    {
+        return User::where('eui_code', $euiCode)->first();
+    }
 }
