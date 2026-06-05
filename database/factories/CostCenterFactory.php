@@ -22,7 +22,6 @@ class CostCenterFactory extends Factory
             'contact_email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->numerify('##########'),
             'photo' => 'cost_center.jpg',
-            'user_id' => $this->faker->numberBetween(2, 21),
         ];
     }
 }

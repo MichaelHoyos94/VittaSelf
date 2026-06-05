@@ -50,7 +50,10 @@ export default function Index() {
     const {
         qualityChecklists = TEST_QUALITY_CHECKLISTS,
         costCenters = TEST_COST_CENTERS,
+        costCenter,
     } = usePage().props;
+
+    console.log("Cost center:", costCenter);
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
@@ -214,6 +217,25 @@ export default function Index() {
                     Create Checklist
                 </PrimaryButton>
                 <SecondaryButton>Export</SecondaryButton>
+                {/* Card with cost center info at end */}
+                <div className="ml-auto rounded bg-gray-50 px-4 py-2">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
+                            <ClipboardDocumentCheckIcon className="h-5 w-5 text-primary-700" />
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Cost center</p>
+                            <div>
+                                <strong>{costCenter?.name || "N/A"}</strong>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">
+                                    {costCenter?.address || "N/A"}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <Table
                 columns={columns}
@@ -428,8 +450,7 @@ export default function Index() {
                                         Audit Checklist
                                     </h2>
                                     <p className="text-sm text-gray-500">
-                                        {selectedChecklist?.cost_center?.name} -
-                                        {" "}
+                                        {selectedChecklist?.cost_center?.name} -{" "}
                                         {selectedChecklist?.checklist_date}
                                     </p>
                                 </div>
@@ -480,7 +501,9 @@ export default function Index() {
                                                     e.target.value,
                                                 )
                                             }
-                                            error={auditErrors.corrective_actions}
+                                            error={
+                                                auditErrors.corrective_actions
+                                            }
                                             placeholder="Describe corrective actions if required..."
                                         />
                                     </div>
