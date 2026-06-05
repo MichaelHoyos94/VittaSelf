@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('photo', 64)->default('cost_center.png');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('user_id')->constrained('users');
         });
     }
 
