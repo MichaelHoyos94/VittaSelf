@@ -4,20 +4,17 @@ namespace Modules\Audits\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class QualityChecklistsController extends Controller
 {
-    public function index() {}
-
-    public function create() {}
+    public function index() {
+        // Load curren user -> costcenter
+        $costCenter = auth()->user()->costCenter;
+        return Inertia::render('Audits/QualityChecklists/Index')->with([
+            'costCenter' => $costCenter,
+        ]);
+    }
 
     public function store(Request $request) {}
-
-    public function show($id) {}
-
-    public function edit($id) {}
-
-    public function update(Request $request, $id) {}
-
-    public function destroy($id) {}
 }

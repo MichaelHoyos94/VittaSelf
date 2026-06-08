@@ -34,8 +34,8 @@ class DisciplinaryCasesController extends Controller
     public function index(Request $request)
     {
         $userToSanction = null;
-        if ($request->filled('user_id')) {
-            $userToSanction = $this->userService->getById($request->user_id);
+        if ($request->filled('eui_code')) {
+            $userToSanction = $this->userService->getByEuiCode($request->eui_code);
         }
         $policies = $this->policiesService->getAll();
         $complianceSources = $this->compliancesService->getAll();
@@ -61,6 +61,9 @@ class DisciplinaryCasesController extends Controller
     public function manageCase($id)
     {
         $disciplinaryCase = $this->service->getById($id);
+        if ($disciplinaryCase->caseStatus->case_status !== 'Sin asignar' && $disciplinaryCase->admin_id !== auth()->id()) {
+            abort(403, 'You are not authorized to manage this case.');
+        }
         $statuses = $this->caseStatusService->getAllStatuses();
         $sanctions = $this->sanctionsService->getAll();
         $sanctionLevels = $this->sanctionLevelsService->getAll();
@@ -80,32 +83,6 @@ class DisciplinaryCasesController extends Controller
         $disciplinaryCase = $this->service->progressCase($disciplinaryCase->id);
         return back()->with('success', 'Case assigned to you successfully.');
     }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('sanctions::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('sanctions::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 
     public function progressCase($id)
     {

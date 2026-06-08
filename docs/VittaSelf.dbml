@@ -171,7 +171,7 @@ Table user [headercolor: #175e7a] {
 	last_name varchar(64) [ not null ]
 	full_name varchar(255) [ not null ]
 	document varchar(32) [ not null ]
-	avatar varchar(32) [ not null, default: avatar.png ]
+	avatar varchar(32) [ not null, default: 'avatar.png' ]
 	code varchar(64) [ not null ]
 	email varchar(64) [ not null ]
 	phone varchar(10) [ not null ]
@@ -190,7 +190,7 @@ Table cost_centers [headercolor: #175e7a] {
 	address varchar(255) [ not null ]
 	contact_email varchar(64)
 	phone varchar(10)
-	photo varchar(64) [ default: cost_center.png ]
+	photo varchar(64) [ default: 'cost_center.png' ]
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
 	deleted_at datetime
@@ -200,7 +200,7 @@ Table cost_centers [headercolor: #175e7a] {
 Table products [headercolor: #175e7a] {
 	id integer [ pk, increment, not null, unique ]
 	name varchar(64) [ not null ]
-	cover varchar(255) [ not null, default: product.png ]
+	cover varchar(255) [ not null, default: 'product.png' ]
 	price decimal [ not null ]
 	points integer [ not null, default: 1 ]
 	description varchar(128)

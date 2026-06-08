@@ -26,6 +26,7 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'last_name' => fake()->lastName(),
+            'eui_code' => fake()->unique()->numerify('COL########'),
             'document_number' => fake()->unique()->numerify('##########'),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),

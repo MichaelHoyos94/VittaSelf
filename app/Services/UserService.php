@@ -20,4 +20,8 @@ class UserService
     {
         return $this->userRepository->getById($id);
     }
+    public function getByEuiCode($euiCode)
+    {
+        return $this->userRepository->getByEuiCode($euiCode);
+    }
 }

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Audits\Models\QualityChecklist;
@@ -21,12 +20,11 @@ class CostCenter extends Model
         'contact_email',
         'phone',
         'photo',
-        'user_id',
     ];
 
-    public function user(): BelongsTo
+    public function users(): HasMany
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(User::class, 'cost_center_id');
     }
 
     public function qualityChecklists(): HasMany
