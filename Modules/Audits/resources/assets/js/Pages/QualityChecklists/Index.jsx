@@ -170,11 +170,10 @@ export default function Index() {
             header: "SMOKE DETECTOR",
             render: (row) => (
                 <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                        row.smoke_detector
-                            ? "bg-primary-100 text-primary-800"
-                            : "bg-red-100 text-red-700"
-                    }`}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${row.smoke_detector
+                        ? "bg-primary-100 text-primary-800"
+                        : "bg-red-100 text-red-700"
+                        }`}
                 >
                     {row.smoke_detector ? "OK" : "Review"}
                 </span>
@@ -253,22 +252,7 @@ export default function Index() {
                         <div className="mx-4 my-6">
                             <Form onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <Select
-                                            label="Cost Center"
-                                            name="cost_center_id"
-                                            value={data.cost_center_id}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "cost_center_id",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            error={errors.cost_center_id}
-                                            options={costCenterOptions}
-                                            placeholder="Select a cost center"
-                                        />
-                                    </div>
+                                    <input type="hidden" name="cost_center_id" value={data.cost_center_id} />
                                     <div>
                                         <Input
                                             label="Checklist Date"
@@ -286,7 +270,7 @@ export default function Index() {
                                     </div>
                                     <div>
                                         <Input
-                                            label="Temperature Start"
+                                            label="Freezers initial temperature"
                                             name="temperature_start"
                                             type="number"
                                             value={data.temperature_start}
@@ -302,7 +286,7 @@ export default function Index() {
                                     </div>
                                     <div>
                                         <Input
-                                            label="Temperature End"
+                                            label="Freezers final temperature"
                                             name="temperature_end"
                                             type="number"
                                             value={data.temperature_end}
@@ -329,10 +313,10 @@ export default function Index() {
                                             }
                                             error={errors.smoke_detector}
                                             options={[
-                                                { value: "1", label: "OK" },
+                                                { value: "1", label: "Working" },
                                                 {
                                                     value: "0",
-                                                    label: "Requires review",
+                                                    label: "Not working",
                                                 },
                                             ]}
                                             placeholder="Select status"
