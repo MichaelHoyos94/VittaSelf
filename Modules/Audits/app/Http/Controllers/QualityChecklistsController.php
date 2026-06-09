@@ -5,6 +5,7 @@ namespace Modules\Audits\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Audits\Http\Requests\QualityChecklistRequest;
 
 class QualityChecklistsController extends Controller
 {
@@ -16,5 +17,7 @@ class QualityChecklistsController extends Controller
         ]);
     }
 
-    public function store(Request $request) {}
+    public function store(QualityChecklistRequest $request) {
+        $validated = $request->validated();
+    }
 }

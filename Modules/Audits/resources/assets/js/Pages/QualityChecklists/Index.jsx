@@ -59,7 +59,7 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const [selectedChecklist, setSelectedChecklist] = useState(null);
 
-    const { data, setData, errors, reset } = useForm({
+    const { data, setData, errors, reset, post } = useForm({
         cost_center_id: "",
         checklist_date: "",
         temperature_start: "",
@@ -121,8 +121,12 @@ export default function Index() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Quality checklist draft:", data);
-        reset();
-        setModalOpen(false);
+        post(route("quality-checklists.store"), {
+            onSuccess: () => {
+                reset();
+                setModalOpen(false);
+            },
+        });
     };
 
     const handleSubmitAudit = (e) => {
