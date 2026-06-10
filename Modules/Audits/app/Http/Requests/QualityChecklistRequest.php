@@ -12,7 +12,7 @@ class QualityChecklistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cost_center_id' => 'required|exists:cat_cost_centers,id',
+            'cost_center_id' => 'required|exists:cost_centers,id',
             'checklist_date' => 'required|date',
             'temperature_start' => 'required|numeric',
             'temperature_end' => 'required|numeric',

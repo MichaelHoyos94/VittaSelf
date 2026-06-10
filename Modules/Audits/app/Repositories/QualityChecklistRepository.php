@@ -15,4 +15,9 @@ class QualityChecklistRepository
     public function create(array $data) {
         return QualityChecklist::create($data);
     }
+    public function findByCostCenterAndDate($costCenterId, $date) {
+        return QualityChecklist::where('cost_center_id', $costCenterId)
+            ->where('checklist_date', $date)
+            ->first();
+    }
 }
