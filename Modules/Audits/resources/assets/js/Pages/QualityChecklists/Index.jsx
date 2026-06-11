@@ -51,6 +51,7 @@ export default function Index() {
         qualityChecklists = TEST_QUALITY_CHECKLISTS,
         costCenters = TEST_COST_CENTERS,
         costCenter,
+        flash,
     } = usePage().props;
 
     console.log("Cost center:", costCenter);
@@ -220,6 +221,17 @@ export default function Index() {
                     Create Checklist
                 </PrimaryButton>
                 <SecondaryButton>Export</SecondaryButton>
+                {/* Flash message section */}
+                {flash.success && (
+                    <div className="rounded bg-green-100 px-4 py-2 text-green-800">
+                        {flash.success}
+                    </div>
+                )}
+                {flash.error && (
+                    <div className="rounded bg-red-100 px-4 py-2 text-red-800">
+                        {flash.error}
+                    </div>
+                )}
                 {/* Card with cost center info at end */}
                 <div className="ml-auto rounded bg-gray-50 px-4 py-2">
                     <div className="flex items-center gap-3">
