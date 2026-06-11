@@ -10,14 +10,15 @@ use Modules\Audits\Services\QualityChecklistService;
 
 class QualityChecklistsController extends Controller
 {
-    // Inject services and repos
     public function __construct(private QualityChecklistService $service){}
 
     public function index() {
         // Load curren user -> costcenter
         $costCenter = auth()->user()->costCenter;
+        $qualityChecklists = $this->service->getByCostCenter($costCenter->id);
         return Inertia::render('Audits/QualityChecklists/Index')->with([
             'costCenter' => $costCenter,
+            'qualityChecklists' => $qualityChecklists,
         ]);
     }
 

@@ -9,35 +9,7 @@ import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ClipboardDocumentCheckIcon, EyeIcon } from "@heroicons/react/16/solid";
 import { useForm, usePage } from "@inertiajs/react";
-import { useMemo, useState } from "react";
-
-const TEST_COST_CENTERS = [
-    { id: 1, name: "Centro Norte" },
-    { id: 2, name: "Centro Sur" },
-];
-
-const TEST_QUALITY_CHECKLISTS = [
-    {
-        id: 1,
-        temperature_start: 22.4,
-        temperature_end: 23.1,
-        smoke_detector: true,
-        humidity_percentage: 48,
-        checklist_date: "2026-05-19",
-        cost_center: { id: 1, name: "Centro Norte" },
-        audit: null,
-    },
-    {
-        id: 2,
-        temperature_start: 21.8,
-        temperature_end: 22.6,
-        smoke_detector: true,
-        humidity_percentage: 52,
-        checklist_date: "2026-05-18",
-        cost_center: { id: 2, name: "Centro Sur" },
-        audit: { status: "good", requires_actions: false },
-    },
-];
+import { useState } from "react";
 
 const statusOptions = [
     { value: "excellent", label: "Excellent" },
@@ -48,13 +20,10 @@ const statusOptions = [
 
 export default function Index() {
     const {
-        qualityChecklists = TEST_QUALITY_CHECKLISTS,
-        costCenters = TEST_COST_CENTERS,
+        qualityChecklists,
         costCenter,
         flash,
     } = usePage().props;
-
-    console.log("Cost center:", costCenter);
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
@@ -83,15 +52,6 @@ export default function Index() {
         requires_actions: "",
         corrective_actions: "",
     });
-
-    const costCenterOptions = useMemo(
-        () =>
-            costCenters.map((costCenter) => ({
-                value: costCenter.id,
-                label: costCenter.name,
-            })),
-        [costCenters],
-    );
 
     const closeModal = () => {
         setModalOpen(false);
@@ -149,9 +109,6 @@ export default function Index() {
                     <strong className="font-medium">
                         {row.cost_center?.name || "Sin centro de costo"}
                     </strong>
-                    <span className="text-sm text-gray-500">
-                        Checklist #{row.id}
-                    </span>
                 </div>
             ),
         },
@@ -180,7 +137,7 @@ export default function Index() {
                         : "bg-red-100 text-red-700"
                         }`}
                 >
-                    {row.smoke_detector ? "OK" : "Review"}
+                    {row.smoke_detector ? "Working" : "Not Working"}
                 </span>
             ),
         },

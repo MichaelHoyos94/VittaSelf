@@ -17,6 +17,11 @@ class QualityChecklistService
 
     public function getById($id) {}
 
+    public function getByCostCenter($costCenterId)
+    {
+        return $this->repository->findByCostCenter($costCenterId);
+    }
+
     public function create(array $data)
     {
         // Si existe una checklist para el mismo cost center y fecha, lanzar error
