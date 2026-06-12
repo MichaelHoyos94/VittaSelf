@@ -47,6 +47,7 @@ export default function Index() {
         status: "",
         requires_actions: "",
         corrective_actions: "",
+        report: "",
     });
 
     const closeModal = () => {
@@ -467,6 +468,21 @@ export default function Index() {
                                                 auditErrors.corrective_actions
                                             }
                                             placeholder="Describe corrective actions if required..."
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <TextArea
+                                            label="Detailed Report"
+                                            name="report"
+                                            value={auditData.report}
+                                            onChange={(e) =>
+                                                setAuditData(
+                                                    "report",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            error={auditErrors.report}
+                                            placeholder="Provide a detailed report of the audit findings..."
                                         />
                                     </div>
                                 </div>
