@@ -20,6 +20,7 @@ class QualityChecklistAudit extends Model
         'report',
         'quality_checklist_id',
         'audited_by',
+        'pdf_path',
     ];
 
     protected function casts(): array
