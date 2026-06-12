@@ -17,6 +17,7 @@ class QualityChecklistAuditRequest extends FormRequest
             'requires_actions' => 'required|boolean',
             'corrective_actions' => 'nullable|string|max:255',
             'audited_by' => 'required|exists:users,id',
+            'report' => 'nullable|string|max:65535',
         ];
     }
 

@@ -19,7 +19,7 @@ const statusOptions = [
 ];
 
 export default function Index() {
-    const { qualityChecklists, costCenter, flash } = usePage().props;
+    const { qualityChecklists, costCenter, flash, auth } = usePage().props;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
@@ -43,11 +43,14 @@ export default function Index() {
         setData: setAuditData,
         errors: auditErrors,
         reset: resetAudit,
+        post: postAudit,
     } = useForm({
+        quality_checklist_id: "",
         status: "",
         requires_actions: "",
         corrective_actions: "",
         report: "",
+        audited_by: "",
     });
 
     const closeModal = () => {
@@ -65,6 +68,8 @@ export default function Index() {
     const handleOpenAuditModal = (checklist) => {
         setModalMode("audit");
         setSelectedChecklist(checklist);
+        setAuditData("quality_checklist_id", checklist.id);
+        setAuditData("audited_by", auth.user?.id || "");
         setModalOpen(true);
     };
 
@@ -81,9 +86,15 @@ export default function Index() {
 
     const handleSubmitAudit = (e) => {
         e.preventDefault();
+        setAuditData("quality_checklist_id", selectedChecklist?.id || "");
         console.log("Audit data to submit:", auditData);
-        resetAudit();
-        setModalOpen(false);
+        postAudit(route("audits.quality-checklists.audit"), {
+            data: auditData,
+            onSuccess: () => {
+                resetAudit();
+                setModalOpen(false);
+            },
+        });
     };
 
     const columns = [
@@ -416,10 +427,8 @@ export default function Index() {
                                 />
                                 <input
                                     type="hidden"
-                                    name="cost_center_id"
-                                    value={
-                                        selectedChecklist?.cost_center_id || ""
-                                    }
+                                    name="audited_by"
+                                    value={auth.user?.id || ""}
                                 />
                                 <div className="grid grid-cols-2 gap-4">
                                     <Select
