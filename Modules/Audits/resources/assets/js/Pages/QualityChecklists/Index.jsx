@@ -68,14 +68,6 @@ export default function Index() {
     const handleOpenAuditModal = (checklist) => {
         setModalMode("audit");
         setSelectedChecklist(checklist);
-        setAuditData({
-            status: checklist.audit?.status || "",
-            requires_actions:
-                checklist.audit?.requires_actions === undefined
-                    ? ""
-                    : String(checklist.audit.requires_actions),
-            corrective_actions: checklist.audit?.corrective_actions || "",
-        });
         setModalOpen(true);
     };
 
@@ -92,10 +84,8 @@ export default function Index() {
 
     const handleSubmitAudit = (e) => {
         e.preventDefault();
-        console.log("Quality checklist audit draft:", {
-            quality_checklist_id: selectedChecklist?.id,
-            ...auditData,
-        });
+        // Console log data
+        console.log("Audit data to submit:", auditData);
         resetAudit();
         setModalOpen(false);
     };
@@ -415,6 +405,8 @@ export default function Index() {
                         </div>
                         <div className="mx-4 my-6">
                             <Form onSubmit={handleSubmitAudit}>
+                                <input type="hidden" name="quality_checklist_id" value={selectedChecklist?.id || ""} />
+                                <input type="hidden" name="cost_center_id" value={selectedChecklist?.cost_center_id || ""} />
                                 <div className="grid grid-cols-2 gap-4">
                                     <Select
                                         label="Status"
