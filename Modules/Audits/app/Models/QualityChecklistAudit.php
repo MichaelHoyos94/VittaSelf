@@ -17,6 +17,7 @@ class QualityChecklistAudit extends Model
         'status',
         'requires_actions',
         'corrective_actions',
+        'report',
         'quality_checklist_id',
         'audited_by',
     ];
@@ -25,6 +26,7 @@ class QualityChecklistAudit extends Model
     {
         return [
             'requires_actions' => 'boolean',
+            'report' => 'string',
         ];
     }
 

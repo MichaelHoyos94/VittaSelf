@@ -19,11 +19,7 @@ const statusOptions = [
 ];
 
 export default function Index() {
-    const {
-        qualityChecklists,
-        costCenter,
-        flash,
-    } = usePage().props;
+    const { qualityChecklists, costCenter, flash } = usePage().props;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
@@ -84,7 +80,6 @@ export default function Index() {
 
     const handleSubmitAudit = (e) => {
         e.preventDefault();
-        // Console log data
         console.log("Audit data to submit:", auditData);
         resetAudit();
         setModalOpen(false);
@@ -122,10 +117,11 @@ export default function Index() {
             header: "SMOKE DETECTOR",
             render: (row) => (
                 <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${row.smoke_detector
-                        ? "bg-primary-100 text-primary-800"
-                        : "bg-red-100 text-red-700"
-                        }`}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        row.smoke_detector
+                            ? "bg-primary-100 text-primary-800"
+                            : "bg-red-100 text-red-700"
+                    }`}
                 >
                     {row.smoke_detector ? "Working" : "Not Working"}
                 </span>
@@ -215,7 +211,11 @@ export default function Index() {
                         <div className="mx-4 my-6">
                             <Form onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <input type="hidden" name="cost_center_id" value={data.cost_center_id} />
+                                    <input
+                                        type="hidden"
+                                        name="cost_center_id"
+                                        value={data.cost_center_id}
+                                    />
                                     <div>
                                         <Input
                                             label="Checklist Date"
@@ -276,7 +276,10 @@ export default function Index() {
                                             }
                                             error={errors.smoke_detector}
                                             options={[
-                                                { value: "1", label: "Working" },
+                                                {
+                                                    value: "1",
+                                                    label: "Working",
+                                                },
                                                 {
                                                     value: "0",
                                                     label: "Not working",
@@ -405,8 +408,18 @@ export default function Index() {
                         </div>
                         <div className="mx-4 my-6">
                             <Form onSubmit={handleSubmitAudit}>
-                                <input type="hidden" name="quality_checklist_id" value={selectedChecklist?.id || ""} />
-                                <input type="hidden" name="cost_center_id" value={selectedChecklist?.cost_center_id || ""} />
+                                <input
+                                    type="hidden"
+                                    name="quality_checklist_id"
+                                    value={selectedChecklist?.id || ""}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="cost_center_id"
+                                    value={
+                                        selectedChecklist?.cost_center_id || ""
+                                    }
+                                />
                                 <div className="grid grid-cols-2 gap-4">
                                     <Select
                                         label="Status"
