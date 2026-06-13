@@ -9,35 +9,7 @@ import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ClipboardDocumentCheckIcon, EyeIcon } from "@heroicons/react/16/solid";
 import { useForm, usePage } from "@inertiajs/react";
-import { useMemo, useState } from "react";
-
-const TEST_COST_CENTERS = [
-    { id: 1, name: "Centro Norte" },
-    { id: 2, name: "Centro Sur" },
-];
-
-const TEST_QUALITY_CHECKLISTS = [
-    {
-        id: 1,
-        temperature_start: 22.4,
-        temperature_end: 23.1,
-        smoke_detector: true,
-        humidity_percentage: 48,
-        checklist_date: "2026-05-19",
-        cost_center: { id: 1, name: "Centro Norte" },
-        audit: null,
-    },
-    {
-        id: 2,
-        temperature_start: 21.8,
-        temperature_end: 22.6,
-        smoke_detector: true,
-        humidity_percentage: 52,
-        checklist_date: "2026-05-18",
-        cost_center: { id: 2, name: "Centro Sur" },
-        audit: { status: "good", requires_actions: false },
-    },
-];
+import { useState } from "react";
 
 const statusOptions = [
     { value: "excellent", label: "Excellent" },
@@ -47,20 +19,14 @@ const statusOptions = [
 ];
 
 export default function Index() {
-    const {
-        qualityChecklists = TEST_QUALITY_CHECKLISTS,
-        costCenters = TEST_COST_CENTERS,
-        costCenter,
-    } = usePage().props;
-
-    console.log("Cost center:", costCenter);
+    const { qualityChecklists, costCenter, flash, auth } = usePage().props;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
     const [selectedChecklist, setSelectedChecklist] = useState(null);
 
-    const { data, setData, errors, reset } = useForm({
-        cost_center_id: "",
+    const { data, setData, errors, reset, post } = useForm({
+        cost_center_id: costCenter?.id || "",
         checklist_date: "",
         temperature_start: "",
         temperature_end: "",
@@ -77,20 +43,15 @@ export default function Index() {
         setData: setAuditData,
         errors: auditErrors,
         reset: resetAudit,
+        post: postAudit,
     } = useForm({
+        quality_checklist_id: "",
         status: "",
         requires_actions: "",
         corrective_actions: "",
+        report: "",
+        audited_by: "",
     });
-
-    const costCenterOptions = useMemo(
-        () =>
-            costCenters.map((costCenter) => ({
-                value: costCenter.id,
-                label: costCenter.name,
-            })),
-        [costCenters],
-    );
 
     const closeModal = () => {
         setModalOpen(false);
@@ -107,32 +68,33 @@ export default function Index() {
     const handleOpenAuditModal = (checklist) => {
         setModalMode("audit");
         setSelectedChecklist(checklist);
-        setAuditData({
-            status: checklist.audit?.status || "",
-            requires_actions:
-                checklist.audit?.requires_actions === undefined
-                    ? ""
-                    : String(checklist.audit.requires_actions),
-            corrective_actions: checklist.audit?.corrective_actions || "",
-        });
+        setAuditData("quality_checklist_id", checklist.id);
+        setAuditData("audited_by", auth.user?.id || "");
         setModalOpen(true);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Quality checklist draft:", data);
-        reset();
-        setModalOpen(false);
+        post(route("audits.quality-checklists.store"), {
+            onSuccess: () => {
+                reset();
+                setModalOpen(false);
+            },
+        });
     };
 
     const handleSubmitAudit = (e) => {
         e.preventDefault();
-        console.log("Quality checklist audit draft:", {
-            quality_checklist_id: selectedChecklist?.id,
-            ...auditData,
+        setAuditData("quality_checklist_id", selectedChecklist?.id || "");
+        console.log("Audit data to submit:", auditData);
+        postAudit(route("audits.quality-checklists.audit"), {
+            data: auditData,
+            onSuccess: () => {
+                resetAudit();
+                setModalOpen(false);
+            },
         });
-        resetAudit();
-        setModalOpen(false);
     };
 
     const columns = [
@@ -144,9 +106,6 @@ export default function Index() {
                     <strong className="font-medium">
                         {row.cost_center?.name || "Sin centro de costo"}
                     </strong>
-                    <span className="text-sm text-gray-500">
-                        Checklist #{row.id}
-                    </span>
                 </div>
             ),
         },
@@ -170,12 +129,13 @@ export default function Index() {
             header: "SMOKE DETECTOR",
             render: (row) => (
                 <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${row.smoke_detector
-                        ? "bg-primary-100 text-primary-800"
-                        : "bg-red-100 text-red-700"
-                        }`}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        row.smoke_detector
+                            ? "bg-primary-100 text-primary-800"
+                            : "bg-red-100 text-red-700"
+                    }`}
                 >
-                    {row.smoke_detector ? "OK" : "Review"}
+                    {row.smoke_detector ? "Working" : "Not Working"}
                 </span>
             ),
         },
@@ -216,6 +176,17 @@ export default function Index() {
                     Create Checklist
                 </PrimaryButton>
                 <SecondaryButton>Export</SecondaryButton>
+                {/* Flash message section */}
+                {flash.success && (
+                    <div className="rounded bg-green-100 px-4 py-2 text-green-800">
+                        {flash.success}
+                    </div>
+                )}
+                {flash.error && (
+                    <div className="rounded bg-red-100 px-4 py-2 text-red-800">
+                        {flash.error}
+                    </div>
+                )}
                 {/* Card with cost center info at end */}
                 <div className="ml-auto rounded bg-gray-50 px-4 py-2">
                     <div className="flex items-center gap-3">
@@ -252,7 +223,11 @@ export default function Index() {
                         <div className="mx-4 my-6">
                             <Form onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <input type="hidden" name="cost_center_id" value={data.cost_center_id} />
+                                    <input
+                                        type="hidden"
+                                        name="cost_center_id"
+                                        value={data.cost_center_id}
+                                    />
                                     <div>
                                         <Input
                                             label="Checklist Date"
@@ -313,7 +288,10 @@ export default function Index() {
                                             }
                                             error={errors.smoke_detector}
                                             options={[
-                                                { value: "1", label: "Working" },
+                                                {
+                                                    value: "1",
+                                                    label: "Working",
+                                                },
                                                 {
                                                     value: "0",
                                                     label: "Not working",
@@ -442,6 +420,16 @@ export default function Index() {
                         </div>
                         <div className="mx-4 my-6">
                             <Form onSubmit={handleSubmitAudit}>
+                                <input
+                                    type="hidden"
+                                    name="quality_checklist_id"
+                                    value={selectedChecklist?.id || ""}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="audited_by"
+                                    value={auth.user?.id || ""}
+                                />
                                 <div className="grid grid-cols-2 gap-4">
                                     <Select
                                         label="Status"
@@ -489,6 +477,21 @@ export default function Index() {
                                                 auditErrors.corrective_actions
                                             }
                                             placeholder="Describe corrective actions if required..."
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <TextArea
+                                            label="Detailed Report"
+                                            name="report"
+                                            value={auditData.report}
+                                            onChange={(e) =>
+                                                setAuditData(
+                                                    "report",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            error={auditErrors.report}
+                                            placeholder="Provide a detailed report of the audit findings..."
                                         />
                                     </div>
                                 </div>

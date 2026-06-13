@@ -17,14 +17,17 @@ class QualityChecklistAudit extends Model
         'status',
         'requires_actions',
         'corrective_actions',
+        'report',
         'quality_checklist_id',
         'audited_by',
+        'pdf_path',
     ];
 
     protected function casts(): array
     {
         return [
             'requires_actions' => 'boolean',
+            'report' => 'string',
         ];
     }
 

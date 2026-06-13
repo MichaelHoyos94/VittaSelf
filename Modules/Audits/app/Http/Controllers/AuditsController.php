@@ -5,9 +5,14 @@ namespace Modules\Audits\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Audits\Http\Requests\QualityChecklistAuditRequest;
+use Modules\Audits\Services\QualityChecklistAuditService;
 
 class AuditsController extends Controller
 {
+
+    public function __construct(private QualityChecklistAuditService $service) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -17,41 +22,11 @@ class AuditsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('audits::create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('audits::show');
+    public function store(QualityChecklistAuditRequest $request) {
+        $validated = $request->validated();
+        $audit = $this->service->create($validated);
+        return back()->with('success', 'Audit created successfully! ID: ' . $audit->id);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('audits::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }
