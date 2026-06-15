@@ -18,7 +18,7 @@ class AuditsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Audits/Index');
+        return Inertia::render('Audits/Audits/Index');
     }
 
     /**

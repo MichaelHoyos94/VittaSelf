@@ -53,6 +53,32 @@ export default function Sidebar() {
                     )}
                 </div>
 
+                <div>
+                    <button
+                        onClick={() => toggleMenu("audits")}
+                        className="w-full text-left p-2 rounded hover:bg-[var(--surface-variant)]"
+                    >
+                        Audits
+                    </button>
+
+                    {openMenu === "audits" && (
+                        <div className="ml-4 flex flex-col">
+                            <NavLink
+                                href="/audits/quality-checklists"
+                                active={route().current("audits.quality-checklists.index")}
+                            >
+                                Quality Checklists
+                            </NavLink>
+                            <NavLink
+                                href="/audits/history"
+                                active={route().current("audits.history.index")}
+                            >
+                                Audit History
+                            </NavLink>
+                        </div>
+                    )}
+                </div>
+
                 {/* 📦 Parent menu */}
                 <div>
                     <button
