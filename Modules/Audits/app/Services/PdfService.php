@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Services;
+namespace Modules\Audits\Services;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Modules\Audits\Models\QualityChecklistAudit;
 
-class AuditPdfService
+class PdfService
 {
-    public function generate(QualityChecklistAudit $audit): string
+    public function generateQualityChecklistAuditPdf(QualityChecklistAudit $audit): string
     {
         $audit->load('auditor');
 
-        $pdf = Pdf::loadView('pdfs.audit-report', [
+        $pdf = Pdf::loadView('audits::pdfs.audit-report', [
             'audit' => $audit,
         ])->setPaper('letter');
 

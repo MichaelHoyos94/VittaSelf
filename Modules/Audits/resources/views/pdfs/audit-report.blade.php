@@ -36,7 +36,7 @@
 
         .badge {
             display: inline-block;
-            padding: 6px 10px;
+            padding: 4px 4px;
             border-radius: 4px;
             color: #fff;
             font-weight: bold;
@@ -82,7 +82,7 @@
 <body>
 
     <div class="header">
-        <img class="logo" src="{{ public_path('images/company-logo.png') }}" alt="Logo empresa">
+        <img class="logo" src="{{ public_path('images/logo/logo2.png') }}" alt="Logo empresa">
 
         <p class="title">Informe de Auditoría</p>
 
@@ -101,7 +101,7 @@
     </div>
 
     <div class="footer">
-        Empresa XYZ S.A.S. — NIT 900.000.000-0 — Dirección: Calle 00 # 00-00 — Tel: 000 000 0000 <br>
+        VittaSelf S.A.S. — NIT 915.789.159-1 — Dirección: Av Bolivar 14 # 01N-23 — Tel: 321-809-5197 <br>
         Este documento fue generado automáticamente por el sistema de auditorías.
     </div>
 
