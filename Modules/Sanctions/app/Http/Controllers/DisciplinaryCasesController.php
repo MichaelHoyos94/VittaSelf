@@ -3,8 +3,10 @@
 namespace Modules\Sanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Sanctions\Exceptions\UserSanctionedException;
 use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
 use Modules\Sanctions\Services\CatCaseStatusService;
 use Modules\Sanctions\Services\CatComplianceSourceService;
@@ -23,17 +25,23 @@ class DisciplinaryCasesController extends Controller
         protected CatCaseStatusService $caseStatusService,
         protected CatSanctionService $sanctionsService,
         protected CatSanctionLevelService $sanctionLevelsService,
-        protected CatMitigationService $mitigationsService
+        protected CatMitigationService $mitigationsService,
+        protected UserService $userService
     ) {}
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $userToSanction = null;
+        if ($request->filled('eui_code')) {
+            $userToSanction = $this->userService->getByEuiCode($request->eui_code);
+        }
         $policies = $this->policiesService->getAll();
         $complianceSources = $this->compliancesService->getAll();
         $disciplinaryCases = $this->service->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
+            'userToSanction' => $userToSanction,
             'policies' => $policies,
             'complianceSources' => $complianceSources,
             'disciplinaryCases' => $disciplinaryCases,
@@ -53,6 +61,9 @@ class DisciplinaryCasesController extends Controller
     public function manageCase($id)
     {
         $disciplinaryCase = $this->service->getById($id);
+        if ($disciplinaryCase->caseStatus->case_status !== 'Sin asignar' && $disciplinaryCase->admin_id !== auth()->id()) {
+            abort(403, 'You are not authorized to manage this case.');
+        }
         $statuses = $this->caseStatusService->getAllStatuses();
         $sanctions = $this->sanctionsService->getAll();
         $sanctionLevels = $this->sanctionLevelsService->getAll();
@@ -65,39 +76,13 @@ class DisciplinaryCasesController extends Controller
             'mitigations' => $mitigations
         ]);
     }
-    #TODO: Terminar el metodo y avanzar en el progress
+    
     public function assignCase(Request $request, $id)
     {
         $disciplinaryCase = $this->service->assignCase($id, $request->user()->id);
         $disciplinaryCase = $this->service->progressCase($disciplinaryCase->id);
         return back()->with('success', 'Case assigned to you successfully.');
     }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('sanctions::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('sanctions::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 
     public function progressCase($id)
     {

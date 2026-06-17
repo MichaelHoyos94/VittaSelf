@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('sanction_evidences', function (Blueprint $table) {
             $table->id();
-            $table->string('file', 32);
+            $table->string('file', 128);
             $table->string('description', 128);
             $table->timestamps();
             $table->softDeletes();

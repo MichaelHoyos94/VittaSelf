@@ -4,9 +4,11 @@ namespace Modules\Sanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Sanctions\Services\SanctionEvidenceService;
 
 class SanctionEvidencesController extends Controller
 {
+    public function __construct(protected SanctionEvidenceService $service) {}
     /**
      * Display a listing of the resource.
      */
@@ -16,17 +18,22 @@ class SanctionEvidencesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('sanctions::create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request, $disciplinaryCaseId) {
+        $request->validate([
+            'evidence_description' => 'required|string|max:255',
+            'evidences.*' => 'required|file|max:10240', // Max 10MB per file
+        ]);
+
+        $evidences = $request->file('evidences');
+        $description = $request->input('evidence_description');
+
+        $this->service->storeEvidences($disciplinaryCaseId, $evidences, $description);
+
+        return redirect()->route('sanctions.manage-case', ['id' => $disciplinaryCaseId])
+                         ->with('success', 'Evidences uploaded successfully.');
+    }
 
     /**
      * Show the specified resource.

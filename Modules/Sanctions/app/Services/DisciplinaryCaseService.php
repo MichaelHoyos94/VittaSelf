@@ -3,6 +3,7 @@
 namespace Modules\Sanctions\Services;
 
 use Exception;
+use Modules\Sanctions\Exceptions\UserSanctionedException;
 use Modules\Sanctions\Repositories\CatCaseStatusRepository;
 use Modules\Sanctions\Repositories\DisciplinaryCaseRepository;
 
