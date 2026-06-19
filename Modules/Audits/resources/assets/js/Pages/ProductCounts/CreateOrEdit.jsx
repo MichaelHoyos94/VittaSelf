@@ -4,13 +4,17 @@ import Select from "@/Components/Form/Select";
 import TextArea from "@/Components/Form/TextArea";
 import PrimaryButton from "@/Components/PrimaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 
 export default function Create() {
-    const { data, setData, errors, reset, post } = useForm({
+    const { products, auth, costCenter } = usePage().props;
+
+    const { data, setData, errors, post } = useForm({
         count_date: "",
         observations: "",
-        product_quantities: [
+        counted_by: auth.user.id,
+        cost_center_id: costCenter.id,
+        products: [
             {
                 product_id: "",
                 quantity: "",
@@ -19,14 +23,20 @@ export default function Create() {
         ],
     });
 
+    console.log(costCenter);
+    if (errors) {
+        console.log(errors);
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(data);
+        post(route("audits.product-counts.store"));
     };
 
     const addProduct = () => {
-        setData("product_quantities", [
-            ...data.product_quantities,
+        setData("products", [
+            ...data.products,
             {
                 product_id: "",
                 quantity: "",
@@ -36,18 +46,16 @@ export default function Create() {
     };
 
     const removeProduct = (index) => {
-        const updatedProducts = data.product_quantities.filter(
-            (_, i) => i !== index,
-        );
-        setData("product_quantities", updatedProducts);
+        const updatedProducts = data.products.filter((_, i) => i !== index);
+        setData("products", updatedProducts);
     };
 
     const updateProduct = (index, field, value) => {
-        const updatedProducts = [...data.product_quantities];
+        const updatedProducts = [...data.products];
 
         updatedProducts[index][field] = value;
 
-        setData("product_quantities", updatedProducts);
+        setData("products", updatedProducts);
     };
 
     return (
@@ -59,22 +67,50 @@ export default function Create() {
             <div>
                 <Form onSubmit={handleSubmit}>
                     <div className="space-y-2">
-                        {data.product_quantities.map((item, index) => (
+                        {data.products.map((item, index) => (
                             <div
                                 key={index}
                                 className="grid grid-cols-4 gap-4 items-end"
                             >
                                 <Select
                                     label="product"
-                                    name={`product_quantities.${index}.product_id`}
+                                    name={`product.${index}.product_id`}
+                                    onChange={(e) =>
+                                        updateProduct(
+                                            index,
+                                            "product_id",
+                                            e.target.value,
+                                        )
+                                    }
+                                    value={item.product_id}
+                                    options={products.map((product) => ({
+                                        value: product.id,
+                                        label: product.name,
+                                    }))}
                                 />
-                                <Input 
-                                    label="quantity" 
-                                    onChange={(e) => updateProduct(index, "quantity", e.target.value)}
+                                <Input
+                                    label="quantity"
+                                    name={`products.${index}.quantity`}
+                                    value={item.quantity}
+                                    onChange={(e) =>
+                                        updateProduct(
+                                            index,
+                                            "quantity",
+                                            e.target.value,
+                                        )
+                                    }
                                 />
-                                <Input 
-                                    label="observations" 
-                                    onChange={(e) => updateProduct(index, "observations", e.target.value)}
+                                <Input
+                                    label="observations"
+                                    name={`products.${index}.observations`}
+                                    value={item.observations}
+                                    onChange={(e) =>
+                                        updateProduct(
+                                            index,
+                                            "observations",
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 <button
                                     type="button"
@@ -98,6 +134,7 @@ export default function Create() {
                             onChange={(e) =>
                                 setData("count_date", e.target.value)
                             }
+                            error={errors.count_date}
                         />
                         <TextArea
                             label="Observations"

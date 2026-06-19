@@ -11,7 +11,13 @@ class ProductCountRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'cost_center_id' => 'required|exists:cost_centers,id',
+            'counted_by' => 'required|exists:users,id',
+            'count_date' => 'required|date',
+            'observations' => 'nullable|string|max:255',
+            'products' => 'array',
+        ];
     }
 
     /**

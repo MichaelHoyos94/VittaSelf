@@ -3,6 +3,7 @@
 namespace Modules\Audits\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Audits\Http\Requests\ProductCountRequest;
@@ -10,13 +11,16 @@ use Modules\Audits\Services\ProductCountService;
 
 class ProductCountController extends Controller
 {
-    public function __construct(private ProductCountService $service) {}
+    public function __construct(private ProductCountService $service, private ProductService $productService) {}
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Audits/ProductCounts/Index');
+        $productCounts = $this->service->getAll();
+        return Inertia::render('Audits/ProductCounts/Index')->with([
+            'productCounts' => $productCounts
+        ]);
     }
 
     /**
@@ -24,7 +28,12 @@ class ProductCountController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Audits/ProductCounts/CreateOrEdit');
+        $products = $this->productService->getAll();
+        $costCenter = auth()->user()->costCenter;
+        return Inertia::render('Audits/ProductCounts/CreateOrEdit')->with([
+            "products" => $products,
+            "costCenter" => $costCenter
+        ]);
     }
 
     /**
@@ -33,7 +42,7 @@ class ProductCountController extends Controller
     public function store(ProductCountRequest $request) {
         $validated = $request->validated();
         $productCount = $this->service->create($validated);
-        return redirect()->route('audits.product-counts.index')->with('success', 'Product count created successfully.');
+        return redirect()->route('audits.product-counts.index')->with('success', 'Product count created successfully with ID: ' . $productCount->id);
     }
 
     /**

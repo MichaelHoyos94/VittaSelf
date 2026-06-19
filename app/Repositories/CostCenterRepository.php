@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-class ProductsRepository
+class CostCenterRepository
 {
     public function __construct() {}
     public function getAll() {}

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
-class CostCentersRepository
+class CostCenterService
 {
     public function __construct() {}
     public function getAll() {}

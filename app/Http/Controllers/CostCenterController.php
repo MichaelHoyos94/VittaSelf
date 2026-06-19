@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class CostCentersController extends Controller
+class CostCenterController extends Controller
 {
     public function __construct() {}
 }

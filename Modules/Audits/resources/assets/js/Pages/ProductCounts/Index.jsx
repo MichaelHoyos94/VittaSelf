@@ -2,13 +2,40 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 export default function Index() {
+    const { productCounts } = usePage().props;
+
     const columns = [
         {
             header: "ID",
             accessor: "id",
+        },
+        {
+            header: "Counted By",
+            render: (row) => (
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            user
+                        </span>
+                    </div>
+                    <span>user</span>
+                </div>
+            ),
+        },
+        {
+            header: "Count Date",
+            accessor: "count_date",
+        },
+        {
+            header: "Observations",
+            accessor: "observations",
+        },
+        {
+            header: "Audited",
+            accessor: "audited",
         },
     ];
 
@@ -25,7 +52,7 @@ export default function Index() {
                 <SecondaryButton type="button">Export</SecondaryButton>
             </div>
             <div>
-                <Table columns={columns} />
+                <Table columns={columns} data={productCounts} />
             </div>
         </div>
     );
