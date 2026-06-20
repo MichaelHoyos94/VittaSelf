@@ -19,4 +19,5 @@ Route::prefix('audits')->middleware(['auth', 'verified'])->as('audits.')->group(
     Route::get('/product-counts', [ProductCountController::class, 'index'])->name('product-counts.index');
     Route::get('/product-counts/create', [ProductCountController::class, 'create'])->name('product-counts.create');
     Route::post('/product-counts', [ProductCountController::class, 'store'])->name('product-counts.store');
+    Route::get('/product-counts/details/{id}', [ProductCountController::class, 'show'])->name('product-counts.show');
 });

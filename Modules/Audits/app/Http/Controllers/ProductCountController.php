@@ -50,7 +50,7 @@ class ProductCountController extends Controller
      */
     public function show($id)
     {
-        return view('audits::show');
+        return Inertia::render('Audits/ProductCounts/Show');
     }
 
     /**
