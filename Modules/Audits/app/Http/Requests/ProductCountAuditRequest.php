@@ -11,7 +11,18 @@ class ProductCountAuditRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'product_count_id' => 'required|exists:product_counts,id',
+            'status' => 'required',
+            'audited_by' => 'required|exists:users,id',
+            'audited_at' => 'required|date',
+            'total_expected_products' => 'required',
+            'total_counted_products' => 'required',
+            'total_difference' => 'required',
+            'products_with_mismatch' => 'required',
+            'products_with_observations' => 'required',
+            'requires_recount' => 'required',
+        ];
     }
 
     /**
