@@ -11,22 +11,23 @@ export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log('links:', users.links);
+    console.log("links:", users.links);
     const { data, setData, post, put, processing, errors, reset } = useForm({
-        name: '',
-        last_name: '',
-        document_number: '',
-        email: '',
-        phone: '',
-        password: '',
-        password_confirmation: '',
+        name: "",
+        last_name: "",
+        document_number: "",
+        email: "",
+        phone: "",
+        password: "",
+        password_confirmation: "",
     });
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState('create');
+    const [modalMode, setModalMode] = useState("create");
     const columns = [
-        { header: 'ID', accessor: 'id' },
+        { header: "ID", accessor: "id" },
         {
-            header: 'Name', render: (row) => (
+            header: "Name",
+            render: (row) => (
                 <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                         <span className="text-sm font-medium text-gray-700">
@@ -37,7 +38,7 @@ export default function Index() {
                     <button
                         onClick={() => {
                             setSelectedUser(row);
-                            setModalMode('view');
+                            setModalMode("view");
                             setModalOpen(true);
                         }}
                         className="ml-2 bg-transparent rounded-full transform transition-transform duration-300 hover:scale-110"
@@ -45,14 +46,15 @@ export default function Index() {
                         <EyeIcon className="h-4 w-4 text-gray-500 hover:text-gray-700" />
                     </button>
                 </div>
-            )
+            ),
         },
-        { header: 'Last Name', accessor: 'last_name' },
-        { header: 'Document', accessor: 'document_number' },
-        { header: 'Phone', accessor: 'phone' },
-        { header: 'Email', accessor: 'email' },
+        { header: "Last Name", accessor: "last_name" },
+        { header: "Document", accessor: "document_number" },
+        { header: "Phone", accessor: "phone" },
+        { header: "Email", accessor: "email" },
         {
-            header: 'Actions', render: (row) => (
+            header: "Actions",
+            render: (row) => (
                 <div className="flex space-x-2">
                     <button
                         onClick={() => openEditModal(row)}
@@ -63,7 +65,7 @@ export default function Index() {
                     <button
                         onClick={() => {
                             setSelectedUser(row);
-                            setModalMode('delete');
+                            setModalMode("delete");
                             setModalOpen(true);
                         }}
                         className="px-2 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transform transition-transform duration-300 hover:scale-110"
@@ -71,8 +73,8 @@ export default function Index() {
                         <MinusIcon className="h-5 w-5" />
                     </button>
                 </div>
-            )
-        }
+            ),
+        },
     ];
 
     useEffect(() => {
@@ -83,28 +85,28 @@ export default function Index() {
             }, 3000);
             return () => clearTimeout(time);
         }
-    }, [flash.success])
+    }, [flash.success]);
 
     const handlePageChange = (url) => {
         if (url) router.visit(url);
-    }
+    };
 
     const openCreateModal = () => {
-        setModalMode('create');
+        setModalMode("create");
         setModalOpen(true);
         setData({
-            name: '',
-            last_name: '',
-            document_number: '',
-            email: '',
-            phone: '',
-            password: '',
-            password_confirmation: '',
+            name: "",
+            last_name: "",
+            document_number: "",
+            email: "",
+            phone: "",
+            password: "",
+            password_confirmation: "",
         });
-    }
+    };
 
     const openEditModal = ($user) => {
-        setModalMode('edit');
+        setModalMode("edit");
         setSelectedUser($user);
 
         setData({
@@ -116,39 +118,39 @@ export default function Index() {
         });
 
         setModalOpen(true);
-    }
+    };
 
     const closeModal = () => {
         setModalOpen(false);
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (modalMode === 'create') {
-            post(route('human-resources.store'), {
+        if (modalMode === "create") {
+            post(route("human-resources.store"), {
                 onSuccess: () => {
                     reset();
                     setModalOpen(false);
-                }
+                },
             });
-        } else if (modalMode === 'edit') {
-            put(route('human-resources.update', selectedUser.id), {
+        } else if (modalMode === "edit") {
+            put(route("human-resources.update", selectedUser.id), {
                 onSuccess: () => {
                     reset();
                     setModalOpen(false);
-                }
+                },
             });
         }
-    }
+    };
 
     const handleDelete = () => {
-        console.log('Deleting user with ID:', selectedUser.id);
-        router.delete(route('human-resources.destroy', selectedUser.id), {
+        console.log("Deleting user with ID:", selectedUser.id);
+        router.delete(route("human-resources.destroy", selectedUser.id), {
             onSuccess: () => {
                 setModalOpen(false);
-            }
+            },
         });
-    }
+    };
 
     return (
         <div className="p-4 bg-primary-300 rounded-lg">
@@ -172,90 +174,107 @@ export default function Index() {
                 emptyText="No employees found"
                 links={users.links}
                 onPageChange={handlePageChange}
-            >
-            </Table>
-            <Modal
-                show={modalOpen}
-                onClose={closeModal}
-                maxWidth="lg"
-            >
-                {(modalMode === 'create' || modalMode === 'edit') && (
+            ></Table>
+            <Modal show={modalOpen} onClose={closeModal} maxWidth="lg">
+                {(modalMode === "create" || modalMode === "edit") && (
                     <div>
                         <div className="border-b px-6 py-4">
                             <h2 className="text-lg font-semibold text-gray-800">
-                                {modalMode === 'create' ? 'Create User' : 'Edit User'}
+                                {modalMode === "create"
+                                    ? "Create User"
+                                    : "Edit User"}
                             </h2>
                         </div>
                         <div className="mx-4 my-6">
-                            <Form
-                                onSubmit={handleSubmit}
-                            >
+                            <Form onSubmit={handleSubmit}>
                                 <Input
-                                    label='Name'
-                                    name='name'
-                                    type='text'
+                                    label="Name"
+                                    name="name"
+                                    type="text"
                                     value={data.name}
-                                    placeholder='John doe...'
-                                    onChange={(e) => setData('name', e.target.value)}
+                                    placeholder="John doe..."
+                                    onChange={(e) =>
+                                        setData("name", e.target.value)
+                                    }
                                     error={errors.name}
                                 />
                                 <Input
-                                    label='Last Name'
-                                    name='last_name'
-                                    type='text'
+                                    label="Last Name"
+                                    name="last_name"
+                                    type="text"
                                     value={data.last_name}
-                                    placeholder='Smith...'
-                                    onChange={(e) => setData('last_name', e.target.value)}
+                                    placeholder="Smith..."
+                                    onChange={(e) =>
+                                        setData("last_name", e.target.value)
+                                    }
                                 />
                                 <Input
-                                    label='Document Number'
-                                    name='document_number'
-                                    type='text'
+                                    label="Document Number"
+                                    name="document_number"
+                                    type="text"
                                     value={data.document_number}
-                                    placeholder='97234241'
-                                    onChange={(e) => setData('document_number', e.target.value)}
+                                    placeholder="97234241"
+                                    onChange={(e) =>
+                                        setData(
+                                            "document_number",
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 <Input
-                                    label='Email'
-                                    name='email'
-                                    type='email'
+                                    label="Email"
+                                    name="email"
+                                    type="email"
                                     value={data.email}
-                                    placeholder='john.doe@example.com'
-                                    onChange={(e) => setData('email', e.target.value)}
+                                    placeholder="john.doe@example.com"
+                                    onChange={(e) =>
+                                        setData("email", e.target.value)
+                                    }
                                 />
                                 <Input
-                                    label='Phone'
-                                    name='phone'
-                                    type='text'
+                                    label="Phone"
+                                    name="phone"
+                                    type="text"
                                     value={data.phone}
-                                    placeholder='321-807-9660'
-                                    onChange={(e) => setData('phone', e.target.value)}
+                                    placeholder="321-807-9660"
+                                    onChange={(e) =>
+                                        setData("phone", e.target.value)
+                                    }
                                 />
                                 <Input
-                                    label='Password'
-                                    name='password'
-                                    type='password'
-                                    placeholder='********'
-                                    onChange={(e) => setData('password', e.target.value)}
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    placeholder="********"
+                                    onChange={(e) =>
+                                        setData("password", e.target.value)
+                                    }
                                 />
                                 <Input
-                                    label='Confirm Password'
-                                    name='password_confirmation'
-                                    type='password'
-                                    placeholder='********'
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                                    label="Confirm Password"
+                                    name="password_confirmation"
+                                    type="password"
+                                    placeholder="********"
+                                    onChange={(e) =>
+                                        setData(
+                                            "password_confirmation",
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 <button
                                     type="submit"
                                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 hover:shadow-md transition duration-300"
                                 >
-                                    {modalMode === 'create' ? 'Create User' : 'Update User'}
+                                    {modalMode === "create"
+                                        ? "Create User"
+                                        : "Update User"}
                                 </button>
                             </Form>
                         </div>
                     </div>
                 )}
-                {modalMode === 'view' && selectedUser && (
+                {modalMode === "view" && selectedUser && (
                     <div>
                         <div className="border-b px-6 py-4">
                             <h2 className="text-lg font-semibold text-gray-800">
@@ -263,15 +282,27 @@ export default function Index() {
                             </h2>
                         </div>
                         <div className="mx-4 my-6 space-y-4">
-                            <p><strong>Name:</strong> {selectedUser.name}</p>
-                            <p><strong>Last Name:</strong> {selectedUser.last_name}</p>
-                            <p><strong>Document Number:</strong> {selectedUser.document_number}</p>
-                            <p><strong>Email:</strong> {selectedUser.email}</p>
-                            <p><strong>Phone:</strong> {selectedUser.phone}</p>
+                            <p>
+                                <strong>Name:</strong> {selectedUser.name}
+                            </p>
+                            <p>
+                                <strong>Last Name:</strong>{" "}
+                                {selectedUser.last_name}
+                            </p>
+                            <p>
+                                <strong>Document Number:</strong>{" "}
+                                {selectedUser.document_number}
+                            </p>
+                            <p>
+                                <strong>Email:</strong> {selectedUser.email}
+                            </p>
+                            <p>
+                                <strong>Phone:</strong> {selectedUser.phone}
+                            </p>
                         </div>
                     </div>
                 )}
-                {modalMode === 'delete' && selectedUser && (
+                {modalMode === "delete" && selectedUser && (
                     <div>
                         <div className="border-b px-6 py-4">
                             <h2 className="text-lg font-semibold text-gray-800">
@@ -279,7 +310,10 @@ export default function Index() {
                             </h2>
                         </div>
                         <div className="mx-4 my-6">
-                            <p>Are you sure you want to delete {selectedUser.name}?</p>
+                            <p>
+                                Are you sure you want to delete{" "}
+                                {selectedUser.name}?
+                            </p>
                             <button
                                 onClick={() => {
                                     handleDelete();
@@ -302,4 +336,4 @@ export default function Index() {
     );
 }
 
-Index.layout = page => <MainLayout children={page} />;
+Index.layout = (page) => <MainLayout children={page} />;

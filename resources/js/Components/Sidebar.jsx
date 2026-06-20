@@ -33,13 +33,17 @@ export default function Sidebar() {
                         <div className="ml-4 flex flex-col">
                             <NavLink
                                 href="/sanctions/disciplinary-cases"
-                                active={route().current("sanctions.disciplinary-cases.index")}
+                                active={route().current(
+                                    "sanctions.disciplinary-cases.index",
+                                )}
                             >
                                 Disciplinary Cases
                             </NavLink>
                             <NavLink
                                 href="/sanctions/resolutions"
-                                active={route().current("sanctions.resolutions.index")}
+                                active={route().current(
+                                    "sanctions.resolutions.index",
+                                )}
                             >
                                 Resolutions History
                             </NavLink>
@@ -65,9 +69,19 @@ export default function Sidebar() {
                         <div className="ml-4 flex flex-col">
                             <NavLink
                                 href="/audits/quality-checklists"
-                                active={route().current("audits.quality-checklists.index")}
+                                active={route().current(
+                                    "audits.quality-checklists.index",
+                                )}
                             >
                                 Quality Checklists
+                            </NavLink>
+                            <NavLink
+                                href="/audits/product-counts"
+                                active={route().current(
+                                    "audits.product-counts.index",
+                                )}
+                            >
+                                Product Counts
                             </NavLink>
                             <NavLink
                                 href="/audits/history"
