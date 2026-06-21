@@ -15,4 +15,7 @@ class ProductCountRepository
     {
         return ProductCount::create($data);
     }
+    public function getById($id) {
+        return ProductCount::FindOrFail($id);
+    }
 }
