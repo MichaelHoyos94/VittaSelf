@@ -42,8 +42,8 @@ class AuditsController extends Controller
     {
         $validated = $request->validated();
         $audit = $this->productCountAuditService->create($validated);
-        //$pdfPath = $this->pdfService->generateProductCountAuditPdf($audit);
-        //$audit->update(['pdf_path' => $pdfPath]);
-        return back()->with('success', 'Product count audit created successfully! ID: ' . $audit->id);
+        $pdfPath = $this->pdfService->generateProductCountAuditPdf($audit);
+        $audit->update(['pdf_path' => $pdfPath]);
+        return redirect()->route('audits.history.index')->with('success', 'Product count audit created successfully! ID: ' . $audit->id);
     }
 }

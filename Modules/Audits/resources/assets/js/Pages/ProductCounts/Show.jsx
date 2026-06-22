@@ -1,6 +1,7 @@
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 import Select from "@/Components/Form/Select";
+import TextArea from "@/Components/Form/TextArea";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
@@ -22,6 +23,7 @@ export default function Show() {
         products_with_observations: "",
         status: "",
         requires_recount: "",
+        report: "",
     });
 
     console.log(errors);
@@ -169,6 +171,16 @@ export default function Show() {
                                         { label: "Yes", value: 1 },
                                         { label: "No", value: 0 },
                                     ]}
+                                />
+                            </div>
+                            <div className="col-span-2">
+                                <TextArea 
+                                    label={"Report"}
+                                    name={"report"}
+                                    error={errors.report}
+                                    placeholder={"This product count shows that ..."}
+                                    value={data.report}
+                                    onChange={(e) => setData("report", e.target.value)}
                                 />
                             </div>
                         </div>

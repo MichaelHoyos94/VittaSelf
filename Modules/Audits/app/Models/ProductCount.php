@@ -3,6 +3,7 @@
 namespace Modules\Audits\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductCount extends Model
 {
@@ -16,4 +17,9 @@ class ProductCount extends Model
         'observations',
         'audited'
     ];
+
+    public function audit(): HasOne
+    {
+        return $this->hasOne(ProductCountAudit::class, 'product_count_id');
+    }
 }
