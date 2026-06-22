@@ -10,7 +10,8 @@ Route::prefix('audits')->middleware(['auth', 'verified'])->as('audits.')->group(
     // ================================================== Audits History ==================================================
     Route::get('/history', [AuditsController::class, 'index'])->name('history.index');
 
-    Route::post('/quality-checklists/audit', [AuditsController::class, 'store'])->name('quality-checklists.audit');
+    Route::post('/quality-checklists/audit', [AuditsController::class, 'storeQualityChecklistAudit'])->name('quality-checklists.audit');
+    Route::post('/product-counts/audit', [AuditsController::class, 'storeProductCountAudit'])->name('product-counts.audit');
     // ================================================== Quality Checklists ==================================================
     Route::get('/quality-checklists', [QualityChecklistsController::class, 'index'])->name('quality-checklists.index');
     Route::post('/quality-checklists', [QualityChecklistsController::class, 'store'])->name('quality-checklists.store');

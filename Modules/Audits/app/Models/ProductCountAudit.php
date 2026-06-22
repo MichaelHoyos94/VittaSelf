@@ -15,7 +15,7 @@ class ProductCountAudit extends Model
         'audited_by',
         'audited_at',
         'total_expected_products',
-        'total_counted_productos',
+        'total_counted_products',
         'total_difference',
         'products_with_mismatch',
         'products_with_observations',

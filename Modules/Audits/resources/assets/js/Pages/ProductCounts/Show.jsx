@@ -9,12 +9,13 @@ import { useForm, usePage } from "@inertiajs/react";
 
 export default function Show() {
 
-    const { productCount } = usePage().props;
+    const { productCount, auth } = usePage().props;
 
-    const { data, setData, errors } = useForm({
+    const { data, setData, post, errors } = useForm({
         product_count_id: productCount.id,
         audited_at: "",
-        total_expected_products: "",
+        audited_by: auth.user.id,
+        total_expected_products: "5", //Viene del stock real del centro de costos #TODO quemado por ahora
         total_counted_products: "",
         total_difference: "",
         products_with_mismatch: "",
@@ -23,9 +24,12 @@ export default function Show() {
         requires_recount: "",
     });
 
+    console.log(errors);
+
     const handleSubmit = function (e) {
         e.preventDefault();
         console.log(data);
+        post(route("audits.product-counts.audit"));
     };
 
     return (
