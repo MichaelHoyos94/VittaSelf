@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('audited_by')->constrained('users')->onDelete('cascade');
             $table->dateTime('audited_at');
             $table->integer('total_expected_products');
-            $table->integer('total_counted_productos');
+            $table->integer('total_counted_products');
             $table->integer('total_difference');
             $table->integer('products_with_mismatch');
             $table->integer('products_with_observations');

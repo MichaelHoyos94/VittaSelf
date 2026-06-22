@@ -13,7 +13,7 @@ export default function Create() {
         count_date: "",
         observations: "",
         counted_by: auth.user.id,
-        cost_center_id: costCenter.id,
+        cost_center_id: costCenter?.id,
         products: [
             {
                 product_id: "",

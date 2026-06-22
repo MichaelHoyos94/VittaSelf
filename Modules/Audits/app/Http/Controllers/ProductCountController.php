@@ -50,7 +50,10 @@ class ProductCountController extends Controller
      */
     public function show($id)
     {
-        return Inertia::render('Audits/ProductCounts/Show');
+        $productCount = $this->service->getById($id);
+        return Inertia::render('Audits/ProductCounts/Show')->with([
+            "productCount" => $productCount
+        ]);
     }
 
     /**

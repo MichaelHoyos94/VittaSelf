@@ -25,4 +25,8 @@ class ProductCountService
             return $productCount;
         });
     }
+
+    public function getById($id){
+        return $this->repository->getById($id);
+    }
 }
