@@ -26,6 +26,33 @@ export default function Show() {
         report: "",
     });
 
+    const columns = [
+        {
+            header: 'Product',
+            render: (row) => (
+                <div>
+                    {row.product.name}
+                </div>
+            )
+        },
+        {
+            header: 'Expected',
+            render: () => (
+                <div>
+                    5
+                </div>
+            )
+        },
+        {
+            header: 'Counted',
+            accessor: 'quantity'
+        },
+        {
+            header: 'Observations',
+            accessor: 'observations'
+        }
+    ];
+
     console.log(errors);
 
     const handleSubmit = function (e) {
@@ -53,7 +80,7 @@ export default function Show() {
                         <div>
                             <p>
                                 <strong>Counted by: </strong>
-                                <span>{productCount.counted_by}</span>
+                                <span>{productCount.user?.name}</span>
                             </p>
                         </div>
                         <div className="col-span-2">
@@ -63,13 +90,13 @@ export default function Show() {
                                         <ClipboardDocumentCheckIcon className="h-5 w-5 text-primary-700" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-gray-500">Cost center</p>
+                                        <p className="text-sm text-gray-500">Cost Center</p>
                                         <div>
-                                            <strong>name</strong>
+                                            <strong>{productCount.cost_center?.name}</strong>
                                         </div>
                                         <div>
                                             <span className="text-sm text-gray-500">
-                                                address
+                                                {productCount.cost_center?.address}
                                             </span>
                                         </div>
                                     </div>
@@ -85,7 +112,8 @@ export default function Show() {
                         <div className="col-span-2"></div>
                     </div>
                     <Table
-
+                        columns={columns}
+                        data={productCount.product_quantities}
                     />
                 </div>
                 <div>

@@ -15,7 +15,8 @@ class ProductCountRepository
     {
         return ProductCount::create($data);
     }
-    public function getById($id) {
-        return ProductCount::FindOrFail($id);
+    public function getById($id)
+    {
+        return ProductCount::with(['costCenter', 'user', 'productQuantities.product'])->findOrFail($id);
     }
 }
