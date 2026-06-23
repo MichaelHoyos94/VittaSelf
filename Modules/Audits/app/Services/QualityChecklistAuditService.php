@@ -9,7 +9,9 @@ class QualityChecklistAuditService
 
     public function __construct(private QualityChecklistAuditRepository $repository) {}
 
-    public function getAll() {}
+    public function getAll() {
+        return $this->repository->getAll();
+    }
 
     public function getById($id) {}
 

@@ -20,7 +20,12 @@ class AuditsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Audits/Audits/Index');
+        $productCountAudits = $this->productCountAuditService->getAll();
+        $qualityChecklistAudits = $this->service->getAll();
+        return Inertia::render('Audits/Audits/Index')->with([
+            'productcountAudits' => $productCountAudits,
+            'qualityChecklistAudits' => $qualityChecklistAudits
+        ]);
     }
 
     /**
