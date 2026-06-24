@@ -14,8 +14,6 @@ export default function Index() {
     const { productCountAudits, qualityChecklistAudits, flash } =
         usePage().props;
 
-    console.log(productCountAudits);
-
     const productCountAuditsColumns = [
         {
             header: "Status",
@@ -41,13 +39,29 @@ export default function Index() {
             header: "Report",
             render: (row) => (
                 <div>
-                    <a href={route('audits.product-counts.audit.download', row.id)}>Report</a>
+                    <a
+                        href={route(
+                            "audits.product-counts.audit.download",
+                            row.id,
+                        )}
+                    >
+                        Report
+                    </a>
                 </div>
-            )
+            ),
         },
         {
             header: "Audited By",
-            accessor: "audited_by",
+            render: (row) => (
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.auditor.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <span>{row.auditor.full_name}</span>
+                </div>
+            ),
         },
     ];
 
@@ -68,13 +82,29 @@ export default function Index() {
             header: "Report",
             render: (row) => (
                 <div>
-                    <a href={route('audits.quality-checklists.audit.download', row.id)}>Report</a>
+                    <a
+                        href={route(
+                            "audits.quality-checklists.audit.download",
+                            row.id,
+                        )}
+                    >
+                        Report
+                    </a>
                 </div>
-            )
+            ),
         },
         {
             header: "Audited By",
-            accessor: "audited_by",
+            render: (row) => (
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.auditor.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <span>{row.auditor.full_name}</span>
+                </div>
+            ),
         },
     ];
 

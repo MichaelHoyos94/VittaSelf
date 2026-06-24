@@ -7,7 +7,7 @@ use Modules\Audits\Models\QualityChecklistAudit;
 class QualityChecklistAuditRepository
 {
     public function getAll() {
-        return QualityChecklistAudit::all();
+        return QualityChecklistAudit::with(["auditor"])->get();
     }
 
     public function getById($id) {
