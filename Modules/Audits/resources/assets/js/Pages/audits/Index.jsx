@@ -14,53 +14,67 @@ export default function Index() {
     const { productCountAudits, qualityChecklistAudits, flash } =
         usePage().props;
 
+    console.log(productCountAudits);
+
     const productCountAuditsColumns = [
         {
-            header: 'Status',
-            accessor: 'status'
+            header: "Status",
+            accessor: "status",
         },
         {
-            header: 'Total Expected Products',
-            accessor: 'total_expected_products',
+            header: "Total Expected Products",
+            accessor: "total_expected_products",
         },
         {
-            header: 'Total Counted Products',
-            accessor: 'total_counted_products'
+            header: "Total Counted Products",
+            accessor: "total_counted_products",
         },
         {
-            header: 'Total Difference',
-            accessor: 'total_difference',
+            header: "Total Difference",
+            accessor: "total_difference",
         },
         {
-            header: 'Products With Mismatch',
-            accessor: 'products_with_mismatch'
+            header: "Products With Mismatch",
+            accessor: "products_with_mismatch",
         },
         {
-            header: 'Audited By',
-            accessor: 'audited_by'
-        }
+            header: "Report",
+            render: (row) => (
+                <div>
+                    <a href={route('audits.product-counts.audit.download', row.id)}>Report</a>
+                </div>
+            )
+        },
+        {
+            header: "Audited By",
+            accessor: "audited_by",
+        },
     ];
 
     const qualityChecklistAuditsColumns = [
         {
-            header: 'Status',
-            accessor: 'status',
+            header: "Status",
+            accessor: "status",
         },
         {
-            header: 'Requires Actions',
-            accessor: 'requires_actions',
+            header: "Requires Actions",
+            render: (row) => <div>{row.requires_actions}</div>,
         },
         {
-            header: 'Corrective Actions',
-            accessor: 'corrective_actions',
+            header: "Corrective Actions",
+            accessor: "corrective_actions",
         },
         {
-            header: 'Report',
-            accessor: 'pdf_path',
+            header: "Report",
+            render: (row) => (
+                <div>
+                    <a href={route('audits.quality-checklists.audit.download', row.id)}>Report</a>
+                </div>
+            )
         },
         {
-            header: 'Audited By',
-            accessor: 'audited_by'
+            header: "Audited By",
+            accessor: "audited_by",
         },
     ];
 
@@ -72,21 +86,18 @@ export default function Index() {
     const [activeData, setActiveData] = useState(qualityChecklistAudits);
 
     const changeTab = function (tab) {
-        console.log(tab);
-        if (tab.id == 'products') {
+        if (tab.id == "products") {
             setActiveColumns(productCountAuditsColumns);
             setActiveTab(tab);
             setActiveData(productCountAudits);
-        }
-        else if (tab.id == 'quality') {
+        } else if (tab.id == "quality") {
             setActiveColumns(qualityChecklistAuditsColumns);
             setActiveTab(tab);
             setActiveData(qualityChecklistAudits);
-        }
-        else {
+        } else {
             setActiveTab(tab);
         }
-    }
+    };
 
     return (
         <div className="p-4 bg-white rounded-lg">
@@ -118,7 +129,7 @@ export default function Index() {
                     Selected Tab: {activeTab.label}
                 </h1>
                 <div>
-                    <Table columns={activeColumns} data={qualityChecklistAudits}/>
+                    <Table columns={activeColumns} data={activeData} />
                 </div>
             </div>
         </div>

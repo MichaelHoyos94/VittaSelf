@@ -13,7 +13,9 @@ class QualityChecklistAuditService
         return $this->repository->getAll();
     }
 
-    public function getById($id) {}
+    public function getById($id) {
+        return $this->repository->getById($id);
+    }
 
     public function create(array $data) {
         return $this->repository->create($data);

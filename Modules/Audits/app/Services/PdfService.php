@@ -32,10 +32,20 @@ class PdfService
             'audit' => $audit,
         ])->setPaper('letter');
 
-        $fileName = 'audit-reports/audit-' . $audit->id . '.pdf';
+        $fileName = 'audit-reports/product-count-' . $audit->id . '.pdf';
 
         Storage::disk('local')->put($fileName, $pdf->output());
 
         return $fileName;
+    }
+
+    public function download($audit)
+    {
+        abort_if(!$audit->pdf_path, 404, 'No report generated.');
+        abort_if(!Storage::disk('local')->exists($audit->pdf_path), 404, 'El archivo PDF no existe.');
+        return Storage::disk('local')->download(
+            $audit->pdf_path,
+            'audit-' . $audit->id . '.pdf'
+        );
     }
 }

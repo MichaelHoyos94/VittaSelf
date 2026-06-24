@@ -13,6 +13,6 @@ class ProductCountAuditRepository{
         return ProductCountAudit::create($data);
     }
     public function getById($id){
-
+        return ProductCountAudit::findOrFail($id);
     }
 }

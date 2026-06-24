@@ -10,7 +10,9 @@ class QualityChecklistAuditRepository
         return QualityChecklistAudit::all();
     }
 
-    public function getById($id) {}
+    public function getById($id) {
+        return QualityChecklistAudit::findOrFail($id);
+    }
 
     public function create(array $data) {
         return QualityChecklistAudit::create($data);
