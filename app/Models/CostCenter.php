@@ -37,4 +37,9 @@ class CostCenter extends Model
     {
         return $this->hasMany(ProductCount::class, 'cost_center_id');
     }
+
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class, 'cost_center_id');
+    }
 }
