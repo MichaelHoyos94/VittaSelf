@@ -6,9 +6,13 @@ use Modules\Audits\Models\QualityChecklistAudit;
 
 class QualityChecklistAuditRepository
 {
-    public function getAll() {}
+    public function getAll() {
+        return QualityChecklistAudit::with(["auditor"])->get();
+    }
 
-    public function getById($id) {}
+    public function getById($id) {
+        return QualityChecklistAudit::findOrFail($id);
+    }
 
     public function create(array $data) {
         return QualityChecklistAudit::create($data);

@@ -20,7 +20,12 @@ class AuditsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Audits/Audits/Index');
+        $productCountAudits = $this->productCountAuditService->getAll();
+        $qualityChecklistAudits = $this->service->getAll();
+        return Inertia::render('Audits/Audits/Index')->with([
+            'productCountAudits' => $productCountAudits,
+            'qualityChecklistAudits' => $qualityChecklistAudits
+        ]);
     }
 
     /**
@@ -42,8 +47,19 @@ class AuditsController extends Controller
     {
         $validated = $request->validated();
         $audit = $this->productCountAuditService->create($validated);
-        //$pdfPath = $this->pdfService->generateProductCountAuditPdf($audit);
-        //$audit->update(['pdf_path' => $pdfPath]);
-        return back()->with('success', 'Product count audit created successfully! ID: ' . $audit->id);
+        $pdfPath = $this->pdfService->generateProductCountAuditPdf($audit);
+        $audit->update(['pdf_path' => $pdfPath]);
+        return redirect()->route('audits.history.index')->with('success', 'Product count audit created successfully! ID: ' . $audit->id);
+    }
+
+    public function downloadProductCountAuditReport($id)
+    {
+        $audit = $this->productCountAuditService->getById($id);
+        return $this->pdfService->download($audit);
+    }
+
+    public function downloadQualityChecklistAuditReport($id) {
+        $audit = $this->service->getById($id);
+        return $this->pdfService->download($audit);
     }
 }

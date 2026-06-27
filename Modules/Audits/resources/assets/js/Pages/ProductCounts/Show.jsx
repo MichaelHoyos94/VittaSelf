@@ -1,30 +1,64 @@
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 import Select from "@/Components/Form/Select";
+import TextArea from "@/Components/Form/TextArea";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/16/solid";
 import { useForm, usePage } from "@inertiajs/react";
+import { useMemo } from "react";
 
 export default function Show() {
-
     const { productCount, auth } = usePage().props;
 
     const { data, setData, post, errors } = useForm({
         product_count_id: productCount.id,
         audited_at: "",
         audited_by: auth.user.id,
-        total_expected_products: "5", //Viene del stock real del centro de costos #TODO quemado por ahora
+        total_expected_products: "", //Viene del stock real del centro de costos #TODO quemado por ahora
         total_counted_products: "",
         total_difference: "",
         products_with_mismatch: "",
         products_with_observations: "",
         status: "",
         requires_recount: "",
+        report: "",
     });
 
-    console.log(errors);
+    const productQuantities = useMemo(() => {
+        const expectedByProductId = productCount.cost_center.stocks.reduce(
+            (acc, stock) => {
+                acc[stock.product_id] =
+                    (acc[stock.product_id] ?? 0) + Number(stock.quantity);
+                return acc;
+            },
+            {},
+        );
+        return productCount.product_quantities.map((quantity) => ({
+            ...quantity,
+            expected: expectedByProductId[quantity.product_id] ?? 0,
+        }))
+    });
+
+    const columns = [
+        {
+            header: "Product",
+            render: (row) => <div>{row.product.name}</div>,
+        },
+        {
+            header: "Expected",
+            accessor: "expected",
+        },
+        {
+            header: "Counted",
+            accessor: "quantity",
+        },
+        {
+            header: "Observations",
+            accessor: "observations",
+        },
+    ];
 
     const handleSubmit = function (e) {
         e.preventDefault();
@@ -51,7 +85,7 @@ export default function Show() {
                         <div>
                             <p>
                                 <strong>Counted by: </strong>
-                                <span>{productCount.counted_by}</span>
+                                <span>{productCount.user?.name}</span>
                             </p>
                         </div>
                         <div className="col-span-2">
@@ -61,13 +95,20 @@ export default function Show() {
                                         <ClipboardDocumentCheckIcon className="h-5 w-5 text-primary-700" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-gray-500">Cost center</p>
+                                        <p className="text-sm text-gray-500">
+                                            Cost Center
+                                        </p>
                                         <div>
-                                            <strong>name</strong>
+                                            <strong>
+                                                {productCount.cost_center?.name}
+                                            </strong>
                                         </div>
                                         <div>
                                             <span className="text-sm text-gray-500">
-                                                address
+                                                {
+                                                    productCount.cost_center
+                                                        ?.address
+                                                }
                                             </span>
                                         </div>
                                     </div>
@@ -77,13 +118,16 @@ export default function Show() {
                         <div>
                             <p>
                                 <strong>Observations: </strong>
-                                {productCount.observations ? productCount.observations : "N/A"}
+                                {productCount.observations
+                                    ? productCount.observations
+                                    : "N/A"}
                             </p>
                         </div>
                         <div className="col-span-2"></div>
                     </div>
                     <Table
-
+                        columns={columns}
+                        data={productQuantities}
                     />
                 </div>
                 <div>
@@ -95,12 +139,23 @@ export default function Show() {
                                     name={"audited_at"}
                                     type="date"
                                     value={data.audited_at}
-                                    onChange={(e) => setData('audited_at', e.target.value)}
+                                    onChange={(e) =>
+                                        setData("audited_at", e.target.value)
+                                    }
                                     error={errors.audited_at}
                                 />
                             </div>
                             <div>
-                                <p>Total expected products: 5</p>
+                                <Input 
+                                    label={"Total Expected Products"}
+                                    name={"total_expected_products"}
+                                    type="number"
+                                    value={data.total_expected_products}
+                                    onChange={(e) => 
+                                        setData("total_expected_products", e.target.value)
+                                    }
+                                    error={errors.total_expected_products}
+                                />
                             </div>
                             <div>
                                 <Input
@@ -108,9 +163,16 @@ export default function Show() {
                                     name={"total_counted_products"}
                                     type="number"
                                     value={data.total_counted_products}
-                                    onChange={(e) => setData('total_counted_products', e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "total_counted_products",
+                                            e.target.value,
+                                        )
+                                    }
                                     error={errors.total_counted_products}
-                                    placeholder={"Introduce the total products counted."}
+                                    placeholder={
+                                        "Introduce the total products counted."
+                                    }
                                 />
                             </div>
                             <div>
@@ -119,7 +181,12 @@ export default function Show() {
                                     name={"total_difference"}
                                     type="number"
                                     value={data.total_difference}
-                                    onChange={(e) => setData('total_difference', e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "total_difference",
+                                            e.target.value,
+                                        )
+                                    }
                                     error={errors.total_difference}
                                 />
                             </div>
@@ -129,7 +196,12 @@ export default function Show() {
                                     name={"products_with_mismatch"}
                                     type={"number"}
                                     value={data.products_with_mismatch}
-                                    onChange={(e) => setData('products_with_mismatch', e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "products_with_mismatch",
+                                            e.target.value,
+                                        )
+                                    }
                                     error={errors.products_with_mismatch}
                                 />
                             </div>
@@ -139,9 +211,16 @@ export default function Show() {
                                     name={"products_with_observations"}
                                     type="number"
                                     value={data.products_with_observations}
-                                    onChange={(e) => setData('products_with_observations', e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "products_with_observations",
+                                            e.target.value,
+                                        )
+                                    }
                                     error={errors.products_with_observations}
-                                    placeholder={"How many products with observations?"}
+                                    placeholder={
+                                        "How many products with observations?"
+                                    }
                                 />
                             </div>
                             <div>
@@ -149,12 +228,20 @@ export default function Show() {
                                     label={"Status"}
                                     name={"status"}
                                     value={data.status}
-                                    onChange={(e) => setData('status', e.target.value)}
+                                    onChange={(e) =>
+                                        setData("status", e.target.value)
+                                    }
                                     error={errors.status}
                                     options={[
                                         { label: "Correct", value: "CORRECT" },
-                                        { label: "Incorrect", value: "INCORRECT" },
-                                        { label: "Correct with issues", value: "CORRECT_WITH_ISSUES" },
+                                        {
+                                            label: "Incorrect",
+                                            value: "INCORRECT",
+                                        },
+                                        {
+                                            label: "Correct with issues",
+                                            value: "CORRECT_WITH_ISSUES",
+                                        },
                                     ]}
                                 />
                             </div>
@@ -163,7 +250,12 @@ export default function Show() {
                                     label={"Requires Recount"}
                                     name={"requires_recount"}
                                     value={data.requires_recount}
-                                    onChange={(e) => setData('requires_recount', e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            "requires_recount",
+                                            e.target.value,
+                                        )
+                                    }
                                     error={errors.requires_recount}
                                     options={[
                                         { label: "Yes", value: 1 },
@@ -171,13 +263,23 @@ export default function Show() {
                                     ]}
                                 />
                             </div>
+                            <div className="col-span-2">
+                                <TextArea
+                                    label={"Report"}
+                                    name={"report"}
+                                    error={errors.report}
+                                    placeholder={
+                                        "This product count shows that ..."
+                                    }
+                                    value={data.report}
+                                    onChange={(e) =>
+                                        setData("report", e.target.value)
+                                    }
+                                />
+                            </div>
                         </div>
                         <div className="flex justify-center items-center">
-                            <PrimaryButton
-                                type="submit"
-                            >
-                                Send
-                            </PrimaryButton>
+                            <PrimaryButton type="submit">Send</PrimaryButton>
                         </div>
                     </Form>
                 </div>

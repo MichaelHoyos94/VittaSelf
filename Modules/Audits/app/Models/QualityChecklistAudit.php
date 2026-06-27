@@ -26,7 +26,6 @@ class QualityChecklistAudit extends Model
     protected function casts(): array
     {
         return [
-            'requires_actions' => 'boolean',
             'report' => 'string',
         ];
     }

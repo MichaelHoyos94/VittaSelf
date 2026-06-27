@@ -37,7 +37,7 @@ export default function Table({
                                         >
                                             {column.render
                                                 ? column.render(row)
-                                                : row[column.accessor]}
+                                                : row[column.accessor] ?? 'N/A'}
                                         </td>
                                     ))}
                                 </tr>

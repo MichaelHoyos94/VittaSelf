@@ -2,7 +2,10 @@
 
 namespace Modules\Audits\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Audits\Enums\ProductCountAuditStatus;
 
 class ProductCountAudit extends Model
 {
@@ -14,6 +17,8 @@ class ProductCountAudit extends Model
         'status',
         'audited_by',
         'audited_at',
+        'report',
+        'pdf_path',
         'total_expected_products',
         'total_counted_products',
         'total_difference',
@@ -21,4 +26,17 @@ class ProductCountAudit extends Model
         'products_with_observations',
         'requires_recount',
     ];
+
+
+    protected function casts(): array
+    {
+        return [
+            
+        ];
+    }
+
+    public function auditor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'audited_by');
+    }
 }

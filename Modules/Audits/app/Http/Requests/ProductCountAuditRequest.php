@@ -22,6 +22,7 @@ class ProductCountAuditRequest extends FormRequest
             'products_with_mismatch' => 'required',
             'products_with_observations' => 'required',
             'requires_recount' => 'required',
+            'report' => 'required|string|max:65535'
         ];
     }
 

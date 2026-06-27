@@ -13,6 +13,6 @@ class ProductCountAuditService{
         return $this->repository->create($data);
     }
     public function getById($id){
-        $this->repository->getById($id);
+        return $this->repository->getById($id);
     }
 }
