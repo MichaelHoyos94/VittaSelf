@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Cart extends Model
 {
     protected $table = 'carts';
-
-    public function cartProducts(): HasMany
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(CartProduct::class, 'cart_id');
+        return $this->belongsToMany(Product::class)->withPivot('quantity');
     }
 }

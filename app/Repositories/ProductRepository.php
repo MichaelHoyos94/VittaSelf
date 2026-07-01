@@ -11,5 +11,7 @@ class ProductRepository
         return Product::all();
     }
     public function create(array $data) {}
-    public function getById($id) {}
+    public function getById($id) {
+        return Product::findOrFail($id);
+    }
 }

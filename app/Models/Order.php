@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Order extends Model
 {
@@ -12,11 +12,11 @@ class Order extends Model
         'subtotal',
         'total',
         'payment_method',
+        'shipping_address',
         'user_id',
     ];
-
-    public function orderProducts(): HasMany
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(OrderProduct::class, 'order_id');
+        return $this->belongsToMany(Product::class)->withPivot('quantity', 'unit_price', 'discount', 'subtotal', 'total');
     }
 }
