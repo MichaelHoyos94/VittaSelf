@@ -19,6 +19,13 @@ export default function Index() {
                         {flash.error}
                     </div>
                 )}
+                {
+                    flash.success && (
+                        <div>
+                            {flash.success}
+                        </div>
+                    )
+                }
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4 gap-8">
                 {/* Card per product */}

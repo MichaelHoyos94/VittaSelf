@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
+use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -32,10 +33,14 @@ Route::prefix('human-resources')->group(function() {
 Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
     Route::get('/my-cart', [CartController::class, 'myCart'])->name('my-cart');
     Route::post('/add-product', [CartController::class, 'addProduct'])->name('add-product');
-    Route::post('/increse-product', [CartController::class, 'increseProduct']);
-    Route::post('/decrese-product', [CartController::class, 'decreseProduct']);
-    Route::delete('/removeProduct', [CartController::class, 'removeProduct']);
-    Route::delete('/emptyCart', [CartController::class, 'emptyCart']);
+    Route::post('/increse-product', [CartController::class, 'increseProduct'])->name('increse-product');
+    Route::post('/decrese-product', [CartController::class, 'decreseProduct'])->name('decrese-product');
+    Route::post('/removeProduct', [CartController::class, 'removeProduct'])->name('remove-product');
+    Route::delete('/emptyCart', [CartController::class, 'emptyCart'])->name('empty-cart');
+});
+
+Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
 });
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {

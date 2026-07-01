@@ -7,10 +7,14 @@ use Exception;
 
 class CartService
 {
-    public function __construct(private CartRepository $repository, private ProductService $productService) {}
+    public function __construct(private CartRepository $repository) {}
     public function create($userId)
     {
         return $this->repository->create($userId);
+    }
+    public function getByUserId($userId)
+    {
+        return $this->repository->getByUserId($userId);
     }
     public function addProduct($userId, $productId)
     {
@@ -24,7 +28,7 @@ class CartService
     public function increseQuantity($userId, $productId)
     {
         $cart = $this->repository->getByUserId($userId);
-        $product = $cart->products()->where('id', $productId)->first();
+        $product = $cart->products()->where('products.id', $productId)->first();
         if ($product) {
             $product->pivot->quantity += 1;
             $product->pivot->save();
@@ -35,7 +39,7 @@ class CartService
     public function decreseQuantity($userId, $productId)
     {
         $cart = $this->repository->getByUserId($userId);
-        $product = $cart->products()->where('id', $productId)->first();
+        $product = $cart->products()->where('products.id', $productId)->first();
         if ($product) {
             $product->pivot->quantity -= 1;
             $product->pivot->save();
