@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('last_name');
-            $table->string('full_name')->virtualAs("CONCAT(name, ' ', last_name)");
+            $fullNameExpression = Schema::getConnection()->getDriverName() === 'sqlite'
+                ? "name || ' ' || last_name"
+                : "CONCAT(name, ' ', last_name)";
+            $table->string('full_name')->virtualAs($fullNameExpression);
             $table->string('document_number')->unique();
             $table->string('email')->unique();
             $table->string('phone')->nullable();

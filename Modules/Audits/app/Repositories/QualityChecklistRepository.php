@@ -6,24 +6,30 @@ use Modules\Audits\Models\QualityChecklist;
 
 class QualityChecklistRepository
 {
-    public function getAll() {
+    public function getAll()
+    {
         return QualityChecklist::all();
     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
         return QualityChecklist::find($id);
     }
 
-    public function findByCostCenter($costCenterId) {
+    public function findByCostCenter($costCenterId)
+    {
         return QualityChecklist::where('cost_center_id', $costCenterId)->get();
     }
 
-    public function create(array $data) {
+    public function create(array $data)
+    {
         return QualityChecklist::create($data);
     }
-    public function findByCostCenterAndDate($costCenterId, $date) {
+
+    public function findByCostCenterAndDate($costCenterId, $date)
+    {
         return QualityChecklist::where('cost_center_id', $costCenterId)
-            ->where('checklist_date', $date)
+            ->whereDate('checklist_date', $date)
             ->first();
     }
 }
