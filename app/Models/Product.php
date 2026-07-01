@@ -6,6 +6,7 @@ use App\Enums\Category;
 use App\Enums\Presentation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -32,5 +33,9 @@ class Product extends Model
             'category' => Category::class,
             'presentation' => Presentation::class,
         ];
+    }
+    public function carts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class)->withPivot('quantity');
     }
 }

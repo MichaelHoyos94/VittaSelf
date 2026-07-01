@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
+use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,19 @@ Route::prefix('human-resources')->group(function() {
     Route::post('/employees', [HumanResourcesController::class, 'store'])->name('human-resources.store');
     Route::put('/employees/{id}', [HumanResourcesController::class, 'update'])->name('human-resources.update');
     Route::delete('/employees/{id}', [HumanResourcesController::class, 'destroy'])->name('human-resources.destroy');
+});
+
+Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
+    Route::get('/my-cart', [CartController::class, 'myCart'])->name('my-cart');
+    Route::post('/add-product', [CartController::class, 'addProduct'])->name('add-product');
+    Route::post('/increse-product', [CartController::class, 'increseProduct']);
+    Route::post('/decrese-product', [CartController::class, 'decreseProduct']);
+    Route::delete('/removeProduct', [CartController::class, 'removeProduct']);
+    Route::delete('/emptyCart', [CartController::class, 'emptyCart']);
+});
+
+Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])->name('products.index');
 });
 
 require __DIR__.'/auth.php';

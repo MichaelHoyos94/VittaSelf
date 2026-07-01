@@ -11,5 +11,7 @@ class ProductService
         return $this->repository->getAll();
     }
     public function create(array $data) {}
-    public function getById($id) {}
+    public function getById($id) {
+        return $this->repository->getById($id);
+    }
 }
