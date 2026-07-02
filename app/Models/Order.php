@@ -13,6 +13,8 @@ class Order extends Model
         'total',
         'payment_method',
         'shipping_address',
+        'email',
+        'phone',
         'user_id',
     ];
     public function products(): BelongsToMany

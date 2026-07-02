@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderRequest;
 use App\Services\CartService;
 use App\Services\OrderService;
-use Illuminate\Http\Request;
+use Exception;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -14,12 +15,20 @@ class OrderController extends Controller
     public function checkout()
     {
         $cart = $this->cartService->getByUserId(auth()->user()->id);
-        return Inertia::render('Orders/Checkout', compact('cart'))->with([
+        return Inertia::render('Orders/Checkout')->with([
             'cart' => $cart,
         ]);
     }
-    public function create()
+    public function store(OrderRequest $request)
     {
-        
+        $validated = $request->validated();
+        try {
+            $order = $this->service->create($validated);
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
+        }
+        return Inertia::render('Orders/MyOrders')->with([
+            'order' => $order,
+        ]);
     }
 }
