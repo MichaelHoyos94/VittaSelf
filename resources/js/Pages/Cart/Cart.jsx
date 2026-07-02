@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
-import { router, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 
 export default function Cart() {
     const { cart, flash } = usePage().props;
@@ -31,6 +31,7 @@ export default function Cart() {
             <div>
                 <SecondaryButton
                     disabled={cart.products.length === 0}
+                    onClick={handleEmptyCart}
                 >
                     empty cart
                 </SecondaryButton>
@@ -59,7 +60,9 @@ export default function Cart() {
                                                 <PlusIcon className="h-4 w-4" />
                                             </button>
                                             <button
-                                                onClick={() => handleDecrese(product.id)}
+                                                onClick={() =>
+                                                    handleDecrese(product.id)
+                                                }
                                                 disabled={
                                                     product.pivot.quantity <= 1
                                                 }
@@ -69,9 +72,16 @@ export default function Cart() {
                                             </button>
                                         </div>
                                     </div>
-                                    <div>{product.price * product.pivot.quantity}</div>
                                     <div>
-                                        <button onClick={() => handleDeleteProduct(product.id)} className="bg-red-600 rounded-full p-1 text-white">
+                                        {product.price * product.pivot.quantity}
+                                    </div>
+                                    <div>
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteProduct(product.id)
+                                            }
+                                            className="bg-red-600 rounded-full p-1 text-white"
+                                        >
                                             <TrashIcon className="h-4 w-4" />
                                         </button>
                                     </div>
@@ -82,10 +92,12 @@ export default function Cart() {
                 )}
             </div>
             <div>
-                <PrimaryButton>Checkout</PrimaryButton>
+                <Link href={route("orders.checkout")}>
+                    <PrimaryButton>Checkout</PrimaryButton>
+                </Link>
             </div>
         </div>
     );
 }
 
-Cart.layout = (page) => <MainLayout children={page}/>
+Cart.layout = (page) => <MainLayout children={page} />;
