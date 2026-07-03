@@ -31,4 +31,12 @@ class OrderController extends Controller
             'order' => $order,
         ]);
     }
+    public function myOrders()
+    {
+        $userId = auth()->user()->id;
+        $orders = $this->service->getByUserId($userId);
+        return Inertia::render('Orders/MyOrders')->with([
+            'orders' => $orders,
+        ]);
+    }
 }

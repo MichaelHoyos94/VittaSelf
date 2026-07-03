@@ -42,6 +42,7 @@ Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
 Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/', [OrderController::class, 'store'])->name('store');
+    Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
 });
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {

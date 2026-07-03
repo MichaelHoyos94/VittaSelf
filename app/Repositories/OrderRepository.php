@@ -29,4 +29,8 @@ class OrderRepository
         });
     }
     public function getById($id) {}
+    public function getByUserId($userId)
+    {
+        return Order::where('user_id', $userId)->get();
+    }
 }

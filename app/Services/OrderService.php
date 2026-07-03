@@ -19,4 +19,8 @@ class OrderService
         $order = $this->repository->create($data);
         return $order;
     }
+    public function getByUserId($userId)
+    {
+        return $this->repository->getByUserId($userId);
+    }
 }
