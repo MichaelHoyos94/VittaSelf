@@ -17,6 +17,9 @@ class OrderService
         $data['subtotal'] = $subtotal;
         $data['total'] = $subtotal;
         $order = $this->repository->create($data);
+        if ($order) {
+            $this->cartService->emptyCart($data['user_id']);
+        }
         return $order;
     }
     public function getByUserId($userId)

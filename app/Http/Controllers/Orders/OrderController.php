@@ -24,11 +24,12 @@ class OrderController extends Controller
         $validated = $request->validated();
         try {
             $order = $this->service->create($validated);
+            $orders = $this->service->getByUserId(auth()->user()->id);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
         }
-        return Inertia::render('Orders/MyOrders')->with([
-            'order' => $order,
+        return redirect()->route('orders.my-orders')->with([
+            'orders' => $orders,
         ]);
     }
     public function myOrders()
