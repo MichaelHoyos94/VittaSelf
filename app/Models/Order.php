@@ -13,7 +13,15 @@ class Order extends Model
         'total',
         'payment_method',
         'shipping_address',
+        'email',
+        'phone',
         'user_id',
+    ];
+    protected $casts = [
+        'subtotal' => 'decimal:2', 
+        'total' => 'decimal:2',
+        'created_at' => 'datetime', // Format to Y-m-d H:i:s
+        'updated_at' => 'datetime',
     ];
     public function products(): BelongsToMany
     {

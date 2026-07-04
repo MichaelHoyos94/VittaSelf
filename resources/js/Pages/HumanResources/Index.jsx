@@ -105,16 +105,16 @@ export default function Index() {
         });
     };
 
-    const openEditModal = ($user) => {
+    const openEditModal = (user) => {
         setModalMode("edit");
-        setSelectedUser($user);
+        setSelectedUser(user);
 
         setData({
-            name: $user.name,
-            last_name: $user.last_name,
-            document_number: $user.document_number,
-            email: $user.email,
-            phone: $user.phone,
+            name: user.name,
+            last_name: user.last_name,
+            document_number: user.document_number,
+            email: user.email,
+            phone: user.phone,
         });
 
         setModalOpen(true);
