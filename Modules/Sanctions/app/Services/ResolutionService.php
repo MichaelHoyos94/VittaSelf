@@ -30,6 +30,7 @@ class ResolutionService
                 'SUSPEND_CODE' => $resolution->sanctions->contains('code', 'SUSPEND_CODE'),
                 'DOWNGRADE_PLAN' => $resolution->sanctions->contains('code', 'DOWNGRADE_PLAN'),
                 'TERMINATE_ACCOUNT' => $resolution->sanctions->contains('code', 'TERMINATE_ACCOUNT'),
+                'BLOCK_ORDERS' => $resolution->sanctions->contains('code', 'BLOCK_ORDERS'),
                 'applied_at' => now(),
                 'lifted_at' => now()->addDays(30), // #TODO: Cambiar por el input del tiempo de sanción
             ];

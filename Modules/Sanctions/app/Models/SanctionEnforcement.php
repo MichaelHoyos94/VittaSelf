@@ -22,6 +22,7 @@ class SanctionEnforcement extends Model
         'SUSPEND_CODE',
         'DOWNGRADE_PLAN',
         'TERMINATE_ACCOUNT',
+        'BLOCK_ORDERS',
         'applied_at',
         'lifted_at',
         'resolution_id',

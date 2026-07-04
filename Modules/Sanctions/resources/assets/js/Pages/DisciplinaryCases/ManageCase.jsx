@@ -54,8 +54,6 @@ export default function ManageCase() {
         [];
     const activeEvidence = evidences[activeEvidenceIndex];
 
-    console.log("Disciplinary Case:", disciplinaryCase);
-
     const getEvidenceUrl = (evidence) => {
         if (!evidence?.file) {
             return "";

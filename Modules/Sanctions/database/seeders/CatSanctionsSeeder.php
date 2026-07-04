@@ -55,6 +55,12 @@ class CatSanctionsSeeder extends Seeder
                 'description' => 'Se termina la cuenta del usuario, eliminando su acceso e interacción con el sitio.',
                 'active' => true,
             ],
+            [
+                'code' => 'BLOCK_ORDERS',
+                'sanction' => 'Bloqueo de pedidos.',
+                'description' => 'Se bloquea la posibilidad de realizar pedidos.',
+                'active' => true,
+            ]
         ];
 
         CatSanction::query()->upsert($records, ['code'], ['sanction', 'description', 'active']);
