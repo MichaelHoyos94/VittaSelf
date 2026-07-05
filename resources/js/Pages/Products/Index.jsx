@@ -2,30 +2,49 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 
 export default function Index() {
     const { products, flash } = usePage().props;
+    const [successMessage, setSuccessMessage] = useState(flash.success);
+    const [errorMessage, setErrorMessage] = useState(flash.error);
+    console.log(flash);
     const handleAddToCart = function (productId) {
         router.post(route('carts.add-product'), {
             product_id: productId
         });
     }
+    useEffect(() => {
+        setErrorMessage(flash.error);
+        setSuccessMessage(flash.success);
+        if (!flash.success && !flash.error) return;
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.success, flash.error])
     return (
         <div className="bg-white p-4 rounded">
             <h2>Products</h2>
             <div>
-                {flash.error && (
-                    <div>
-                        {flash.error}
+                {successMessage && (
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{successMessage}</span>
                     </div>
                 )}
-                {
-                    flash.success && (
-                        <div>
-                            {flash.success}
-                        </div>
-                    )
-                }
+                {errorMessage && (
+                    <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{errorMessage}</span>
+                    </div>
+                )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4 gap-8">
                 {/* Card per product */}

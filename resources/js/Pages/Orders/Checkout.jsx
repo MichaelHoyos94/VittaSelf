@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { useForm, usePage } from "@inertiajs/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Checkout() {
     const { cart, auth, flash } = usePage().props;

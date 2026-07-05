@@ -3,7 +3,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { Link, router, usePage } from "@inertiajs/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Cart() {
     const { cart, flash } = usePage().props;
@@ -37,7 +37,7 @@ export default function Cart() {
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, [errorMessage, successMessage])
+    }, [flash.error, flash.success])
     return (
         <div className="bg-white p-4 rounded">
             <h2>Products in my cart</h2>

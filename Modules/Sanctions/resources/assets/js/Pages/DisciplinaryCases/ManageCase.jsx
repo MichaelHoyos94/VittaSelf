@@ -1,4 +1,5 @@
 import Form from "@/Components/Form/Form";
+import Input from "@/Components/Form/Input";
 import Select from "@/Components/Form/Select";
 import TextArea from "@/Components/Form/TextArea";
 import Modal from "@/Components/Modal";
@@ -32,6 +33,8 @@ export default function ManageCase() {
         sanctions: [],
         mitigations: [],
         disciplinary_case_id: disciplinaryCase.id,
+        applied_at: "",
+        lifted_at: "",
     });
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -558,6 +561,22 @@ export default function ManageCase() {
                                         </label>
                                     ))}
                                 </div>
+                            </div>
+                            <div>
+                                <Input type="date" 
+                                    label="Applied At"
+                                    name="applied_at"
+                                    value={data.applied_at}
+                                    onChange={(e) => setData("applied_at", e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <Input type="date" 
+                                    label="Lifted At"
+                                    name="lifted_at"
+                                    value={data.lifted_at}
+                                    onChange={(e) => setData("lifted_at", e.target.value)}
+                                />
                             </div>
                         </div>
                     </div>
