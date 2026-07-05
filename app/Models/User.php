@@ -32,6 +32,7 @@ class User extends Authenticatable
         'email',
         'password',
         'cost_center_id',
+        'plan_id',
     ];
 
     /**
@@ -66,5 +67,10 @@ class User extends Authenticatable
     public function productCounts(): HasMany
     {
         return $this->hasMany(ProductCount::class, 'counted_by');
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class, 'plan_id');
     }
 }
