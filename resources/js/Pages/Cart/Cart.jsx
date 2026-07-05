@@ -3,10 +3,12 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { Link, router, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
 
 export default function Cart() {
     const { cart, flash } = usePage().props;
-    console.log(flash);
+    const [successMessage, setSuccessMessage] = useState(flash.success);
+    const [errorMessage, setErrorMessage] = useState(flash.error);
     const handleIncrese = function (productId) {
         router.post(route("carts.increse-product"), {
             product_id: productId,
@@ -25,9 +27,36 @@ export default function Cart() {
             product_id: productId,
         });
     };
+    useEffect(() => {
+        setErrorMessage(flash.error);
+        setSuccessMessage(flash.success);
+        if (!flash.success && !flash.error) return;
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [errorMessage, successMessage])
     return (
         <div className="bg-white p-4 rounded">
             <h2>Products in my cart</h2>
+            {successMessage && (
+                <div
+                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert"
+                >
+                    <span className="block sm:inline">{successMessage}</span>
+                </div>
+            )}
+            {errorMessage && (
+                <div
+                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                >
+                    <span className="block sm:inline">{errorMessage}</span>
+                </div>
+            )}
             <div>
                 <SecondaryButton
                     disabled={cart.products.length === 0}

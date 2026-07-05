@@ -58,4 +58,4 @@ export default function Index() {
     );
 }
 
-Index.layout = (page) => <MainLayout children={page}/>
+Index.layout = (page) => <MainLayout children={page} />

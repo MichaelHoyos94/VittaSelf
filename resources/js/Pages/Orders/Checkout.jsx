@@ -5,9 +5,12 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { useForm, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
 
 export default function Checkout() {
     const { cart, auth, flash } = usePage().props;
+    const [successMessage, setSuccessMessage] = useState(flash.success);
+    const [errorMessage, setErrorMessage] = useState(flash.error);
     const { data, setData, post, processing, errors } = useForm({
         user_id: auth.user.id,
         email: auth.user.email,
@@ -28,10 +31,33 @@ export default function Checkout() {
             },
         });
     }
+    useEffect(() => {
+        setSuccessMessage(flash.success);
+        setErrorMessage(flash.error);
+
+        if (!flash.success && !flash.error) return;
+
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.success, flash.error]);
     return (
         <div className="bg-white p-4 rounded">
             <h2>Checkout</h2>
             <p>Confirm the data.</p>
+            {successMessage && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span className="block sm:inline">{successMessage}</span>
+                </div>
+            )}
+            {errorMessage && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span className="block sm:inline">{errorMessage}</span>
+                </div>
+            )}
             <Form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="border-r-2 p-2">

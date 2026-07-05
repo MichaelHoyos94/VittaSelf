@@ -39,6 +39,7 @@ class SanctionEnforcement extends Model
             'SUSPEND_CODE' => 'boolean',
             'DOWNGRADE_PLAN' => 'boolean',
             'TERMINATE_ACCOUNT' => 'boolean',
+            'BLOCK_ORDERS' => 'boolean',
             'applied_at' => 'datetime',
             'lifted_at' => 'datetime',
         ];
