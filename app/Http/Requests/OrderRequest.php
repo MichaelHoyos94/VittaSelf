@@ -31,6 +31,7 @@ class OrderRequest extends FormRequest
             'products.*.id' => 'required|exists:products,id',
             'products.*.price' => 'required|numeric|min:0',
             'products.*.pivot.quantity' => 'required|integer|min:1',
+            'products.*.points' => 'nullable|integer|min:0',
         ];
     }
 }

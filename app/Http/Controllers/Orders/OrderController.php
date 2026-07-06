@@ -23,12 +23,13 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
         try {
-            $order = $this->service->create($validated);
+            $order = $this->service->create($validated, auth()->user());
+            dd($order);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
         }
         return redirect()->route('orders.my-orders')->with([
-            'success' => 'Order created successfully with ID: ' . $order->id,
+            'success' => 'Order created successfully with ID: ',
         ]);
     }
     public function myOrders()
