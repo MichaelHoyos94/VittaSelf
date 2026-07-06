@@ -16,6 +16,10 @@ class Order extends Model
         'email',
         'phone',
         'user_id',
+        'shipping_price',
+        'shipping_discount',
+        'discount',
+        'points',
     ];
     protected $casts = [
         'subtotal' => 'decimal:2', 
