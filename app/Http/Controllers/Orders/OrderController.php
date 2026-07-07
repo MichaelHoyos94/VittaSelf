@@ -15,8 +15,11 @@ class OrderController extends Controller
     public function checkout()
     {
         $cart = $this->cartService->getByUserId(auth()->user()->id);
+        $user = auth()->user();
+        $user->load(['plan.benefits']);
         return Inertia::render('Orders/Checkout')->with([
             'cart' => $cart,
+            'user' => $user,
         ]);
     }
     public function store(OrderRequest $request)

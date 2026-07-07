@@ -8,14 +8,21 @@ import { useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Checkout() {
-    const { cart, auth, flash } = usePage().props;
+    const { cart, user, flash } = usePage().props;
+    console.log(user);
+    const discountBenefit = user.plan?.benefits?.find(
+        (benefit) => benefit.type === "discount",
+    );
+    const discountValue = Number(discountBenefit?.value ?? 0);
+    const hasDiscount = discountValue > 0;
+    const formatPrice = (price) => Number(price).toFixed(2);
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const [errorMessage, setErrorMessage] = useState(flash.error);
     const { data, setData, post, processing, errors } = useForm({
-        user_id: auth.user.id,
-        email: auth.user.email,
-        phone: auth.user.phone,
-        shipping_address: auth.user.address ? auth.user.address : "—",
+        user_id: user.id,
+        email: user.email,
+        phone: user.phone,
+        shipping_address: user.address ? user.address : "—",
         payment_method: '',
         products: cart.products,
     });
@@ -60,14 +67,14 @@ export default function Checkout() {
             )}
             <Form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="border-r-2 p-2">
+                    <div className="p-2">
                         <h3>Billing</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <strong>Name:</strong>
                             </div>
                             <div>
-                                <span>{auth.user.full_name}</span>
+                                <span>{user.full_name}</span>
                             </div>
                             <div>
                                 <strong>Email:</strong>
@@ -145,29 +152,65 @@ export default function Checkout() {
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div className="p-2">
                         <h3>Products</h3>
                         <div className="flex flex-col gap-4 my-4">
-                            {cart.products.map((product) => (
-                                <div
-                                    className="border rounded-xl p-4"
-                                    key={product.id}
-                                >
-                                    <div className="flex flex-row flex-wrap justify-between gap-4">
-                                        <div>{product.name}</div>
-                                        <div className="flex flex-row gap-4">
-                                            {product.pivot.quantity}
-                                        </div>
-                                        <div>
-                                            {product.price *
-                                                product.pivot.quantity}
+                            {cart.products.map((product) => {
+                                const unitPrice = product.price;
+                                const linePrice =
+                                    product.price * product.pivot.quantity;
+                                const discountedLinePrice =
+                                    linePrice -
+                                    linePrice * (discountValue / 100);
+
+                                return (
+                                    <div
+                                        className="border rounded-xl p-4"
+                                        key={product.id}
+                                    >
+                                        <div className="flex flex-row flex-wrap justify-between gap-4">
+                                            <div className="flex flex-col items-end">
+                                                <span>Product</span>
+                                                {product.name}
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span>Quantity</span>
+                                                {product.pivot.quantity}
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span>Unit price</span>
+                                                {unitPrice}
+                                            </div>
+                                            <div>
+                                                {hasDiscount ? (
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Total</span>
+                                                        <span className="line-through text-gray-500">
+                                                            {
+                                                                formatPrice(
+                                                                    linePrice,
+                                                                )
+                                                            }
+                                                        </span>
+                                                        <span>
+                                                            {
+                                                                formatPrice(
+                                                                    discountedLinePrice,
+                                                                )
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    formatPrice(linePrice)
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1 sm:col-span-2">
                         <div className="flex flex-wrap justify-evenly gap-2 mt-4">
                             <PrimaryButton type="submit" disabled={processing}>
                                 Send
