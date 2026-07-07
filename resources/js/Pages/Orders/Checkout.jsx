@@ -8,8 +8,8 @@ import { useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Checkout() {
-    const { cart, user, flash } = usePage().props;
-    console.log(user);
+    const { cart, user, flash, sanctions } = usePage().props;
+    console.log(sanctions);
     const discountBenefit = user.plan?.benefits?.find(
         (benefit) => benefit.type === "discount",
     );
@@ -51,6 +51,9 @@ export default function Checkout() {
 
         return () => clearTimeout(timer);
     }, [flash.success, flash.error]);
+    useEffect(() => {
+        const planFreezeSanction = sanctions.find((sanction) => sanction.FREEZE_PLAN);
+    }, []);
     return (
         <div className="bg-white p-4 rounded">
             <h2>Checkout</h2>
@@ -63,6 +66,12 @@ export default function Checkout() {
             {errorMessage && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <span className="block sm:inline">{errorMessage}</span>
+                </div>
+            )}
+            {/** If any sanctions.FREEZE_PLAN, warning*/}
+            {sanctions.some(sanction => sanction.FREEZE_PLAN) && (
+                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                    <span className="block sm:inline">Your plan is currently frozen due to a sanction. Benefits will not be available until the freeze is lifted.</span>
                 </div>
             )}
             <Form onSubmit={handleSubmit}>

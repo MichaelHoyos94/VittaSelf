@@ -18,7 +18,7 @@ class OrderService
         if ($sanctions->isNotEmpty()) {
             foreach ($sanctions as $sanction) {
                 if ($sanction->BLOCK_ORDERS === true) {
-                    throw new Exception('User is restricted from placing orders due to sanctions.');
+                    throw new Exception('User is restricted from placing orders due to a sanction.');
                 } if ($sanction->FREEZE_PLAN === true) {
                     $freezePlan = true;
                 } if ($sanction->FREEZE_POINTS === true) {
