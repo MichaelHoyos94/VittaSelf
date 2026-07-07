@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
 
 export default function Checkout() {
     const { cart, user, flash, sanctions } = usePage().props;
-    console.log(sanctions);
+    const planFreezeSanction = sanctions.some((sanction) => sanction.FREEZE_PLAN);
+    const pointsFreezeSanction = sanctions.some((sanction) => sanction.FREEZE_POINTS);
     const discountBenefit = user.plan?.benefits?.find(
         (benefit) => benefit.type === "discount",
     );
@@ -51,29 +52,32 @@ export default function Checkout() {
 
         return () => clearTimeout(timer);
     }, [flash.success, flash.error]);
-    useEffect(() => {
-        const planFreezeSanction = sanctions.find((sanction) => sanction.FREEZE_PLAN);
-    }, []);
     return (
         <div className="bg-white p-4 rounded">
             <h2>Checkout</h2>
             <p>Confirm the data.</p>
-            {successMessage && (
-                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span className="block sm:inline">{successMessage}</span>
-                </div>
-            )}
-            {errorMessage && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <span className="block sm:inline">{errorMessage}</span>
-                </div>
-            )}
-            {/** If any sanctions.FREEZE_PLAN, warning*/}
-            {sanctions.some(sanction => sanction.FREEZE_PLAN) && (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
-                    <span className="block sm:inline">Your plan is currently frozen due to a sanction. Benefits will not be available until the freeze is lifted.</span>
-                </div>
-            )}
+            <div className="space-y-4 my-4">
+                {successMessage && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                        <span className="block sm:inline">{successMessage}</span>
+                    </div>
+                )}
+                {errorMessage && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <span className="block sm:inline">{errorMessage}</span>
+                    </div>
+                )}
+                {planFreezeSanction && (
+                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                        <span className="block sm:inline">Your plan is currently frozen due to a sanction. Benefits will not be available until the freeze is lifted.</span>
+                    </div>
+                )}
+                {pointsFreezeSanction && (
+                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                        <span className="block sm:inline">Your points are currently frozen due to a sanction. Points will not increment in this order.</span>
+                    </div>
+                )}
+            </div>
             <Form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="p-2">
@@ -145,7 +149,6 @@ export default function Checkout() {
                                     }
                                     options={
                                         [
-                                            { value: "", label: "Select" },
                                             {
                                                 value: "cash",
                                                 label: "Cash",
@@ -191,7 +194,7 @@ export default function Checkout() {
                                                 {unitPrice}
                                             </div>
                                             <div>
-                                                {hasDiscount ? (
+                                                {(hasDiscount && !planFreezeSanction) ? (
                                                     <div className="flex flex-col items-end">
                                                         <span>Total</span>
                                                         <span className="line-through text-gray-500">
@@ -210,7 +213,12 @@ export default function Checkout() {
                                                         </span>
                                                     </div>
                                                 ) : (
-                                                    formatPrice(linePrice)
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Total</span>
+                                                        <span>
+                                                            {formatPrice(linePrice)}
+                                                        </span>
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
