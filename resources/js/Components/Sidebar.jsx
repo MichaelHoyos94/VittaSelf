@@ -8,7 +8,7 @@ export default function Sidebar() {
         setOpenMenu(openMenu === menu ? null : menu);
     };
     return (
-        <aside className="w-64 h-screen bg-[var(--surface-container-low)] border-r border-[var(--outline-variant)] p-4">
+        <aside className="h-dvh w-64 shrink-0 overflow-y-auto bg-[var(--surface-container-low)] border-r border-[var(--outline-variant)] p-4">
             <img src="/images/logo/logo2.png" alt="LOGO" />
             <h2 className="text-lg font-bold mb-4">Mi App</h2>
 
