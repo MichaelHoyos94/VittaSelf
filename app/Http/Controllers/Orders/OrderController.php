@@ -34,7 +34,6 @@ class OrderController extends Controller
         $validated = $request->validated();
         try {
             $order = $this->service->create($validated, auth()->user());
-            dd($order);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
         }

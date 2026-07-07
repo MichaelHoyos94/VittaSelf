@@ -221,6 +221,27 @@ export default function Checkout() {
                                                     </div>
                                                 )}
                                             </div>
+                                            <div className="flex flex-col items-end">
+                                                <span>Points</span>
+                                                {product.points}
+                                            </div>
+                                            <div>
+                                                {pointsFreezeSanction ? (
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Points</span>
+                                                        <span className="text-red-500">
+                                                            0
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Points</span>
+                                                        <span>
+                                                            {product.points}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 );
