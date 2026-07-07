@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('cash_registers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->decimal('base', 13, 2)->default(100000);
+            $table->decimal('cash', 13, 2);
+            $table->decimal('bank_transfer');
+            $table->foreignId('cost_center_id')->constrained('cost_centers')->cascadeOnDelete();
+            $table->foreignId('commercial_agent_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
