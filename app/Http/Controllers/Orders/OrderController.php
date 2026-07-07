@@ -8,18 +8,25 @@ use App\Services\CartService;
 use App\Services\OrderService;
 use Exception;
 use Inertia\Inertia;
+use Modules\Sanctions\Services\SanctionEnforcementService;
 
 class OrderController extends Controller
 {
-    public function __construct(private OrderService $service, private CartService $cartService) {}
+    public function __construct(
+        private OrderService $service,
+        private CartService $cartService,
+        private SanctionEnforcementService $sanctionEnforcementService
+    ) {}
     public function checkout()
     {
         $cart = $this->cartService->getByUserId(auth()->user()->id);
         $user = auth()->user();
         $user->load(['plan.benefits']);
+        $sanctions = $this->sanctionEnforcementService->getUserSanctions($user->id);
         return Inertia::render('Orders/Checkout')->with([
             'cart' => $cart,
             'user' => $user,
+            'sanctions' => $sanctions,
         ]);
     }
     public function store(OrderRequest $request)
