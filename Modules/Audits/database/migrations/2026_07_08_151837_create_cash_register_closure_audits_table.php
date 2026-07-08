@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('observations', 255)->nullable();
             $table->text('report');
             $table->string('pdf_path')->nullable();
-            $table->foreignId('cash_register_closure_id')->constrained('cash_register_closures')->nullOnDelete();
+            $table->foreignId('cash_register_closure_id')->constrained('cash_register_closures')->restrictOnDelete();
+            $table->foreignId('audited_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
         });
     }

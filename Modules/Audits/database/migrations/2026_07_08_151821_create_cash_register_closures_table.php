@@ -26,8 +26,8 @@ return new class extends Migration
             $table->integer('coins_50')->default(0);
             $table->decimal('bank_transfer', 13, 2);
             $table->date('date');
-            $table->foreignId('cash_register_id')->constrained('cash_registers')->nullOnDelete();
-            $table->foreignId('commercial_agent_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('cash_register_id')->constrained('cash_registers')->restrictOnDelete();
+            $table->foreignId('commercial_agent_id')->constrained('users')->restrictOnDelete();
             $table->timestamps();
         });
     }
