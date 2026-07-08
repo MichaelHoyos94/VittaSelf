@@ -6,25 +6,29 @@ import { useEffect, useState } from "react";
 
 export default function Index() {
     const { products, flash } = usePage().props;
-    const [successMessage, setSuccessMessage] = useState(flash.success);
-    const [errorMessage, setErrorMessage] = useState(flash.error);
-    console.log(flash);
+    const [successMessage, setSuccessMessage] = useState(flash?.success);
+    const [errorMessage, setErrorMessage] = useState(flash?.error);
+
     const handleAddToCart = function (productId) {
         router.post(route('carts.add-product'), {
             product_id: productId
         });
     }
+
     useEffect(() => {
-        setErrorMessage(flash.error);
-        setSuccessMessage(flash.success);
-        if (!flash.success && !flash.error) return;
+        setErrorMessage(flash?.error);
+        setSuccessMessage(flash?.success);
+
+        if (!flash?.success && !flash?.error) return;
+
         const timer = setTimeout(() => {
             setSuccessMessage(null);
             setErrorMessage(null);
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, [flash.success, flash.error])
+    }, [flash])
+
     return (
         <div className="bg-white p-4 rounded">
             <h2>Products</h2>
@@ -61,11 +65,12 @@ export default function Index() {
                             </p>
                             <span>${product.price}</span><br />
                             <strong>{product.points} points</strong>
-                            <div className="flex gap-4 justify-between">
+                            <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:flex-wrap">
                                 <PrimaryButton
+                                    className="w-full justify-center text-center sm:flex-1"
                                     onClick={() => handleAddToCart(product.id)}
                                 >Add to cart</PrimaryButton>
-                                <SecondaryButton>
+                                <SecondaryButton className="w-full justify-center text-center sm:flex-1">
                                     Add to favorites
                                 </SecondaryButton>
                             </div>

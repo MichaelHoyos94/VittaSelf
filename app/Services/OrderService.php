@@ -36,7 +36,6 @@ class OrderService
         if ($user->plan && !$freezePlan) {
             $data = $this->planService->applyBenefits($data, $user->plan);
         }
-        dd($data);
         $order = $this->repository->create($data);
         if ($order) {
             $this->cartService->emptyCart($data['user_id']);
