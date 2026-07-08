@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('email');
             $table->decimal('discount', 13, 2);
             $table->decimal('points', 10, 2);
-            $table->foreignId('user_id')->constrained('users')->nullOnDelete();
-            $table->foreignId('commercial_agent_id')->constrained('users')->nullOnDelete();
-            $table->foreignId('cost_center_id')->constrained('cost_centers')->nullOnDelete();
+            $table->foreignId('user_id')->constrained('users')->restrictOnDelete();
+            $table->foreignId('commercial_agent_id')->constrained('users')->restrictOnDelete();
+            $table->foreignId('cost_center_id')->constrained('cost_centers')->restrictOnDelete();
             $table->timestamps();
         });
     }
