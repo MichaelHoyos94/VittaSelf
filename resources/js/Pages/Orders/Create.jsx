@@ -278,7 +278,15 @@ export default function Create() {
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 3 ? "block" : "hidden"}`}
                     >
-                        <p>3</p>
+                        <p>Checkout</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <h4>Billing Information</h4>
+                            </div>
+                            <div>
+                                <h4>Products</h4>
+                            </div>
+                        </div>
                     </div>
                     {/* Buttons */}
                     <div className="flex flex-wrap gap-4 justify-evenly">
