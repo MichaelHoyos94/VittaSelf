@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
+use App\Http\Controllers\Orders\InternalOrderController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Models\InternalOrder;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +42,7 @@ Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
 });
 
 Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
+    Route::get('/create-order', [InternalOrderController::class, 'create'])->name('internal-orders.create');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/', [OrderController::class, 'store'])->name('store');
     Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
