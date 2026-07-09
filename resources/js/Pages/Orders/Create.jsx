@@ -12,7 +12,14 @@ export default function Create() {
     const [euiCode, setEuiCode] = useState("");
     const [selectedProducts, setSelectedProducts] = useState([]);
     console.log("userToOrder", userToOrder);
-    const { data, setData, post, processing, errors, reset } = useForm({});
+    const { data, setData, post, processing, errors, reset } = useForm({
+        user_id: userToOrder ? userToOrder.id : null,
+        products: selectedProducts,
+        payment_method: '',
+        shipping_address: '',
+        phone: '',
+        email: ''
+    });
     const steps = ["EUI", "Products", "Checkout"];
     const currentStep = 1;
     const totalSteps = steps.length;
@@ -139,7 +146,7 @@ export default function Create() {
             {/* Content */}
             <div>
                 <Form>
-                    {/* Step 1 */}
+                    {/* Step 1 empresario*/}
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
                     >
@@ -224,12 +231,13 @@ export default function Create() {
                             </div>
                         )}
                     </div>
-                    {/* Step 2 */}
+                    {/* Step 2 productos*/}
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 2 ? "block" : "hidden"}`}
                     >
                         <p>Products</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* Catalogo de productos */}
                             <div>
                                 {products.map((product) => (
                                     <div
@@ -254,19 +262,19 @@ export default function Create() {
                                                         )
                                                     }
                                                 >
-                                                    Add to cart
+                                                    Add to order
                                                 </PrimaryButton>
-                                                <SecondaryButton className="w-full justify-center text-center sm:flex-1">
-                                                    Add to favorites
-                                                </SecondaryButton>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
+                            {/* Productos agregados */}
+                            <div>
+                            </div>
                         </div>
                     </div>
-                    {/* Step 3 */}
+                    {/* Step 3 checkout*/}
                     <div
                         className={`border-2 rounded mt-6 p-4 max-w-xl mx-auto ${currentStep === 3 ? "block" : "hidden"}`}
                     >
