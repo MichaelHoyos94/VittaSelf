@@ -6,6 +6,7 @@ use App\Enums\Category;
 use App\Enums\Presentation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
@@ -41,5 +42,9 @@ class Product extends Model
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
+    }
+    public function internalOrders(): BelongsTo
+    {
+        return $this->belongsTo(InternalOrder::class);
     }
 }
