@@ -45,7 +45,10 @@ Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
     Route::get('/create-order', [InternalOrderController::class, 'create'])->name('internal-orders.create');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/', [OrderController::class, 'store'])->name('store');
+    Route::post('/create-internal-order', [InternalOrderController::class, 'store'])->name('internal-orders.store');
     Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
+    Route::get('/web-orders', [OrderController::class, 'index'])->name('web-orders.index');
+    Route::get('/internal-orders', [InternalOrderController::class, 'index'])->name('internal-orders.index');
 });
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {

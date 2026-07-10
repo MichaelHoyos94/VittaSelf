@@ -104,7 +104,7 @@ export default function Create() {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Submitting order with data:", data);
+        post(route('orders.internal-orders.store'));
     }
     return (
         <div className="p-4 bg-white rounded">
