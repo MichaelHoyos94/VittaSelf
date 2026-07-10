@@ -4,34 +4,54 @@ import Select from "@/Components/Form/Select";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { MagnifyingGlassIcon, MinusIcon, PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import {
+    MagnifyingGlassIcon,
+    MinusIcon,
+    PlusIcon,
+    TrashIcon,
+    XMarkIcon,
+} from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Create() {
-    const { userToOrder, products, costCenter } = usePage().props;
+    const { userToOrder, products, costCenter, sanctions } = usePage().props;
     const [euiCode, setEuiCode] = useState("");
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [currentStep, setCurrentStep] = useState(1);
 
+    const planFreezeSanction = sanctions.some(
+        (sanction) => sanction.FREEZE_PLAN,
+    );
+    const pointsFreezeSanction = sanctions.some(
+        (sanction) => sanction.FREEZE_POINTS,
+    );
+
+    const discountBenefit = userToOrder?.plan?.benefits?.find(
+        (benefit) => benefit.type === "discount",
+    );
+    const discountValue = Number(discountBenefit?.value ?? 0);
+    const hasDiscount = discountValue > 0;
+    const formatPrice = (price) => Number(price).toFixed(2);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         user_id: userToOrder ? userToOrder.id : null,
         products: selectedProducts,
-        payment_method: '',
-        shipping_address: userToOrder ? userToOrder.address : '',
-        phone: userToOrder ? userToOrder.phone : '',
-        email: userToOrder ? userToOrder.email : '',
+        payment_method: "",
+        shipping_address: userToOrder ? userToOrder.address : "",
+        phone: userToOrder ? userToOrder.phone : "",
+        email: userToOrder ? userToOrder.email : "",
     });
 
     useEffect(() => {
         setData((currentData) => ({
             ...currentData,
             user_id: userToOrder ? userToOrder.id : null,
-            shipping_address: userToOrder?.address ?? '',
-            phone: userToOrder?.phone ?? '',
-            email: userToOrder?.email ?? '',
+            shipping_address: userToOrder?.address ?? "",
+            phone: userToOrder?.phone ?? "",
+            email: userToOrder?.email ?? "",
         }));
-        setEuiCode(userToOrder?.eui_code ?? '');
+        setEuiCode(userToOrder?.eui_code ?? "");
     }, [userToOrder]);
 
     useEffect(() => {
@@ -82,10 +102,10 @@ export default function Create() {
     };
     const handleNextStep = () => {
         setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
-    }
+    };
     const handleBackStep = () => {
         setCurrentStep((prev) => Math.max(prev - 1, 1));
-    }
+    };
     const handleAddProduct = (e, product) => {
         e.preventDefault();
         setSelectedProducts((prev) => [
@@ -97,15 +117,31 @@ export default function Create() {
                 price: product.price,
             },
         ]);
-    }
+    };
     const handleRemoveProduct = (e, product) => {
         e.preventDefault();
         setSelectedProducts((prev) => prev.filter((p) => p.id !== product.id));
-    }
+    };
+    const handleIncreaseProduct = (productId) => {
+        setSelectedProducts((prev) =>
+            prev.map((p) =>
+                p.id === productId ? { ...p, quantity: p.quantity + 1 } : p,
+            ),
+        );
+    };
+    const handleDecreaseProduct = (productId) => {
+        setSelectedProducts((prev) =>
+            prev.map((p) =>
+                p.id === productId && p.quantity > 1
+                    ? { ...p, quantity: p.quantity - 1 }
+                    : p,
+            ),
+        );
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('orders.internal-orders.store'));
-    }
+        post(route("orders.internal-orders.store"));
+    };
     return (
         <div className="p-4 bg-white rounded">
             <h2>Create Internal Order</h2>
@@ -125,10 +161,11 @@ export default function Create() {
                         return (
                             <div key={step} className="text-center">
                                 <h3
-                                    className={`text-sm font-semibold ${isActive
-                                        ? "text-primary-600"
-                                        : "text-gray-400"
-                                        }`}
+                                    className={`text-sm font-semibold ${
+                                        isActive
+                                            ? "text-primary-600"
+                                            : "text-gray-400"
+                                    }`}
                                 >
                                     {step}
                                 </h3>
@@ -169,10 +206,11 @@ export default function Create() {
                                 className="flex justify-center"
                             >
                                 <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${isActive
-                                        ? "border-primary-500 bg-primary-500 text-white"
-                                        : "border-gray-300 bg-white text-gray-400"
-                                        }`}
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${
+                                        isActive
+                                            ? "border-primary-500 bg-primary-500 text-white"
+                                            : "border-gray-300 bg-white text-gray-400"
+                                    }`}
                                 >
                                     {stepNumber}
                                 </span>
@@ -183,13 +221,15 @@ export default function Create() {
             </div>
             {/* Content */}
             <div>
-                <Form>
+                <Form
+                    onSubmit={handleSubmit}
+                >
                     {/* Step 1 empresario*/}
                     <div
                         className={`border-2 rounded mt-6 p-4 mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
                     >
-                        <p>EUI</p>
-                        <div className="col-span-2 grid grid-cols-8 gap-4">
+                        <h3>EUI</h3>
+                        <div className="grid grid-cols-8 gap-4">
                             <div className="col-span-7">
                                 <Input
                                     label="Eui Code"
@@ -202,7 +242,7 @@ export default function Create() {
                                     placeholder="COL-51578"
                                 />
                             </div>
-                            <div className="flex col-span-1">
+                            <div className="flex content-center col-span-1">
                                 <button
                                     type="button"
                                     onClick={searchUser}
@@ -222,7 +262,7 @@ export default function Create() {
                             </div>
                         </div>
                         {userToOrder && (
-                            <div className="col-span-2 user-info">
+                            <div className="user-info">
                                 <div className="rounded-lg border border-primary-100 bg-primary-50/60 p-4">
                                     <div className="flex items-center gap-3">
                                         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-700 text-sm font-semibold text-white">
@@ -266,6 +306,33 @@ export default function Create() {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="space-y-4 my-4">
+                                    {planFreezeSanction && (
+                                        <div
+                                            className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+                                            role="alert"
+                                        >
+                                            <span className="block sm:inline">
+                                                Your plan is currently frozen
+                                                due to a sanction. Benefits will
+                                                not be available until the
+                                                freeze is lifted.
+                                            </span>
+                                        </div>
+                                    )}
+                                    {pointsFreezeSanction && (
+                                        <div
+                                            className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+                                            role="alert"
+                                        >
+                                            <span className="block sm:inline">
+                                                Your points are currently frozen
+                                                due to a sanction. Points will
+                                                not increment in this order.
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>
@@ -293,8 +360,17 @@ export default function Create() {
                                             <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:flex-wrap">
                                                 <PrimaryButton
                                                     className="w-full justify-center text-center sm:flex-1"
-                                                    onClick={(e) => handleAddProduct(e, product)}
-                                                    disabled={selectedProducts.some((selectedProduct) => selectedProduct.id === product.id)}
+                                                    onClick={(e) =>
+                                                        handleAddProduct(
+                                                            e,
+                                                            product,
+                                                        )
+                                                    }
+                                                    disabled={selectedProducts.some(
+                                                        (selectedProduct) =>
+                                                            selectedProduct.id ===
+                                                            product.id,
+                                                    )}
                                                 >
                                                     Add to order
                                                 </PrimaryButton>
@@ -316,15 +392,41 @@ export default function Create() {
                                                     key={product.id}
                                                 >
                                                     <div className="flex flex-row flex-wrap justify-between gap-4">
-                                                        <div>{products.find((item) => item.id === product.id)?.name}</div>
+                                                        <div>
+                                                            {
+                                                                products.find(
+                                                                    (item) =>
+                                                                        item.id ===
+                                                                        product.id,
+                                                                )?.name
+                                                            }
+                                                        </div>
                                                         <div className="flex flex-row gap-4">
                                                             <div className="flex flex-row gap-2">
+                                                                <span className="font-bold">
+                                                                    {
+                                                                        product.quantity
+                                                                    }
+                                                                </span>
+                                                                <span>x</span>
                                                                 <button
+                                                                    onClick={() =>
+                                                                        handleIncreaseProduct(
+                                                                            product.id,
+                                                                        )
+                                                                    }
+                                                                    type="button"
                                                                     className="bg-primary-600 rounded-full p-1 text-white"
                                                                 >
                                                                     <PlusIcon className="h-4 w-4" />
                                                                 </button>
                                                                 <button
+                                                                    onClick={() =>
+                                                                        handleDecreaseProduct(
+                                                                            product.id,
+                                                                        )
+                                                                    }
+                                                                    type="button"
                                                                     className="bg-red-600 rounded-full p-1 text-white disabled:opacity-30"
                                                                 >
                                                                     <MinusIcon className="h-4 w-4" />
@@ -332,12 +434,18 @@ export default function Create() {
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            {product.price}
+                                                            {/* Money format $###.###,dd */}
+                                                            {product.price * product.quantity}
                                                         </div>
                                                         <div>
                                                             <button
                                                                 className="bg-red-600 rounded-full p-1 text-white"
-                                                                onClick={(e) => handleRemoveProduct(e, product)}
+                                                                onClick={(e) =>
+                                                                    handleRemoveProduct(
+                                                                        e,
+                                                                        product,
+                                                                    )
+                                                                }
                                                             >
                                                                 <TrashIcon className="h-4 w-4" />
                                                             </button>
@@ -364,7 +472,11 @@ export default function Create() {
                                         <strong>Name:</strong>
                                     </div>
                                     <div>
-                                        <span>{userToOrder ? userToOrder.full_name : '—'}</span>
+                                        <span>
+                                            {userToOrder
+                                                ? userToOrder.full_name
+                                                : "—"}
+                                        </span>
                                     </div>
                                     <div>
                                         <strong>Email:</strong>
@@ -405,7 +517,10 @@ export default function Create() {
                                             name="shipping_address"
                                             value={data.shipping_address}
                                             onChange={(e) =>
-                                                setData("shipping_address", e.target.value)
+                                                setData(
+                                                    "shipping_address",
+                                                    e.target.value,
+                                                )
                                             }
                                             placeholder="123 Main St, City, Country"
                                             error={errors.shipping_address}
@@ -424,18 +539,16 @@ export default function Create() {
                                                     e.target.value,
                                                 )
                                             }
-                                            options={
-                                                [
-                                                    {
-                                                        value: "cash",
-                                                        label: "Cash",
-                                                    },
-                                                    {
-                                                        value: "bank_transfer",
-                                                        label: "Bank Transfer",
-                                                    },
-                                                ]
-                                            }
+                                            options={[
+                                                {
+                                                    value: "cash",
+                                                    label: "Cash",
+                                                },
+                                                {
+                                                    value: "bank_transfer",
+                                                    label: "Bank Transfer",
+                                                },
+                                            ]}
                                             error={errors.payment_method}
                                         />
                                     </div>
@@ -443,21 +556,125 @@ export default function Create() {
                             </div>
                             <div>
                                 <h4>Products</h4>
+                                <div className="flex flex-col gap-4 my-4">
+                                    {selectedProducts.map((product) => {
+                                        const unitPrice = product.price;
+                                        const linePrice =
+                                            product.price * product.quantity;
+                                        const discountedLinePrice =
+                                            linePrice -
+                                            linePrice * (discountValue / 100);
+
+                                        return (
+                                            <div
+                                                className="border rounded-xl p-4"
+                                                key={product.id}
+                                            >
+                                                <div className="flex flex-row flex-wrap justify-between gap-4">
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Product</span>
+                                                        {
+                                                            products.find(
+                                                                (item) =>
+                                                                    item.id ===
+                                                                    product.id,
+                                                            )?.name
+                                                        }
+                                                    </div>
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Quantity</span>
+                                                        {product.quantity}
+                                                    </div>
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Unit price</span>
+                                                        {unitPrice}
+                                                    </div>
+                                                    <div>
+                                                        {hasDiscount &&
+                                                        !planFreezeSanction ? (
+                                                            <div className="flex flex-col items-end">
+                                                                <span>
+                                                                    Total
+                                                                </span>
+                                                                <span className="line-through text-gray-500">
+                                                                    {formatPrice(
+                                                                        linePrice,
+                                                                    )}
+                                                                </span>
+                                                                <span>
+                                                                    {formatPrice(
+                                                                        discountedLinePrice,
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex flex-col items-end">
+                                                                <span>
+                                                                    Total
+                                                                </span>
+                                                                <span>
+                                                                    {formatPrice(
+                                                                        linePrice,
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col items-end">
+                                                        <span>Points</span>
+                                                        {product.points}
+                                                    </div>
+                                                    <div>
+                                                        {pointsFreezeSanction ? (
+                                                            <div className="flex flex-col items-end">
+                                                                <span>
+                                                                    Total Points
+                                                                </span>
+                                                                <span className="line-through text-gray-500">
+                                                                    {product.points *
+                                                                        product.quantity}
+                                                                </span>
+                                                                <span className="text-red-500">
+                                                                    0
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex flex-col items-end">
+                                                                <span>
+                                                                    Total Points
+                                                                </span>
+                                                                <span>
+                                                                    {product.points *
+                                                                        product.quantity}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
                     {/* Buttons */}
                     <div className="flex flex-wrap gap-4 justify-evenly">
-                        <SecondaryButton
+                        <SecondaryButton 
                             onClick={handleBackStep}
+                            disabled={currentStep === 1}
                         >
                             Back
                         </SecondaryButton>
-                        <PrimaryButton onClick={handleSubmit}>
+                        <PrimaryButton 
+                            type="submit"
+                            disabled={currentStep !== steps.length || selectedProducts.length === 0 || !userToOrder || planFreezeSanction || processing}
+                        >
                             Send
                         </PrimaryButton>
-                        <SecondaryButton
+                        <SecondaryButton 
                             onClick={handleNextStep}
+                            disabled={currentStep === steps.length}
                         >
                             Next
                         </SecondaryButton>

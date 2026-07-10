@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InternalOrder extends Model
 {
@@ -27,4 +28,8 @@ class InternalOrder extends Model
         'created_at' => 'datetime', // Format to Y-m-d H:i:s
         'updated_at' => 'datetime',
     ];
+    public function products(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
