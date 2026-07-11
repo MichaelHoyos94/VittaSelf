@@ -11,7 +11,7 @@ export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log("links:", users.links);
+    console.log("links:", users);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
@@ -171,6 +171,9 @@ export default function Index() {
             <Table
                 columns={columns}
                 data={users.data}
+                from={users.from}
+                to={users.to}
+                totalResults={users.total}
                 emptyText="No employees found"
                 links={users.links}
                 onPageChange={handlePageChange}
