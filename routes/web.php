@@ -6,8 +6,6 @@ use App\Http\Controllers\Orders\InternalOrderController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Models\InternalOrder;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

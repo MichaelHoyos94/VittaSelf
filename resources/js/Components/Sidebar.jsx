@@ -10,7 +10,6 @@ export default function Sidebar() {
     return (
         <aside className="h-dvh w-64 shrink-0 overflow-y-auto bg-[var(--surface-container-low)] border-r border-[var(--outline-variant)] p-4">
             <img src="/images/logo/logo2.png" alt="LOGO" />
-            <h2 className="text-lg font-bold mb-4">Mi App</h2>
 
             <nav className="flex flex-col gap-2">
                 {/* 🏠 Simple link */}
@@ -96,25 +95,25 @@ export default function Sidebar() {
                 {/* 📦 Parent menu */}
                 <div>
                     <button
-                        onClick={() => toggleMenu("inventario")}
+                        onClick={() => toggleMenu("operations")}
                         className="w-full text-left p-2 rounded hover:bg-[var(--surface-variant)]"
                     >
-                        Inventario
+                        Operations
                     </button>
 
-                    {openMenu === "inventario" && (
+                    {openMenu === "operations" && (
                         <div className="ml-4 flex flex-col">
                             <NavLink
                                 href="/dashboard"
                                 active={route().current("products")}
                             >
-                                Products
+                                Inventory Entry
                             </NavLink>
                             <NavLink
                                 href="/dashboard"
                                 active={route().current("products")}
                             >
-                                Products
+                                Inventory Transfer
                             </NavLink>
                             <NavLink
                                 href="/dashboard"
@@ -160,6 +159,37 @@ export default function Sidebar() {
                                 )}
                             >
                                 Permissions
+                            </NavLink>
+                        </div>
+                    )}
+                </div>
+
+                {/* 🧾 Orders */}
+                <div>
+                    <button
+                        onClick={() => toggleMenu("orders")}
+                        className="w-full text-left p-2 rounded hover:bg-[var(--surface-variant)]"
+                    >
+                        Orders
+                    </button>
+
+                    {openMenu === "orders" && (
+                        <div className="ml-4 flex flex-col">
+                            <NavLink
+                                href="/orders/internal-orders"
+                                active={route().current(
+                                    "orders.internal-orders.index",
+                                )}
+                            >
+                                Internal Orders
+                            </NavLink>
+                            <NavLink
+                                href="/orders/web-orders"
+                                active={route().current(
+                                    "orders.web-orders.index",
+                                )}
+                            >
+                                Web Orders
                             </NavLink>
                         </div>
                     )}

@@ -10,6 +10,12 @@ use Modules\Sanctions\Services\SanctionEnforcementService;
 class OrderService
 {
     public function __construct(private OrderRepository $repository, private CartService $cartService, private SanctionEnforcementService $sanctionEnforcementService, private PlanService $planService) {}
+    
+    public function getAll() 
+    {
+        return $this->repository->getAll();
+    }
+
     public function create($data, $user)
     {
         $sanctions = $this->sanctionEnforcementService->getUserSanctions($data['user_id']);
