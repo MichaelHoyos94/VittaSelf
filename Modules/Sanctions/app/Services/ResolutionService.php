@@ -17,6 +17,9 @@ class ResolutionService
     }
     public function create($data)
     {
+        $appliedAt = $data['applied_at'];
+        $liftedAt = $data['lifted_at'];
+        unset($data['applied_at'], $data['lifted_at']);
         $resolution = $this->repository->create($data);
         if ($resolution) {
             $this->disciplinaryCaseService->progressCase($resolution->disciplinary_case_id);
@@ -30,8 +33,9 @@ class ResolutionService
                 'SUSPEND_CODE' => $resolution->sanctions->contains('code', 'SUSPEND_CODE'),
                 'DOWNGRADE_PLAN' => $resolution->sanctions->contains('code', 'DOWNGRADE_PLAN'),
                 'TERMINATE_ACCOUNT' => $resolution->sanctions->contains('code', 'TERMINATE_ACCOUNT'),
-                'applied_at' => now(),
-                'lifted_at' => now()->addDays(30), // #TODO: Cambiar por el input del tiempo de sanción
+                'BLOCK_ORDERS' => $resolution->sanctions->contains('code', 'BLOCK_ORDERS'),
+                'applied_at' => $appliedAt,
+                'lifted_at' => $liftedAt,
             ];
             $this->sanctionEnforcementService->create($sanctionEnforcementData);
         }

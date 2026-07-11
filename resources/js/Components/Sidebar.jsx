@@ -8,7 +8,7 @@ export default function Sidebar() {
         setOpenMenu(openMenu === menu ? null : menu);
     };
     return (
-        <aside className="w-64 h-screen bg-[var(--surface-container-low)] border-r border-[var(--outline-variant)] p-4">
+        <aside className="h-dvh w-64 shrink-0 overflow-y-auto bg-[var(--surface-container-low)] border-r border-[var(--outline-variant)] p-4">
             <img src="/images/logo/logo2.png" alt="LOGO" />
             <h2 className="text-lg font-bold mb-4">Mi App</h2>
 
@@ -33,13 +33,17 @@ export default function Sidebar() {
                         <div className="ml-4 flex flex-col">
                             <NavLink
                                 href="/sanctions/disciplinary-cases"
-                                active={route().current("sanctions.disciplinary-cases.index")}
+                                active={route().current(
+                                    "sanctions.disciplinary-cases.index",
+                                )}
                             >
                                 Disciplinary Cases
                             </NavLink>
                             <NavLink
                                 href="/sanctions/resolutions"
-                                active={route().current("sanctions.resolutions.index")}
+                                active={route().current(
+                                    "sanctions.resolutions.index",
+                                )}
                             >
                                 Resolutions History
                             </NavLink>
@@ -65,9 +69,19 @@ export default function Sidebar() {
                         <div className="ml-4 flex flex-col">
                             <NavLink
                                 href="/audits/quality-checklists"
-                                active={route().current("audits.quality-checklists.index")}
+                                active={route().current(
+                                    "audits.quality-checklists.index",
+                                )}
                             >
                                 Quality Checklists
+                            </NavLink>
+                            <NavLink
+                                href="/audits/product-counts"
+                                active={route().current(
+                                    "audits.product-counts.index",
+                                )}
+                            >
+                                Product Counts
                             </NavLink>
                             <NavLink
                                 href="/audits/history"

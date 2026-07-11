@@ -7,9 +7,11 @@ namespace App\Models;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Audits\Models\ProductCount;
 
 class User extends Authenticatable
 {
@@ -30,6 +32,7 @@ class User extends Authenticatable
         'email',
         'password',
         'cost_center_id',
+        'plan_id',
     ];
 
     /**
@@ -59,5 +62,15 @@ class User extends Authenticatable
     public function costCenter(): BelongsTo
     {
         return $this->belongsTo(CostCenter::class, 'cost_center_id');
+    }
+
+    public function productCounts(): HasMany
+    {
+        return $this->hasMany(ProductCount::class, 'counted_by');
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class, 'plan_id');
     }
 }

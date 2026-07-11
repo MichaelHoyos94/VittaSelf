@@ -29,6 +29,8 @@ class ResolutionRequest extends FormRequest
             'sanctions.*' => 'exists:cat_sanctions,id',
             'mitigations' => 'array',
             'mitigations.*' => 'exists:cat_mitigations,id',
+            'applied_at' => 'nullable|date',
+            'lifted_at' => 'nullable|date|after:applied_at',
         ];
     }
 

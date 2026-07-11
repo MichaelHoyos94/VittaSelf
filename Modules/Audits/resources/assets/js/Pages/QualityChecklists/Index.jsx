@@ -87,7 +87,6 @@ export default function Index() {
     const handleSubmitAudit = (e) => {
         e.preventDefault();
         setAuditData("quality_checklist_id", selectedChecklist?.id || "");
-        console.log("Audit data to submit:", auditData);
         postAudit(route("audits.quality-checklists.audit"), {
             data: auditData,
             onSuccess: () => {

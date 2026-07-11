@@ -23,6 +23,6 @@ class UserRepository
 
     public function getByEuiCode($euiCode)
     {
-        return User::where('eui_code', $euiCode)->first();
+        return User::with('plan')->where('eui_code', $euiCode)->first();
     }
 }
