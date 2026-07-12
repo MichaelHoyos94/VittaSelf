@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CashRegisterClosureController;
+use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
 use App\Http\Controllers\Orders\InternalOrderController;
 use App\Http\Controllers\Orders\OrderController;
@@ -47,6 +49,11 @@ Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
     Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
     Route::get('/web-orders', [OrderController::class, 'index'])->name('web-orders.index');
     Route::get('/internal-orders', [InternalOrderController::class, 'index'])->name('internal-orders.index');
+});
+
+Route::prefix('cash-register-manage')->middleware('auth')->as('cash-register-manage.')->group(function () {
+    Route::get('/cash-registers', [CashRegisterController::class, 'index'])->name('cash-registers.index');
+    Route::get('/cash-register-closings', [CashRegisterClosureController::class, 'index'])->name('cash-register-closings.index');
 });
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {

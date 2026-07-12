@@ -11,6 +11,7 @@ import {
     UsersIcon,
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
+import { ArchiveBoxIcon } from "@heroicons/react/16/solid";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -147,6 +148,27 @@ export default function Sidebar() {
                     label: "Web Orders",
                     href: "/orders/web-orders",
                     active: isCurrent("orders.web-orders.index"),
+                },
+            ],
+        },
+        {
+            id: "cash-register-manage",
+            label: "Cash Register Manage",
+            icon: ArchiveBoxIcon,
+            active:
+                isCurrent("cash-register-manage.*") ||
+                isCurrent("cash-register-manage.cash-registers.index") ||
+                isCurrent("cash-register-manage.cash-register-closings.index"),
+            items: [
+                {
+                    label: "Cash Registers",
+                    href: "/cash-register-manage/cash-registers",
+                    active: isCurrent("cash-register-manage.cash-registers.index"),
+                },
+                {
+                    label: "Cash Register Closings",
+                    href: "/cash-register-manage/cash-register-closings",
+                    active: isCurrent("cash-register-manage.cash-register-closings.index"),
                 },
             ],
         },
