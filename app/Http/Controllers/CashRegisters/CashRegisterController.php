@@ -13,7 +13,10 @@ class CashRegisterController extends Controller
     public function __construct(private CashRegisterService $service) {}
     public function index()
     {
-        return Inertia::render('CashRegisters/Index');
+        $cashRegisters = $this->service->getAll();
+        return Inertia::render('CashRegisters/Index')->with([
+            'cashRegisters' => $cashRegisters,
+        ]);
     }
     public function store(CashRegisterRequest $request)
     {

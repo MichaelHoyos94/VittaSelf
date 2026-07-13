@@ -1,22 +1,208 @@
+import DangerButton from "@/Components/DangerButton";
+import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
+import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
+import { ArchiveBoxIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/16/solid";
+import { usePage } from "@inertiajs/react";
+import { useState } from "react";
 
-export default function Index()
-{
+export default function Index() {
+    const { cashRegisters, flash, users } = usePage().props;
+    const [selectedCashRegister, setSelectedCashRegister] = useState(null);
+    const [modalMode, setModalMode] = useState("create");
+    const [showModal, setModalShow] = useState(false);
+
+    console.log(cashRegisters);
+
+    const openCreateModal = () => {
+        setModalMode("create");
+        setSelectedCashRegister(null);
+        setModalShow(true);
+    }
+
+    const openAssignModal = (cashRegister, user) => {
+        setModalMode("assign");
+        setSelectedCashRegister(cashRegister);
+        setModalShow(true);
+    }
+
+    const openFreeModal = (cashRegister) => {
+        setModalMode("free");
+        setSelectedCashRegister(cashRegister);
+        setModalShow(true);
+    }
+
+    const openDeleteModal = (cashRegister) => {
+        setModalMode("delete");
+        setSelectedCashRegister(cashRegister);
+        setModalShow(true);
+    }
+
+    const closeModal = () => {
+        setModalShow(false);
+    }
+
+    const handleDelete = () => {
+        // Implement the delete logic here, e.g., make an API call to delete the cash register
+        console.log(`Deleting cash register: ${selectedCashRegister.name}`);
+        closeModal();
+    }
+
     return (
         <div className="p-4 rounded-xl bg-white">
             <h2>Cash Registers</h2>
             <p>Manage and assign cash registers.</p>
             {/* Buttons */}
             <div className="flex gap-4 mb-4">
-                <PrimaryButton >
+                <PrimaryButton
+                    onClick={openCreateModal}
+                >
                     Create
                 </PrimaryButton>
             </div>
-            <Table />
-        </div>
+            {/* Cash registers cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {cashRegisters.map((cashRegister) => (
+                    <div className="border rounded-xl shadow-lg p-4 transform transition duration-100 hover:scale-105">
+                        {/* Each item at extreme */}
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="flex items-center">
+                                <ArchiveBoxIcon className="w-4 h-4" />
+                                <h3>{cashRegister.name}</h3>
+                            </div>
+                            <div>
+                                {cashRegister.is_open ? (
+                                    <span className="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">Open</span>
+                                ) : (
+                                    <span className="bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-200 dark:text-gray-900">Closed</span>
+                                )}
+                            </div>
+                        </div>
+                        {/* Cost center section */}
+                        <div className="ml-auto rounded bg-gray-50 px-4 py-2">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
+                                    <ClipboardDocumentCheckIcon className="h-5 w-5 text-primary-700" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500">Cost center</p>
+                                    <div>
+                                        <strong>{cashRegister.cost_center?.name || "N/A"}</strong>
+                                    </div>
+                                    <div>
+                                        <span className="text-sm text-gray-500">
+                                            {cashRegister.cost_center?.address || "N/A"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Buttons */}
+                        <div className="flex justify-end gap-2 mt-4">
+                            <PrimaryButton
+                                onClick={() => openAssignModal(cashRegister)}
+                            >
+                                Assign
+                            </PrimaryButton>
+                            <SecondaryButton
+                                onClick={() => openFreeModal(cashRegister)}
+                            >
+                                Free
+                            </SecondaryButton>
+                            <DangerButton
+                                onClick={() => openDeleteModal(cashRegister)}
+                            >
+                                Delete
+                            </DangerButton>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <Modal show={showModal} onClose={closeModal} maxWidth="lg">
+                {
+                    modalMode === "assign" && (
+                        <div>
+                            <div className="border-b px-6 py-4">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    Assign Cash Register
+                                </h2>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    modalMode === "free" && (
+                        <div>
+                            <div className="border-b px-6 py-4">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    Free Cash Register
+                                </h2>
+                            </div>
+                            <div className="mx-4 my-6">
+                                <p>
+                                    Are you sure you want to unassign {selectedCashRegister.commercial_agent.full_name} from {selectedCashRegister.name}?
+                                </p>
+                                <div className="flex justify-end gap-4">
+                                    <PrimaryButton>
+                                        unassign
+                                    </PrimaryButton>
+                                    <SecondaryButton
+                                        onClick={closeModal}
+                                    >
+                                        cancel
+                                    </SecondaryButton>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    modalMode === "create" && (
+                        <div>
+                            <div className="border-b px-6 py-4">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    Create Cash Register
+                                </h2>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    modalMode === "delete" && (
+                        <div>
+                            <div className="border-b px-6 py-4">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    Delete Cash Register
+                                </h2>
+                            </div>
+                            <div className="mx-4 my-6">
+                                <p>
+                                    Are you sure you want to delete{" "}
+                                    {selectedCashRegister.name}?
+                                </p>
+                                <button
+                                    onClick={() => {
+                                        handleDelete();
+                                    }}
+                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 hover:shadow-md transition duration-300"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    onClick={closeModal}
+                                    className="ml-2 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 hover:shadow-md transition duration-300"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )
+                }
+            </Modal >
+        </div >
     )
 }
 
-Index.layout = (page) => <MainLayout children={page}/>
+Index.layout = (page) => <MainLayout children={page} />
