@@ -162,7 +162,7 @@ export default function Sidebar() {
             items: [
                 {
                     label: "Cash Registers",
-                    href: "/cash-register-manage/cash-registers",
+                    href: "/cash-registers-manage",
                     active: isCurrent("cash-register-manage.cash-registers.index"),
                 },
                 {
