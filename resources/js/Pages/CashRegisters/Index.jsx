@@ -1,15 +1,25 @@
 import DangerButton from "@/Components/DangerButton";
+import Form from "@/Components/Form/Form";
+import Input from "@/Components/Form/Input";
+import Select from "@/Components/Form/Select";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ArchiveBoxIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/16/solid";
-import { usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Index() {
-    const { cashRegisters, flash, users } = usePage().props;
+    const { cashRegisters, flash, users, costCenters } = usePage().props;
+    const { data, setData, post, processing, errors } = useForm({
+        name: "",
+        code: "",
+        base: "",
+        cost_center_id: "",
+        commercial_agent_id: "",
+    });
     const [selectedCashRegister, setSelectedCashRegister] = useState(null);
     const [modalMode, setModalMode] = useState("create");
     const [showModal, setModalShow] = useState(false);
@@ -48,6 +58,15 @@ export default function Index() {
         // Implement the delete logic here, e.g., make an API call to delete the cash register
         console.log(`Deleting cash register: ${selectedCashRegister.name}`);
         closeModal();
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post(route('cash-register-manage.cash-registers.store'), {
+            onSuccess: () => {
+                closeModal();
+            },
+        });
     }
 
     return (
@@ -165,6 +184,72 @@ export default function Index() {
                                 <h2 className="text-lg font-semibold text-gray-800">
                                     Create Cash Register
                                 </h2>
+                            </div>
+                            <div className="mx-4 my-6">
+                                <Form onSubmit={handleSubmit}>
+                                    <Input
+                                        label="Name"
+                                        name="name"
+                                        type="text"
+                                        value={data.name}
+                                        placeholder="Manizales - Juliana"
+                                        onChange={(e) =>
+                                            setData("name", e.target.value)
+                                        }
+                                        error={errors.name}
+                                    />
+                                    <Input
+                                        label="Code"
+                                        name="core"
+                                        type="text"
+                                        value={data.code}
+                                        placeholder="0001"
+                                        onChange={(e) =>
+                                            setData("code", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        label="Base"
+                                        name="base"
+                                        type="number"
+                                        value={data.base}
+                                        placeholder="$100.000"
+                                        onChange={(e) =>
+                                            setData(
+                                                "base",
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    <Select 
+                                        label={"Cost Center"}
+                                        name={"cost_center_id"}
+                                        value={data.cost_center_id}
+                                        onChange={(e) => setData("cost_center_id", e.target.value)}
+                                        placeholder="Cost Center"
+                                        options={costCenters.map((costCenter) => ({
+                                            value: costCenter.id,
+                                            label: costCenter.name,
+                                        }))}
+                                    />
+                                    <Select 
+                                        label={"Commercial Agent"}
+                                        name={"commercial_agent_id"}
+                                        value={data.commercial_agent_id}
+                                        onChange={(e) => setData("commercial_agent_id", e.target.value)}
+                                        placeholder="Commercial Agent"
+                                        options={users.map((user) => ({
+                                            value: user.id,
+                                            label: user.name
+                                        }))}
+                                    />
+                                    <PrimaryButton
+                                        disabled={processing}
+                                        type="submit"
+                                    >
+                                        create cash register
+                                    </PrimaryButton>
+                                </Form>
                             </div>
                         </div>
                     )

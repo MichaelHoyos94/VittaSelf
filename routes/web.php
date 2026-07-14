@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashRegisterClosureController;
-use App\Http\Controllers\CashRegisterController;
-use App\Http\Controllers\CashRegisters\CashRegisterController as CashRegistersCashRegisterController;
+use App\Http\Controllers\CashRegisters\CashRegisterController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
 use App\Http\Controllers\Orders\InternalOrderController;
 use App\Http\Controllers\Orders\OrderController;
@@ -53,7 +52,11 @@ Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
 });
 
 Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-manage.')->group(function () {
-    Route::get('/', [CashRegistersCashRegisterController::class, 'index'])->name('cash-registers.index');
+    Route::get('/', [CashRegisterController::class, 'index'])->name('cash-registers.index');
+    Route::post('/', [CashRegisterController::class, 'store'])->name('cash-registers.store');
+    Route::post('/assign', [CashRegisterController::class, 'assign'])->name('cash-registers.assign');
+    Route::post('/free', [CashRegisterController::class, 'unassign'])->name('cash-registers.free');
+    Route::delete('/delete', [CashRegisterController::class, 'delete'])->name('cash-registers.delete');
 });
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {

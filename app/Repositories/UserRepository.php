@@ -9,7 +9,11 @@ class UserRepository
     /**
      * Create a new class instance.
      */
-    public function __construct(){}
+    public function __construct() {}
+
+    public function getAll() {
+        return User::all();
+    }
 
     public function create($data)
     {
