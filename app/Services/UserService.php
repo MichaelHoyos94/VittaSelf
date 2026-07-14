@@ -11,6 +11,11 @@ class UserService
      */
     public function __construct(private UserRepository $userRepository){}
 
+    public function getAll()
+    {
+        return $this->userRepository->getAll();
+    }
+
     public function create($data)
     {
         return $this->userRepository->create($data);

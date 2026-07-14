@@ -17,6 +17,13 @@ class OrderController extends Controller
         private CartService $cartService,
         private SanctionEnforcementService $sanctionEnforcementService
     ) {}
+    public function index()
+    {
+        $orders = $this->service->getAll();
+        return Inertia::render('Orders/Index')->with([
+            'orders' => $orders,
+        ]);
+    }
     public function checkout()
     {
         $cart = $this->cartService->getByUserId(auth()->user()->id);

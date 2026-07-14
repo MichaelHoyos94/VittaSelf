@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->decimal('base', 13, 2)->default(100000);
-            $table->decimal('cash', 13, 2);
-            $table->decimal('bank_transfer');
+            $table->decimal('cash', 13, 2)->default(0);
+            $table->decimal('bank_transfer', 13, 2)->default(0);
             $table->foreignId('cost_center_id')->constrained('cost_centers')->restrictOnDelete();
-            $table->foreignId('commercial_agent_id')->constrained('users')->restrictOnDelete();
+            $table->foreignId('commercial_agent_id')->constrained('users')->nullable()->restrictOnDelete();
             $table->timestamps();
         });
     }

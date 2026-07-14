@@ -15,10 +15,18 @@ import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Create() {
-    const { userToOrder, products, costCenter, sanctions } = usePage().props;
+    const {
+        userToOrder,
+        products,
+        costCenter,
+        sanctions = [],
+        flash,
+    } = usePage().props;
     const [euiCode, setEuiCode] = useState("");
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [currentStep, setCurrentStep] = useState(1);
+    const [successMessage, setSuccessMessage] = useState(flash.success);
+    const [errorMessage, setErrorMessage] = useState(flash.error);
 
     const planFreezeSanction = sanctions.some(
         (sanction) => sanction.FREEZE_PLAN,
@@ -61,6 +69,20 @@ export default function Create() {
         }));
     }, [selectedProducts]);
 
+    useEffect(() => {
+        setSuccessMessage(flash.success);
+        setErrorMessage(flash.error);
+
+        if (!flash.success && !flash.error) return;
+
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.success, flash.error]);
+
     const steps = ["EUI", "Products", "Checkout"];
     const totalSteps = steps.length;
     const clampedCurrentStep = Math.min(Math.max(currentStep, 1), totalSteps);
@@ -81,7 +103,7 @@ export default function Create() {
                     preserveState: true,
                     preserveScroll: true,
                     replace: true,
-                    only: ["userToOrder"],
+                    only: ["userToOrder", "sanctions"],
                 },
             );
             return;
@@ -96,7 +118,7 @@ export default function Create() {
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
-                only: ["userToOrder"],
+                only: ["userToOrder", "sanctions"],
             },
         );
     };
@@ -146,6 +168,28 @@ export default function Create() {
         <div className="p-4 bg-white rounded">
             <h2>Create Internal Order</h2>
             <p>Complete the steps and create de order.</p>
+            <div className="space-y-4 my-4">
+                {successMessage && (
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {successMessage}
+                        </span>
+                    </div>
+                )}
+                {errorMessage && (
+                    <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {errorMessage}
+                        </span>
+                    </div>
+                )}
+            </div>
             {/* Stepper */}
             <div className="mt-6">
                 <div
@@ -161,11 +205,10 @@ export default function Create() {
                         return (
                             <div key={step} className="text-center">
                                 <h3
-                                    className={`text-sm font-semibold ${
-                                        isActive
-                                            ? "text-primary-600"
-                                            : "text-gray-400"
-                                    }`}
+                                    className={`text-sm font-semibold ${isActive
+                                        ? "text-primary-600"
+                                        : "text-gray-400"
+                                        }`}
                                 >
                                     {step}
                                 </h3>
@@ -206,11 +249,10 @@ export default function Create() {
                                 className="flex justify-center"
                             >
                                 <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${
-                                        isActive
-                                            ? "border-primary-500 bg-primary-500 text-white"
-                                            : "border-gray-300 bg-white text-gray-400"
-                                    }`}
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${isActive
+                                        ? "border-primary-500 bg-primary-500 text-white"
+                                        : "border-gray-300 bg-white text-gray-400"
+                                        }`}
                                 >
                                     {stepNumber}
                                 </span>
@@ -591,7 +633,7 @@ export default function Create() {
                                                     </div>
                                                     <div>
                                                         {hasDiscount &&
-                                                        !planFreezeSanction ? (
+                                                            !planFreezeSanction ? (
                                                             <div className="flex flex-col items-end">
                                                                 <span>
                                                                     Total
@@ -660,19 +702,24 @@ export default function Create() {
                     </div>
                     {/* Buttons */}
                     <div className="flex flex-wrap gap-4 justify-evenly">
-                        <SecondaryButton 
+                        <SecondaryButton
                             onClick={handleBackStep}
                             disabled={currentStep === 1}
                         >
                             Back
                         </SecondaryButton>
-                        <PrimaryButton 
+                        <PrimaryButton
                             type="submit"
-                            disabled={currentStep !== steps.length || selectedProducts.length === 0 || !userToOrder || planFreezeSanction || processing}
+                            disabled={
+                                currentStep !== steps.length
+                                || selectedProducts.length === 0
+                                || !userToOrder
+                                || processing
+                            }
                         >
-                            Send
+                            {processing ? "Processing..." : "Submit Order"}
                         </PrimaryButton>
-                        <SecondaryButton 
+                        <SecondaryButton
                             onClick={handleNextStep}
                             disabled={currentStep === steps.length}
                         >

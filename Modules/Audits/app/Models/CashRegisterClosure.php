@@ -10,13 +10,16 @@ class CashRegisterClosure extends Model
 {
     use HasFactory;
 
+    protected $table = 'cash_register_closures';
+
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
-
-    // protected static function newFactory(): CashRegisterClosureFactory
-    // {
-    //     // return CashRegisterClosureFactory::new();
-    // }
+    protected $fillable = [
+        'date',
+        'cash_register_id',
+        'commercial_agent_id',
+        'bank_transfer',
+        'cash',
+    ];
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Audits\Http\Controllers\AuditsController;
+use Modules\Audits\Http\Controllers\CashRegisterClosureController;
 use Modules\Audits\Http\Controllers\ProductCountController;
 use Modules\Audits\Http\Controllers\QualityChecklistsController;
 
@@ -23,4 +24,7 @@ Route::prefix('audits')->middleware(['auth', 'verified'])->as('audits.')->group(
     Route::get('/product-counts/create', [ProductCountController::class, 'create'])->name('product-counts.create');
     Route::post('/product-counts', [ProductCountController::class, 'store'])->name('product-counts.store');
     Route::get('/product-counts/details/{id}', [ProductCountController::class, 'show'])->name('product-counts.show');
+
+    // ================================================== Cash Register Closings ==========================================
+    Route::get('/cash-register-closings', [CashRegisterClosureController::class, 'index'])->name('cash-register-closings.index');
 });

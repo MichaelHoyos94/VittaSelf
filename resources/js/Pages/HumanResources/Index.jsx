@@ -11,7 +11,7 @@ export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log("links:", users.links);
+    console.log("links:", users);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
@@ -153,7 +153,7 @@ export default function Index() {
     };
 
     return (
-        <div className="p-4 bg-primary-300 rounded-lg">
+        <div className="p-4 bg-white rounded-xl shadow-lg">
             <h1 className="text-green-500">Human Resources</h1>
             <div className="flex justify-between items-center mb-4">
                 <button
@@ -171,6 +171,9 @@ export default function Index() {
             <Table
                 columns={columns}
                 data={users.data}
+                from={users.from}
+                to={users.to}
+                totalResults={users.total}
                 emptyText="No employees found"
                 links={users.links}
                 onPageChange={handlePageChange}
