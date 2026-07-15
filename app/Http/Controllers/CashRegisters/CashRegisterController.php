@@ -62,4 +62,14 @@ class CashRegisterController extends Controller
     {
 
     }
+
+    public function MyCashRegister()
+    {
+        $user = auth()->user();
+        $user->load('cashRegister.costCenter');
+        $cashRegister = $user->cashRegister;
+        return Inertia::render('CashRegisters/MyCashRegister')->with([
+            'cashRegister' => $cashRegister,
+        ]);
+    }
 }
