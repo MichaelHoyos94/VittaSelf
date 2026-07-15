@@ -54,8 +54,8 @@ Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
 Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-manage.')->group(function () {
     Route::get('/', [CashRegisterController::class, 'index'])->name('cash-registers.index');
     Route::post('/', [CashRegisterController::class, 'store'])->name('cash-registers.store');
-    Route::post('/assign', [CashRegisterController::class, 'assign'])->name('cash-registers.assign');
-    Route::post('/free', [CashRegisterController::class, 'unassign'])->name('cash-registers.free');
+    Route::post('/assign/{cashRegisterId}', [CashRegisterController::class, 'assign'])->name('cash-registers.assign');
+    Route::post('/release/{cashRegisterId}', [CashRegisterController::class, 'release'])->name('cash-registers.release');
     Route::delete('/delete', [CashRegisterController::class, 'delete'])->name('cash-registers.delete');
 });
 

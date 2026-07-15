@@ -32,20 +32,33 @@ class CashRegisterController extends Controller
     {
         $data = $request->validated();
         $cashRegister = $this->service->create($data);
-        return redirect()->route('')->with('success', 'Cash register created successfully with ID:' . $cashRegister->id);
+        return redirect()->route('cash-register-manage.cash-registers.index')->with('success', 'Cash register created successfully with ID:' . $cashRegister->id);
     }
     #TODO: Implementar funcionalidad para liberar caja
-    public function free()
+    public function release($cashRegisterId)
     {
-        
+        $released = $this->service->free($cashRegisterId);
+        if ($released)
+            return redirect()->route('cash-register-manage.cash-registers.index')->with('success', 'Cash register liberated.');
+        else
+            return redirect()->route('cash-register-manage.cash-registers.index')->with('error', 'Failed to release cash register.');
     }
     #TODO Implementar logica para asignar empleado
-    public function assign()
+    public function assign(Request $request, $cashRegisterId)
+    {
+        $assigned = $this->service->assign($cashRegisterId, $request->commercial_agent_id);
+        if ($assigned) {
+            return redirect()->route('cash-register-manage.cash-registers.index')->with('success', 'Cash register assigned successfully');
+        } else {
+            return redirect()->route('cash-register-manage.cash-registers.index')->with('error', 'Failed to assign cash register');
+        }
+    }
+    #TODO Implementar logica para eliminar caja
+    public function destroy($cashRegisterId)
     {
 
     }
-    #TODO Implementar logica para eliminar caja
-    public function destroy()
+    public function openCashRegister($cashRegisterId)
     {
 
     }
