@@ -1,4 +1,8 @@
 import DangerButton from "@/Components/DangerButton";
+import Form from "@/Components/Form/Form";
+import Input from "@/Components/Form/Input";
+import TextArea from "@/Components/Form/TextArea";
+import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
@@ -15,15 +19,40 @@ export default function MyCashRegister() {
     const [errorMessage, setErrorMessage] = useState(flash.error || null);
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState("open");
-    const { data, post, errors, processing, setData } = useForm({});
+    const { data, post, errors, processing, setData } = useForm({
+        bills_100000: "",
+        bills_50000: "",
+        bills_20000: "",
+        bills_10000: "",
+        bills_5000: "",
+        bills_2000: "",
+        bills_1000: "",
+        coins_1000: "",
+        coins_500: "",
+        coins_200: "",
+        coins_100: "",
+        coins_50: "",
+        observations: "",
+        date: "",
+        cash_register_id: cashRegister.id,
+    });
 
     const handleOpenCashRegister = () => {
         router.post(route("my-cash-register.open"), {});
     };
 
-    const handleCloseCashRegister = () => {
-        router.post(route("my-cash-register.close"), {});
+    const handleCloseCashRegister = (e) => {
+        e.preventDefault();
+        console.log("Closing cash register with data:", data);
+        //router.post(route("my-cash-register.close"), {});
     };
+
+    const openModal = (mode) => {
+        setModalMode(mode);
+        setShowModal(true);
+    };
+
+    const closeModal = () => setShowModal(false);
 
     return (
         <div className="p-4 bg-white rounded-lg shadow-lg min-h-full">
@@ -100,11 +129,15 @@ export default function MyCashRegister() {
                         {/* Buttons */}
                         <div className="flex justify-center gap-2 mt-4">
                             {cashRegister.is_open ? (
-                                <SecondaryButton onClick={handleCloseCashRegister}>
+                                <SecondaryButton
+                                    onClick={() => openModal("close")}
+                                >
                                     Close
                                 </SecondaryButton>
                             ) : (
-                                <PrimaryButton onClick={handleOpenCashRegister}>
+                                <PrimaryButton
+                                    onClick={() => openModal("open")}
+                                >
                                     Open
                                 </PrimaryButton>
                             )}
@@ -117,6 +150,178 @@ export default function MyCashRegister() {
                     </p>
                 )}
             </div>
+            {/* Modal for opening and closing cash register */}
+            <Modal show={showModal} maxWidth="lg" onClose={closeModal}>
+                {modalMode === "open" && (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Open Cash Register
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <p>
+                                Are you sure you want to open your cash
+                                register?
+                            </p>
+                            <div className="flex justify-end gap-4">
+                                <PrimaryButton onClick={handleOpenCashRegister}>
+                                    open
+                                </PrimaryButton>
+                                <SecondaryButton onClick={closeModal}>
+                                    cancel
+                                </SecondaryButton>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {modalMode === "close" && (
+                    <div>
+                        <div className="border-b px-6 py-4">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Close Cash Register
+                            </h2>
+                        </div>
+                        <div className="mx-4 my-6">
+                            <Form onSubmit={handleCloseCashRegister}>
+                                <div className="grid *:grid-cols-1 md:grid-cols-2 gap-4">
+                                    <Input
+                                        name="bills_100000"
+                                        label="100,000 Bills"
+                                        type="number"
+                                        min="0"
+                                        value={data.bills_100000}
+                                        onChange={(e) =>
+                                            setData("bills_100000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="bills_50000"
+                                        label="50,000 Bills"
+                                        type="number"
+                                        min="0"
+                                        value={data.bills_50000}
+                                        onChange={(e) =>
+                                            setData("bills_50000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="bills_20000"
+                                        label="20,000 Bills"
+                                        type="number"
+                                        min="0"
+                                        value={data.bills_20000}
+                                        onChange={(e) =>
+                                            setData("bills_20000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="bills_10000"
+                                        label="10,000 Bills"
+                                        type="number"
+                                        min="0"
+                                        value={data.bills_10000}
+                                        onChange={(e) =>
+                                            setData("bills_10000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="bills_5000"
+                                        label="5,000 Bills"
+                                        type="number"
+                                        min="0"
+                                        value={data.bills_5000}
+                                        onChange={(e) =>
+                                            setData("bills_5000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="bills_2000"
+                                        label="2,000 Bills"
+                                        type="number"
+                                        min="0"
+                                        value={data.bills_2000}
+                                        onChange={(e) =>
+                                            setData("bills_2000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="coins_1000"
+                                        label="1,000 Coins"
+                                        type="number"
+                                        min="0"
+                                        value={data.coins_1000}
+                                        onChange={(e) =>
+                                            setData("coins_1000", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="coins_500"
+                                        label="500 Coins"
+                                        type="number"
+                                        min="0"
+                                        value={data.coins_500}
+                                        onChange={(e) =>
+                                            setData("coins_500", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="coins_200"
+                                        label="200 Coins"
+                                        type="number"
+                                        min="0"
+                                        value={data.coins_200}
+                                        onChange={(e) =>
+                                            setData("coins_200", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="coins_100"
+                                        label="100 Coins"
+                                        type="number"
+                                        min="0"
+                                        value={data.coins_100}
+                                        onChange={(e) =>
+                                            setData("coins_100", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="coins_50"
+                                        label="50 Coins"
+                                        type="number"
+                                        min="0"
+                                        value={data.coins_50}
+                                        onChange={(e) =>
+                                            setData("coins_50", e.target.value)
+                                        }
+                                    />
+                                    <Input
+                                        name="bank_transfer"
+                                        label="Bank Transfer"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={data.bank_transfer}
+                                        onChange={(e) =>
+                                            setData("bank_transfer", e.target.value)
+                                        }
+                                    />
+                                    <div className="col-span-2">
+                                        <TextArea 
+                                            label="observations"
+                                            name="observations"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-4 flex-wrap items-center justify-end">
+                                    <PrimaryButton type="submit">close cash register</PrimaryButton>
+                                    <SecondaryButton type="button">cancel</SecondaryButton>
+                                </div>
+                            </Form>
+                        </div>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 }
