@@ -59,7 +59,12 @@ Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-ma
     Route::delete('/delete', [CashRegisterController::class, 'delete'])->name('cash-registers.delete');
 });
 
-Route::get('/my-cash-register', [CashRegisterController::class, 'myCashRegister'])->middleware(['auth', 'verified'])->name('cash-registers.my-cash-register');
+//Route::get('/my-cash-register', [CashRegisterController::class, 'myCashRegister'])->middleware(['auth', 'verified'])->name('cash-registers.my-cash-register');
+Route::prefix('/my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function() {
+    Route::get('/', [CashRegisterController::class, 'myCashRegister'])->name('index');
+    Route::post('/close-cash-register', [CashRegisterController::class, 'closeCashRegister'])->name('close');
+    Route::post('/open-cash-register', [CashRegisterController::class, 'openCashRegister'])->name('open');
+});
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');

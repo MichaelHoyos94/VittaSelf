@@ -2,8 +2,11 @@ import DangerButton from "@/Components/DangerButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { ArchiveBoxIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/16/solid";
-import { useForm, usePage } from "@inertiajs/react";
+import {
+    ArchiveBoxIcon,
+    ClipboardDocumentCheckIcon,
+} from "@heroicons/react/16/solid";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function MyCashRegister() {
@@ -15,12 +18,12 @@ export default function MyCashRegister() {
     const { data, post, errors, processing, setData } = useForm({});
 
     const handleOpenCashRegister = () => {
-
-    }
+        router.post(route("my-cash-register.open"), {});
+    };
 
     const handleCloseCashRegister = () => {
-
-    }
+        router.post(route("my-cash-register.close"), {});
+    };
 
     return (
         <div className="p-4 bg-white rounded-lg shadow-lg min-h-full">
@@ -96,18 +99,22 @@ export default function MyCashRegister() {
                         </div>
                         {/* Buttons */}
                         <div className="flex justify-center gap-2 mt-4">
-                            {
-                                cashRegister.is_open ? (
-                                    <SecondaryButton>Close</SecondaryButton>
-                                ) :
-                                (
-                                    <PrimaryButton>Open</PrimaryButton>
-                                )
-                            }
+                            {cashRegister.is_open ? (
+                                <SecondaryButton onClick={handleCloseCashRegister}>
+                                    Close
+                                </SecondaryButton>
+                            ) : (
+                                <PrimaryButton onClick={handleOpenCashRegister}>
+                                    Open
+                                </PrimaryButton>
+                            )}
                         </div>
                     </>
                 ) : (
-                    <p>No cash register assigned, contact to your administrador.</p>
+                    <p>
+                        No cash register assigned, contact to your
+                        administrador.
+                    </p>
                 )}
             </div>
         </div>

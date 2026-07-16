@@ -23,4 +23,8 @@ class CashRegisterRepository
     {
         return $cashRegister->save();
     }
+    public function getByCommercialAgentId($commercialAgentId)
+    {
+        return CashRegister::where('commercial_agent_id', $commercialAgentId)->first();
+    }
 }

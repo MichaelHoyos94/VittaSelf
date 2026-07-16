@@ -27,4 +27,16 @@ class CashRegisterService
         $cashRegister['commercial_agent_id'] = null;
         return $this->repository->update($cashRegister);
     }
+    public function openCashRegister($commercialAgentId)
+    {
+        $cashRegister = $this->repository->getByCommercialAgentId($commercialAgentId);
+        $cashRegister->is_open = true;
+        return $this->repository->update($cashRegister);
+    }
+    public function closeCashRegister($commercialAgentId)
+    {
+        $cashRegister = $this->repository->getByCommercialAgentId($commercialAgentId);
+        $cashRegister->is_open = false;
+        return $this->repository->update($cashRegister);
+    }
 }

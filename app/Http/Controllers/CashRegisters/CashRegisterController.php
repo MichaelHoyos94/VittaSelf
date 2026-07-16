@@ -58,9 +58,14 @@ class CashRegisterController extends Controller
     {
 
     }
-    public function openCashRegister($cashRegisterId)
+    public function openCashRegister()
     {
-
+        $userId = auth()->user()->id;
+        $opened = $this->service->openCashRegister($userId);
+        if ($opened)
+            return redirect()->route('my-cash-register.index')->with('success', 'Cash register open successfully. Now you can create internal orders.');
+        else
+            return redirect()->route('my-cash-register.index')->with('error', 'Something went wrong');
     }
 
     public function MyCashRegister()
@@ -71,5 +76,15 @@ class CashRegisterController extends Controller
         return Inertia::render('CashRegisters/MyCashRegister')->with([
             'cashRegister' => $cashRegister,
         ]);
+    }
+
+    public function closeCashRegister()
+    {
+        $userId = auth()->user()->id;
+        $closed = $this->service->closeCashRegister($userId);
+        if ($closed)
+            return redirect()->route('my-cash-register.index')->with('success', 'Cash register closed successfully.');
+        else
+            return redirect()->route('my-cash-register.index')->with('error', 'Something went wrong');
     }
 }
