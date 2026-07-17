@@ -8,6 +8,7 @@ use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -72,5 +73,10 @@ class User extends Authenticatable
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class, 'plan_id');
+    }
+    
+    public function cashRegister(): HasOne
+    {
+        return $this->hasOne(CashRegister::class, 'commercial_agent_id');
     }
 }

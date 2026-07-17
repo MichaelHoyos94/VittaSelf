@@ -15,4 +15,16 @@ class CashRegisterRepository
     {
         return CashRegister::create($data);
     }
+    public function getById($cashRegisterId)
+    {
+        return CashRegister::findOrFail($cashRegisterId);
+    }
+    public function update($cashRegister)
+    {
+        return $cashRegister->save();
+    }
+    public function getByCommercialAgentId($commercialAgentId)
+    {
+        return CashRegister::where('commercial_agent_id', $commercialAgentId)->first();
+    }
 }

@@ -172,6 +172,12 @@ export default function Sidebar() {
                 },
             ],
         },
+        {
+            label: "My Cash Register",
+            href: "/my-cash-register",
+            icon: ArchiveBoxIcon,
+            active: isCurrent("cash-registers.my-cash-register"),
+        },
     ];
 
     const activeMenu = navigation.find((item) => item.items && item.active)?.id;

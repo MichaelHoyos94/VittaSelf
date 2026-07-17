@@ -17,9 +17,20 @@ class CashRegisterClosure extends Model
      */
     protected $fillable = [
         'date',
+        'bills_100000',
+        'bills_50000',
+        'bills_20000',
+        'bills_10000',
+        'bills_5000',
+        'bills_2000',
+        'coins_1000',
+        'coins_500',
+        'coins_200',
+        'coins_100',
+        'coins_50',
         'cash_register_id',
         'commercial_agent_id',
         'bank_transfer',
-        'cash',
+        'observations',
     ];
 }
