@@ -36,6 +36,7 @@ class CashRegisterClosureController extends Controller
     {
         $data = $request->validated();
         $cashRegisterClosure = $this->service->create($data);
+        return redirect()->route('my-cash-register.index')->with('success', 'Cash register closure created successfully. Waiting for approval.');
     }
 
     public function show($cashRegisterClosureId) {}

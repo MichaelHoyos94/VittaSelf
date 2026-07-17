@@ -37,14 +37,23 @@ export default function MyCashRegister() {
         cash_register_id: cashRegister.id,
     });
 
+    console.log(errors);
+
     const handleOpenCashRegister = () => {
-        router.post(route("my-cash-register.open"), {});
+        router.post(route("my-cash-register.open"), {}, {
+            onSuccess: () => {
+                closeModal();
+            }
+        });
     };
 
     const handleCloseCashRegister = (e) => {
         e.preventDefault();
-        console.log("Closing cash register with data:", data);
-        //router.post(route("my-cash-register.close"), {});
+        post(route("cash-register-closures.store"), {
+            onSuccess: () => {
+                closeModal();
+            }
+        });
     };
 
     const openModal = (mode) => {
@@ -310,12 +319,18 @@ export default function MyCashRegister() {
                                         <TextArea 
                                             label="observations"
                                             name="observations"
+                                            value={data.observations}
+                                            onChange={(e) =>
+                                                setData("observations", e.target.value)
+                                            }
                                         />
                                     </div>
                                 </div>
                                 <div className="flex gap-4 flex-wrap items-center justify-end">
                                     <PrimaryButton type="submit">close cash register</PrimaryButton>
-                                    <SecondaryButton type="button">cancel</SecondaryButton>
+                                    <SecondaryButton type="button" onClick={closeModal}>
+                                        cancel
+                                    </SecondaryButton>
                                 </div>
                             </Form>
                         </div>

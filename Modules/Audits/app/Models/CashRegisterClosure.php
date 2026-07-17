@@ -32,5 +32,6 @@ class CashRegisterClosure extends Model
         'commercial_agent_id',
         'bank_transfer',
         'observations',
+        'cash',
     ];
 }

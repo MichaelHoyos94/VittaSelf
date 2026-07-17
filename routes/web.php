@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CashRegisterClosureController;
 use App\Http\Controllers\CashRegisters\CashRegisterController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
 use App\Http\Controllers\Orders\InternalOrderController;
@@ -10,6 +9,8 @@ use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Modules\Audits\Http\Controllers\CashRegisterClosureController;
+use Modules\Audits\Models\CashRegisterClosure;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -59,11 +60,15 @@ Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-ma
     Route::delete('/delete', [CashRegisterController::class, 'delete'])->name('cash-registers.delete');
 });
 
-//Route::get('/my-cash-register', [CashRegisterController::class, 'myCashRegister'])->middleware(['auth', 'verified'])->name('cash-registers.my-cash-register');
-Route::prefix('/my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function() {
+Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function() {
     Route::get('/', [CashRegisterController::class, 'myCashRegister'])->name('index');
     Route::post('/close-cash-register', [CashRegisterController::class, 'closeCashRegister'])->name('close');
     Route::post('/open-cash-register', [CashRegisterController::class, 'openCashRegister'])->name('open');
+});
+
+Route::prefix('cash-register-closures')->middleware(['auth', 'verified'])->as('cash-register-closures.')->group(function () {
+    Route::get('/', [CashRegisterClosureController::class, 'index'])->name('index');
+    Route::post('/', [CashRegisterClosureController::class, 'store'])->name('store');
 });
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {
