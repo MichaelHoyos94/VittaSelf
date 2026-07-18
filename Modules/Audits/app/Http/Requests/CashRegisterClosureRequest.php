@@ -10,8 +10,30 @@ class CashRegisterClosureRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'commercial_agent_id' => auth()->user->id
+            'commercial_agent_id' => auth()->user()->id,
+            'date' => now()->format('Y-m-d'),
         ]);
+
+        // Set 0 if the bills and coins are not provided
+        $fields = [
+            'bills_100000',
+            'bills_50000',
+            'bills_20000',
+            'bills_10000',
+            'bills_5000',
+            'bills_2000',
+            'coins_1000',
+            'coins_500',
+            'coins_200',
+            'coins_100',
+            'coins_50',
+            'bank_transfer',
+        ];
+        foreach ($fields as $field) {
+            if (blank($this->input($field))) {
+                $this->merge([$field => 0]);
+            }
+        }
     }
 
     /**
