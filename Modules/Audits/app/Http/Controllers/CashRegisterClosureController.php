@@ -18,7 +18,10 @@ class CashRegisterClosureController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Audits/CashRegisterClosings/Index');
+        $cashRegisterClosures = $this->service->getAll();
+        return Inertia::render('Audits/CashRegisterClosings/Index')->with([
+            'cashRegisterClosures' => $cashRegisterClosures,
+        ]);
     }
 
     /**
@@ -39,5 +42,10 @@ class CashRegisterClosureController extends Controller
         return redirect()->route('my-cash-register.index')->with('success', 'Cash register closure created successfully. Waiting for approval.');
     }
 
-    public function show($cashRegisterClosureId) {}
+    public function show($cashRegisterClosureId) {
+        $cashRegisterClosure = $this->service->getById($cashRegisterClosureId);
+        return Inertia::render('Audits/CashRegisterClosings/Show')->with([
+            'cashRegisterClosure' => $cashRegisterClosure,
+        ]);
+    }
 }

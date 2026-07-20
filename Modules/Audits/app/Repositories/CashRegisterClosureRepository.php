@@ -11,4 +11,12 @@ class CashRegisterClosureRepository
     {
         return CashRegisterClosure::create($data);
     }
+    public function getAll()
+    {
+        return CashRegisterClosure::with(['cashRegister.costCenter', 'commercialAgent'])->get();
+    }
+    public function getById($cashRegisterClosureId)
+    {
+        return CashRegisterClosure::with(['cashRegister.costCenter', 'commercialAgent'])->findOrFail($cashRegisterClosureId);
+    }
 }

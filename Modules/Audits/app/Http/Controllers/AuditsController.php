@@ -4,8 +4,10 @@ namespace Modules\Audits\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+use Modules\Audits\Http\Requests\CashRegisterClosureAuditRequest;
 use Modules\Audits\Http\Requests\ProductCountAuditRequest;
 use Modules\Audits\Http\Requests\QualityChecklistAuditRequest;
+use Modules\Audits\Services\CashRegisterClosureAuditService;
 use Modules\Audits\Services\PdfService;
 use Modules\Audits\Services\ProductCountAuditService;
 use Modules\Audits\Services\QualityChecklistAuditService;
@@ -13,7 +15,12 @@ use Modules\Audits\Services\QualityChecklistAuditService;
 class AuditsController extends Controller
 {
 
-    public function __construct(private QualityChecklistAuditService $service, private ProductCountAuditService $productCountAuditService, private PdfService $pdfService) {}
+    public function __construct(
+        private QualityChecklistAuditService $service,
+        private ProductCountAuditService $productCountAuditService,
+        private CashRegisterClosureAuditService $cashRegisterClosureAuditService,
+        private PdfService $pdfService
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -52,13 +59,21 @@ class AuditsController extends Controller
         return redirect()->route('audits.history.index')->with('success', 'Product count audit created successfully! ID: ' . $audit->id);
     }
 
+    public function storeCashRegisterClosureAudit(CashRegisterClosureAuditRequest $request)
+    {
+        $validated = $request->validated();
+        $audit = $this->productCountAuditService->createCashRegisterClosureAudit($validated);
+        return redirect()->route('audits.history.index')->with('success', 'Cash register closure audit created successfully! ID: ' . $audit->id);
+    }
+
     public function downloadProductCountAuditReport($id)
     {
         $audit = $this->productCountAuditService->getById($id);
         return $this->pdfService->download($audit);
     }
 
-    public function downloadQualityChecklistAuditReport($id) {
+    public function downloadQualityChecklistAuditReport($id)
+    {
         $audit = $this->service->getById($id);
         return $this->pdfService->download($audit);
     }

@@ -2,8 +2,12 @@
 
 namespace Modules\Audits\Models;
 
+use App\Models\CashRegister;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 // use Modules\Audits\Database\Factories\CashRegisterClosureFactory;
 
 class CashRegisterClosure extends Model
@@ -34,4 +38,14 @@ class CashRegisterClosure extends Model
         'observations',
         'cash',
     ];
+
+    public function cashRegister(): BelongsTo
+    {
+        return $this->belongsTo(CashRegister::class, 'cash_register_id');
+    }
+
+    public function commercialAgent(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'commercial_agent_id');
+    }
 }
