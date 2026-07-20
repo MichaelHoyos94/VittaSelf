@@ -2,8 +2,11 @@
 
 namespace Modules\Audits\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 // use Modules\Audits\Database\Factories\CashRegisterClosureAuditFactory;
 
 class CashRegisterClosureAudit extends Model
@@ -27,4 +30,14 @@ class CashRegisterClosureAudit extends Model
         'cash_register_closure_id',
         'audited_by',
     ];
+
+    public function auditor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'audited_by');
+    }
+
+    public function cashRegisterClosure(): BelongsTo
+    {
+        return $this->belongsTo(CashRegisterClosure::class, 'cash_register_closure_id');
+    }
 }

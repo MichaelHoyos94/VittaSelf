@@ -62,7 +62,9 @@ class AuditsController extends Controller
     public function storeCashRegisterClosureAudit(CashRegisterClosureAuditRequest $request)
     {
         $validated = $request->validated();
-        $audit = $this->productCountAuditService->createCashRegisterClosureAudit($validated);
+        $audit = $this->cashRegisterClosureAuditService->create($validated);
+        $pdfPath = $this->pdfService->generateCashRegisterClosureAudit($audit);
+        $audit->update(['pdf_path' => $pdfPath]);
         return redirect()->route('audits.history.index')->with('success', 'Cash register closure audit created successfully! ID: ' . $audit->id);
     }
 
