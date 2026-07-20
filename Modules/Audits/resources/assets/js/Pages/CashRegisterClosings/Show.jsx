@@ -17,15 +17,16 @@ export default function Show() {
         counted_bank_transfer: '',
         observations: '',
         report: '',
-        status: ''
+        status: '',
+        cash_register_closure_id: cashRegisterClosure.id,
     });
 
-    console.log(cashRegisterClosure);
+    console.log(errors);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(data);
-        //post(route('audits.cash-register-closings.store', cashRegisterClosure.id));
+        post(route('audits.cash-register-closure.audit'));
     }
 
     return (
@@ -97,8 +98,8 @@ export default function Show() {
                                 <Select
                                     label={"Status"}
                                     options={[
-                                        { value: 'open', label: 'Open' },
-                                        { value: 'closed', label: 'Closed' }
+                                        { value: 'approved', label: 'Approved' },
+                                        { value: 'rejected', label: 'Rejected' }
                                     ]}
                                     value={data.status}
                                     onChange={(e) => setData('status', e.target.value)}
@@ -109,7 +110,7 @@ export default function Show() {
                             <PrimaryButton
                                 type="submit"
                             >
-                                send
+                                Send
                             </PrimaryButton>
                         </div>
                     </Form>

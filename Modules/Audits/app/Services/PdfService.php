@@ -40,12 +40,12 @@ class PdfService
         return $fileName;
     }
 
-    public function generateCashRegisterClosureAudit(CashRegisterClosureAudit $audit): string
+    public function generateCashRegisterClosureAuditPdf(CashRegisterClosureAudit $audit): string
     {
         $audit->load('auditor');
         $audit->load('cashRegisterClosure.cashRegister');
 
-        $pdf = Pdf::loadView('audits::pdfs.product-count-audit-report', [
+        $pdf = Pdf::loadView('audits::pdfs.cash-register-closure-audit-report', [
             'audit' => $audit,
         ])->setPaper('letter');
 

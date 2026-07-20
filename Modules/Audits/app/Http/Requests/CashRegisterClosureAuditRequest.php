@@ -3,9 +3,17 @@
 namespace Modules\Audits\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class CashRegisterClosureAuditRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'audited_by' => auth()->user()->id,
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      */

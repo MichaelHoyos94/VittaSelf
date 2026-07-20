@@ -63,7 +63,7 @@ class AuditsController extends Controller
     {
         $validated = $request->validated();
         $audit = $this->cashRegisterClosureAuditService->create($validated);
-        $pdfPath = $this->pdfService->generateCashRegisterClosureAudit($audit);
+        $pdfPath = $this->pdfService->generateCashRegisterClosureAuditPdf($audit);
         $audit->update(['pdf_path' => $pdfPath]);
         return redirect()->route('audits.history.index')->with('success', 'Cash register closure audit created successfully! ID: ' . $audit->id);
     }
