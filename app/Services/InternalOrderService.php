@@ -12,6 +12,7 @@ class InternalOrderService
         private InternalOrderRepository $internalOrderRepository,
         private UserService $userService,
         private PlanService $planService,
+        private CashRegisterService $cashRegisterService,
         private SanctionEnforcementService $sanctionEnforcementService,
     ) {}
 

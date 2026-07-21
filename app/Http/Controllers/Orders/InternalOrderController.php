@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternalOrderRequest;
+use App\Services\CashRegisterService;
 use App\Services\InternalOrderService;
 use App\Services\ProductService;
 use App\Services\UserService;
@@ -18,6 +19,7 @@ class InternalOrderController extends Controller
         private InternalOrderService $service,
         private UserService $userService,
         private ProductService $productService,
+        private CashRegisterService $cashRegisterService,
         private SanctionEnforcementService $sanctionService,
     ) {}
     public function store(InternalOrderRequest $request)
@@ -27,6 +29,9 @@ class InternalOrderController extends Controller
         $data['cost_center_id'] = auth()->user()->cost_center_id;
         try {
             $order = $this->service->create($data);
+            if ($order) {
+                $this->cashRegisterService->addCash(auth()->user()->id, $order->total, $order->payment_method);
+            }
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to create order: ' . $e->getMessage());
         }
