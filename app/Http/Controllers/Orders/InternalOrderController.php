@@ -34,6 +34,11 @@ class InternalOrderController extends Controller
     }
     public function create(Request $request)
     {
+        $commercialAgent = auth()->user();
+        $commercialAgent->load(['cashRegister']);
+        if(!$commercialAgent->cashRegister || !$commercialAgent->cashRegister->is_open) return redirect()->route('my-cash-register.index')->with([
+            'success' => 'You must open your cash register first.'
+        ]);
         $userToOrder = null;
         if ($request->filled('eui_code')) {
             $userToOrder = $this->userService->getByEuiCode($request->eui_code);
