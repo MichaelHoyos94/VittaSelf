@@ -24,6 +24,6 @@ class InternalOrderRepository
 
     public function getAll()
     {
-        return InternalOrder::all();
+        return InternalOrder::with(['customer', 'commercialAgent'])->paginate(10);
     }
 }

@@ -6,12 +6,83 @@ import { useEffect, useState } from "react";
 
 export default function InternalOrders() {
     const { internalOrders, flash } = usePage().props;
+    console.log(internalOrders);
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const columns = [
         {
-            header: 'id',
-            accessor: 'id',
-        }
+            header: "#",
+            accessor: "id",
+        },
+        {
+            header: "eui",
+            render: (row) => (
+                <div className="flex gap-4 items-center">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.customer.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <div className="flex flex-col">
+                        <strong>{row.customer.name}</strong>
+                        <span className="text-gray-500">
+                            {row.shipping_address}
+                        </span>
+                        <span className="text-gray-500">{row.email}</span>
+                        <span className="text-gray-500">{row.phone}</span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            header: "commercial agent",
+            render: (row) => (
+                <div className="flex gap-4 items-center">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.commercial_agent.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <span>{row.commercial_agent.name}</span>
+                </div>
+            ),
+        },
+        {
+            header: "pricing info",
+            render: (row) => (
+                <div className="flex flex-col">
+                    <div>
+                        <strong>Subtotal: </strong>
+                        <span className="text-gray-500">{row.subtotal}</span>
+                    </div>
+                    <div>
+                        <strong>Shipping: </strong>
+                        <span className="text-gray-500">
+                            {row.shipping_price}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Discount: </strong>
+                        <span className="text-gray-500">{row.discount}</span>
+                    </div>
+                    <div>
+                        <strong>Total: </strong>
+                        <span className="text-gray-500">{row.total}</span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            header: "points",
+            accessor: "points",
+        },
+        {
+            header: "status",
+            accessor: "status",
+        },
+        {
+            header: "actions",
+            render: (row) => <PrimaryButton>details</PrimaryButton>,
+        },
     ];
 
     useEffect(() => {
@@ -25,27 +96,34 @@ export default function InternalOrders() {
     }, [flash.success]);
 
     return (
-        <div className="p-4 bg-white rounded shadow">
+        <div className="p-4 bg-white rounded-lg shadow-lg">
             <h1>Internal Orders</h1>
             {/* Flash messages */}
             <div>
                 {successMessage && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                        <span className="block sm:inline">{successMessage}</span>
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {successMessage}
+                        </span>
                     </div>
                 )}
             </div>
             {/* Buttons */}
             <div className="flex justify-between mb-4 items-center">
-                <Link
-                    href={route('orders.internal-orders.create')}
-                >
+                <Link href={route("orders.internal-orders.create")}>
                     <PrimaryButton>Create</PrimaryButton>
                 </Link>
             </div>
             <Table
                 columns={columns}
-                data={internalOrders}
+                data={internalOrders.data}
+                from={internalOrders.from}
+                to={internalOrders.to}
+                totalResults={internalOrders.total}
+                links={internalOrders.links}
             />
         </div>
     );

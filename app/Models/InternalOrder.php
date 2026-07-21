@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class InternalOrder extends Model
@@ -33,5 +34,15 @@ class InternalOrder extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity');
+    }
+
+    public function customer():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function commercialAgent(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'commercial_agent_id');
     }
 }
