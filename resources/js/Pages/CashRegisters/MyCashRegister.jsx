@@ -11,7 +11,7 @@ import {
     ClipboardDocumentCheckIcon,
 } from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function MyCashRegister() {
     const { cashRegister, flash } = usePage().props;
@@ -37,7 +37,17 @@ export default function MyCashRegister() {
         cash_register_id: cashRegister.id,
     });
 
-    console.log(errors);
+    useEffect(() => {
+        setErrorMessage(flash.error);
+        setSuccessMessage(flash.success);
+        if (!flash.success && !flash.error) return;
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.error, flash.success]);
 
     const handleOpenCashRegister = () => {
         router.post(route("my-cash-register.open"), {}, {
@@ -84,13 +94,8 @@ export default function MyCashRegister() {
                     <span className="block sm:inline">{errorMessage}</span>
                 </div>
             )}
-            {/* Buttons */}
-            <div className="flex gap-4">
-                <PrimaryButton>open</PrimaryButton>
-                <SecondaryButton>close</SecondaryButton>
-            </div>
             {/* Cash Register Card, center and resize w */}
-            <div className="border rounded-xl shadow-lg p-4 transform transition duration-100 hover:scale-105 max-w-lg mx-auto mt-4">
+            <div className="border rounded-xl shadow-lg p-4 transform transition duration-100 hover:scale-105 max-w-lg mx-auto mt-8">
                 {cashRegister ? (
                     <>
                         <div className="flex justify-between items-center mb-4">
@@ -316,7 +321,7 @@ export default function MyCashRegister() {
                                         }
                                     />
                                     <div className="col-span-2">
-                                        <TextArea 
+                                        <TextArea
                                             label="observations"
                                             name="observations"
                                             value={data.observations}

@@ -66,11 +66,6 @@ Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash
     Route::post('/open-cash-register', [CashRegisterController::class, 'openCashRegister'])->name('open');
 });
 
-Route::prefix('cash-register-closures')->middleware(['auth', 'verified'])->as('cash-register-closures.')->group(function () {
-    Route::get('/', [CashRegisterClosureController::class, 'index'])->name('index');
-    Route::post('/', [CashRegisterClosureController::class, 'store'])->name('store');
-});
-
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
 });

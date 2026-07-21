@@ -17,6 +17,16 @@ class CashRegisterClosureService
 
     }
 
+    public function getAll()
+    {
+        return $this->repository->getAll();
+    }
+
+    public function getById($cashRegisterClosureId)
+    {
+        return $this->repository->getById($cashRegisterClosureId);
+    }
+
     // Calculates cash = bills_100000 + bills_5000 etc set $data['cash' => total]
     private function calculateCash($data)
     {

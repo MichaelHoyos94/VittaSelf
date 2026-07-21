@@ -61,6 +61,7 @@ export default function Sidebar() {
                 isCurrent("audits.*") ||
                 isCurrent("audits.quality-checklists.index") ||
                 isCurrent("audits.product-counts.index") ||
+                isCurrent("audits.cash-register-closures.index") ||
                 isCurrent("audits.history.index"),
             items: [
                 {
@@ -77,6 +78,11 @@ export default function Sidebar() {
                     label: "Audit History",
                     href: "/audits/history",
                     active: isCurrent("audits.history.index"),
+                },
+                {
+                    label: "Cash Register Closings",
+                    href: "/audits/cash-register-closures",
+                    active: isCurrent("audits.cash-register-closures.index"),
                 },
             ],
         },
@@ -164,11 +170,6 @@ export default function Sidebar() {
                     label: "Cash Registers",
                     href: "/cash-registers-manage",
                     active: isCurrent("cash-register-manage.cash-registers.index"),
-                },
-                {
-                    label: "Cash Register Closings",
-                    href: "/cash-register-manage/cash-register-closings",
-                    active: isCurrent("cash-register-manage.cash-register-closings.index"),
                 },
             ],
         },
