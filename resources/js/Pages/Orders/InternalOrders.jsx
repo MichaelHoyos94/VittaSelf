@@ -95,6 +95,14 @@ export default function InternalOrders() {
         return () => clearTimeout(timer);
     }, [flash.success]);
 
+    const handleSearch = (search) => {
+        router.get(
+            route("orders.internal-orders.index"),
+            { search: search },
+            { preserveState: true, replace: true },
+        );
+    };
+
     return (
         <div className="p-4 bg-white rounded-lg shadow-lg">
             <h1>Internal Orders</h1>
@@ -119,6 +127,8 @@ export default function InternalOrders() {
             </div>
             <Table
                 columns={columns}
+                filterable={true}
+                handleSearch={handleSearch}
                 data={internalOrders.data}
                 from={internalOrders.from}
                 to={internalOrders.to}

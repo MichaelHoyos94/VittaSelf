@@ -4,14 +4,19 @@ namespace App\Http\Controllers\HumanResources;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\HumanResourcesService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HumanResourcesController extends Controller
 {
-    public function index()
+
+    public function __construct(private HumanResourcesService $service) {}
+
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $search = $request->input('search');
+        $users = $this->service->getAll($search);
         return Inertia::render('HumanResources/Index', [
             'users' => $users
         ]);

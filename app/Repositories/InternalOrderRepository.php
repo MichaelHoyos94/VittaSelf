@@ -22,8 +22,18 @@ class InternalOrderRepository
         });
     }
 
-    public function getAll()
+    public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'asc')
     {
-        return InternalOrder::with(['customer', 'commercialAgent'])->paginate(10);
+        return InternalOrder::with(['customer', 'commercialAgent'])
+            ->when($search, function ($query, $search) {
+                $query->whereHas('customer', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })->orWhereHas('commercialAgent', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
     }
 }

@@ -16,8 +16,8 @@ class InternalOrderService
         private SanctionEnforcementService $sanctionEnforcementService,
     ) {}
 
-    public function getAll() {
-        return $this->internalOrderRepository->getAll();
+    public function getAll($search) {
+        return $this->internalOrderRepository->getAll($search);
     }
 
     public function create($data)
