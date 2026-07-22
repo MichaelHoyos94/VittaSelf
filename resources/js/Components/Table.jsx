@@ -1,8 +1,9 @@
 import {
     ArrowLeftIcon,
     ArrowRightIcon,
-    EyeIcon,
+    MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import { useState } from "react";
 import Input from "./Form/Input";
 
 export default function Table({
@@ -13,18 +14,45 @@ export default function Table({
     totalResults,
     emptyText = "No data available",
     links = [],
+    filterable = false,
+    handleSearch = () => {},
     onPageChange = () => {},
 }) {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const onSearch = (event) => {
+        event.preventDefault();
+        handleSearch(searchTerm);
+    };
+
     return (
         <>
             <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-                <div className="flex flex-col sm:flex-row gap-2 items-center">
-                    <Input
-                        type="text"
-                        placeholder="Search..."
-                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
-                    />
-                </div>
+                {filterable && (
+                    <form
+                        onSubmit={onSearch}
+                        className="flex w-full sm:w-auto items-start gap-2"
+                    >
+                        <div className="w-full sm:w-72">
+                            <Input
+                                name="table-search"
+                                type="search"
+                                value={searchTerm}
+                                placeholder="Search..."
+                                onChange={(event) =>
+                                    setSearchTerm(event.target.value)
+                                }
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            aria-label="Search"
+                            className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-md bg-green-600 text-white transition duration-300 hover:bg-green-700 hover:shadow-md"
+                        >
+                            <MagnifyingGlassIcon className="h-5 w-5" />
+                        </button>
+                    </form>
+                )}
             </div>
             <div className="overflow-x-auto bg-white rounded-lg border border-slate-800 shadow-md">
                 <table className="min-w-full divide-y divide-gray-200">
