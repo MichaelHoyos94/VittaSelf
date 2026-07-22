@@ -152,6 +152,10 @@ export default function Index() {
         });
     };
 
+    const handleSearch = (search) => {
+        router.get(route("human-resources.index"), { search }, { preserveState: true, replace: true });
+    }
+
     return (
         <div className="p-4 bg-white rounded-xl shadow-lg">
             <h1 className="text-green-500">Human Resources</h1>
@@ -170,6 +174,8 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
+                filterable={true}
+                handleSearch={handleSearch}
                 data={users.data}
                 from={users.from}
                 to={users.to}
