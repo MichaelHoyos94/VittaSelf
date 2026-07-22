@@ -11,9 +11,9 @@ class OrderService
 {
     public function __construct(private OrderRepository $repository, private CartService $cartService, private SanctionEnforcementService $sanctionEnforcementService, private PlanService $planService) {}
     
-    public function getAll() 
+    public function getAll($search) 
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($search);
     }
 
     public function create($data, $user)
