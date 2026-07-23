@@ -7,6 +7,7 @@ use App\Http\Requests\OrderRequest;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Exception;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Sanctions\Services\SanctionEnforcementService;
 
@@ -17,9 +18,10 @@ class OrderController extends Controller
         private CartService $cartService,
         private SanctionEnforcementService $sanctionEnforcementService
     ) {}
-    public function index()
+    public function index(Request $request)
     {
-        $orders = $this->service->getAll();
+        $search = $request->input('search');
+        $orders = $this->service->getAll($search);
         return Inertia::render('Orders/Index')->with([
             'orders' => $orders,
         ]);

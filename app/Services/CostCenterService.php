@@ -9,8 +9,8 @@ class CostCenterService
     public function __construct(
         private CostCenterRepository $costCenterRepository
     ) {}
-    public function getAll() {
-        return $this->costCenterRepository->getAll();
+    public function getAll($search) {
+        return $this->costCenterRepository->getAll($search);
     }
     public function create(array $data) {}
     public function getById($id) {}

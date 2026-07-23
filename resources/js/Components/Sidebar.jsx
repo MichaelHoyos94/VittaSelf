@@ -11,7 +11,7 @@ import {
     UsersIcon,
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
-import { ArchiveBoxIcon } from "@heroicons/react/16/solid";
+import { ArchiveBoxIcon, BuildingStorefrontIcon } from "@heroicons/react/16/solid";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -25,6 +25,12 @@ export default function Sidebar() {
             href: "/dashboard",
             icon: Squares2X2Icon,
             active: isCurrent("dashboard"),
+        },
+        {
+            label: "Catalog",
+            href: "/products",
+            icon: BuildingStorefrontIcon,
+            active: isCurrent("products.products.index"),
         },
         {
             id: "sanctions",
@@ -92,6 +98,11 @@ export default function Sidebar() {
             icon: WrenchScrewdriverIcon,
             active: isCurrent("products"),
             items: [
+                {
+                    label: "Manage Products",
+                    href: "/products/manage-products",
+                    active: isCurrent("products.manage-products"),
+                },
                 {
                     label: "Inventory Entry",
                     href: "/dashboard",

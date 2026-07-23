@@ -2,24 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Models\Product;
+use App\Models\User;
 
-class ProductRepository
+class HumanResourcesRepository
 {
-    public function __construct() {}
     public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'asc')
     {
-        return Product::query()
+        $users = User::query()
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
+                return $query->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%");
             })
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPage)
             ->withQueryString();
-    }
-    public function create(array $data) {}
-    public function getById($id)
-    {
-        return Product::findOrFail($id);
+        return $users;
     }
 }

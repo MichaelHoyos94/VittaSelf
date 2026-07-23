@@ -8,8 +8,20 @@ use Illuminate\Support\Facades\DB;
 class OrderRepository
 {
     public function __construct() {}
-    public function getAll() {}
-    public function create($data) {
+    public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'asc')
+    {
+        return Order::with('customer')
+            ->when($search, function ($query, $search) {
+                $query->whereHas('customer', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+    public function create($data)
+    {
         return DB::transaction(function () use ($data) {
             $products = $data['products'];
             unset($data['products']);

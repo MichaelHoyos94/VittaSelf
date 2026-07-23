@@ -60,9 +60,10 @@ class InternalOrderController extends Controller
             'plan' => $userToOrder?->plan,
         ]);
     }
-    public function index()
+    public function index(Request $request)
     {
-        $internalOrders = $this->service->getAll();
+        $search = $request->input('search');
+        $internalOrders = $this->service->getAll($search);
         return Inertia::render('Orders/InternalOrders')->with([
             'internalOrders' => $internalOrders,
         ]);
