@@ -7,6 +7,7 @@ use App\Http\Controllers\Orders\InternalOrderController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Modules\Audits\Http\Controllers\CashRegisterClosureController;
@@ -31,6 +32,11 @@ Route::prefix('human-resources')->group(function() {
     Route::post('/employees', [HumanResourcesController::class, 'store'])->name('human-resources.store');
     Route::put('/employees/{id}', [HumanResourcesController::class, 'update'])->name('human-resources.update');
     Route::delete('/employees/{id}', [HumanResourcesController::class, 'destroy'])->name('human-resources.destroy');
+});
+
+Route::prefix('customers')->middleware(['auth', 'verified'])->as('customers.')->group(function (){
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/create', [UserController::class, 'create'])->name('create');
 });
 
 Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
