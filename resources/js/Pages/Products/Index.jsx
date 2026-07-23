@@ -52,7 +52,7 @@ export default function Index() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4 gap-8">
                 {/* Card per product */}
-                {products.map((product) => (
+                {products.data.map((product) => (
                     <div
                         className="border rounded-xl border-2 p-4 transform transition duration-100 hover:scale-110"
                         key={product.id}
