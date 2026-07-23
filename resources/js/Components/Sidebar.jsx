@@ -99,6 +99,11 @@ export default function Sidebar() {
             active: isCurrent("products"),
             items: [
                 {
+                    label: "Manage Products",
+                    href: "/products/manage-products",
+                    active: isCurrent("products.manage-products"),
+                },
+                {
                     label: "Inventory Entry",
                     href: "/dashboard",
                     active: false,

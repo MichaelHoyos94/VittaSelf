@@ -68,7 +68,7 @@ Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash
 
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('manageProducts');
+    Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('manage-products');
 });
 
 require __DIR__.'/auth.php';
