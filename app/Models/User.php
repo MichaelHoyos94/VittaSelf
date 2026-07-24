@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Audits\Models\ProductCount;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -71,7 +72,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Plan::class, 'plan_id');
     }
-    
+
     public function cashRegister(): HasOne
     {
         return $this->hasOne(CashRegister::class, 'commercial_agent_id');
