@@ -9,9 +9,11 @@ export default function useAuthorization() {
         ? user.roles
         : [];
 
-    const permissions = Array.isArray(user?.permissions)
-        ? user.permissions
+    const permissions = Array.isArray(auth?.permissions)
+        ? auth.permissions
         : [];
+
+    
 
     const hasRole = (role) => {
         if (!role) {

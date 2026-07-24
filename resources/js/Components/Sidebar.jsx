@@ -12,10 +12,14 @@ import {
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { ArchiveBoxIcon, BuildingStorefrontIcon } from "@heroicons/react/16/solid";
+import useAuthorization from "@/Hooks/useAuthorization";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
 export default function Sidebar() {
+
+    const { can } = useAuthorization();
+
     const isCurrent = (name) =>
         typeof route === "function" ? route().current(name) : false;
 
@@ -31,11 +35,13 @@ export default function Sidebar() {
             href: "/products",
             icon: BuildingStorefrontIcon,
             active: isCurrent("products.products.index"),
+            permission: 'products-catalog.view',
         },
         {
             id: "sanctions",
             label: "Sanctions",
             icon: ScaleIcon,
+            permission: 'sanctions.view',
             active:
                 isCurrent("sanctions.*") ||
                 isCurrent("sanctions.disciplinary-cases.index") ||
@@ -63,6 +69,7 @@ export default function Sidebar() {
             id: "audits",
             label: "Audits",
             icon: ClipboardDocumentCheckIcon,
+            permission: 'audits.view',
             active:
                 isCurrent("audits.*") ||
                 isCurrent("audits.quality-checklists.index") ||
@@ -124,6 +131,7 @@ export default function Sidebar() {
             id: "human-resources",
             label: "Human Resources",
             icon: UsersIcon,
+            permission: 'users.view',
             active:
                 isCurrent("human-resources.*") ||
                 isCurrent("human-resources.employees") ||
@@ -151,6 +159,7 @@ export default function Sidebar() {
             id: "orders",
             label: "Orders",
             icon: ShoppingBagIcon,
+            permission: 'orders.view',
             active:
                 isCurrent("orders.*") ||
                 isCurrent("orders.internal-orders.index") ||
@@ -172,6 +181,7 @@ export default function Sidebar() {
             id: "cash-register-manage",
             label: "Cash Register Manage",
             icon: ArchiveBoxIcon,
+            permission: 'cash-register.view',
             active:
                 isCurrent("cash-register-manage.*") ||
                 isCurrent("cash-register-manage.cash-registers.index") ||
@@ -188,6 +198,7 @@ export default function Sidebar() {
             label: "My Cash Register",
             href: "/my-cash-register",
             icon: ArchiveBoxIcon,
+            permission: 'my-cash-register.view',
             active: isCurrent("cash-registers.my-cash-register"),
         },
     ];
@@ -198,6 +209,10 @@ export default function Sidebar() {
     const toggleMenu = (menu) => {
         setOpenMenu(openMenu === menu ? null : menu);
     };
+
+    const visibleNavigation = navigation.filter((item) => {
+        return !item.permission || can(item.permission);
+    });
 
     const renderNavItem = (item) => {
         const Icon = item.icon;
@@ -302,7 +317,7 @@ export default function Sidebar() {
             </div>
 
             <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
-                {navigation.map(renderNavItem)}
+                {visibleNavigation.map(renderNavItem)}
             </nav>
 
             <div className="mt-4 border-t border-slate-200 pt-4">
