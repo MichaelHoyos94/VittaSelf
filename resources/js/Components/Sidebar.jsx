@@ -204,15 +204,18 @@ export default function Sidebar() {
         {
             label: "My Wallet",
             href: '/',
+            icon: ArchiveBoxIcon,
         },
         {
             label: "My Referrals",
-            href: "/"
+            href: "/",
+            icon: ArchiveBoxIcon,
         },
         {
             label: "My Orders",
             href: "/my-orders",
-        }
+            icon: ArchiveBoxIcon,
+        },
     ];
 
     const activeMenu = navigation.find((item) => item.items && item.active)?.id;
