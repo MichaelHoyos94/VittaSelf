@@ -181,7 +181,7 @@ export default function Sidebar() {
             id: "cash-register-manage",
             label: "Cash Register Manage",
             icon: ArchiveBoxIcon,
-            permission: 'cash-register.view',
+            permission: 'cash-registers.view',
             active:
                 isCurrent("cash-register-manage.*") ||
                 isCurrent("cash-register-manage.cash-registers.index") ||
@@ -201,6 +201,18 @@ export default function Sidebar() {
             permission: 'my-cash-register.view',
             active: isCurrent("cash-registers.my-cash-register"),
         },
+        {
+            label: "My Wallet",
+            href: '/',
+        },
+        {
+            label: "My Referrals",
+            href: "/"
+        },
+        {
+            label: "My Orders",
+            href: "/my-orders",
+        }
     ];
 
     const activeMenu = navigation.find((item) => item.items && item.active)?.id;
