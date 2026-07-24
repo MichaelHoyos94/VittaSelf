@@ -45,9 +45,21 @@ enum PermissionName: string
 
         // Internal orders
     case INTERNAL_ORDERS_VIEW = 'internal-orders.view';
-    case INTERNAL_ORDERS_create = 'internal-orders.create';
+    case INTERNAL_ORDERS_CREATE = 'internal-orders.create';
 
         // Web orders
     case ORDERS_VIEW = 'orders.view';
     case ORDERS_CREATE = 'orders.create';
+
+    // My orders
+    case MY_ORDERS_VIEW = 'my-orders.view';
+
+        // Products
+    case PRODUCTS_CATALOG_VIEW = 'products-catalog.view';
+    case PRODUCTS_MANAGE_VIEW = 'products-manage.view';
+    case PRODUCTS_MANAGE_CREATE = 'products-manage.create';
+
+    // Cash registers
+    case CASH_REGISTERS_VIEW = 'cash-registers.view';
+    case MY_CASH_REGISTER_VIEW = 'my-cash-register.view';
 }
