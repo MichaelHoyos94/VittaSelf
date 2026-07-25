@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('cash', 13, 2)->default(0);
             $table->decimal('bank_transfer', 13, 2)->default(0);
             $table->foreignId('cost_center_id')->constrained('cost_centers')->restrictOnDelete();
-            $table->foreignId('commercial_agent_id')->constrained('users')->nullable()->restrictOnDelete();
+            $table->foreignId('commercial_agent_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }
