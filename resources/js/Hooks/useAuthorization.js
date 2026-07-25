@@ -5,15 +5,13 @@ export default function useAuthorization() {
 
     const user = auth?.user ?? null;
 
-    const roles = Array.isArray(user?.roles)
-        ? user.roles
+    const roles = Array.isArray(auth?.roles)
+        ? auth.roles
         : [];
 
     const permissions = Array.isArray(auth?.permissions)
         ? auth.permissions
         : [];
-
-    
 
     const hasRole = (role) => {
         if (!role) {
@@ -44,7 +42,7 @@ export default function useAuthorization() {
             return false;
         }
 
-        return permissions.includes(permission);
+        return hasRole('super-admin') || permissions.includes(permission);
     };
 
     const canAny = (requiredPermissions = []) => {
@@ -52,7 +50,7 @@ export default function useAuthorization() {
             ? requiredPermissions
             : [requiredPermissions];
 
-        return normalizedPermissions.some((permission) =>
+        return hasRole('super-admin') || normalizedPermissions.some((permission) =>
             permissions.includes(permission)
         );
     };
@@ -62,7 +60,7 @@ export default function useAuthorization() {
             ? requiredPermissions
             : [requiredPermissions];
 
-        return normalizedPermissions.every((permission) =>
+        return hasRole('super-admin') || normalizedPermissions.every((permission) =>
             permissions.includes(permission)
         );
     };

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\Category;
 use App\Enums\Presentation;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -20,9 +19,9 @@ class ProductsSeeder extends Seeder
                 'name' => 'DiviLife Plus',
                 'description' => 'Suplementos con sabor a naranja',
                 'cover' => 'product.jpg',
-                'price' => 19.99,
+                'price' => 89999,
                 'points' => 1,
-                'slug' => "divilife-plus",
+                'slug' => 'divilife-plus',
                 'presentation' => Presentation::TABLETS->value,
                 'category' => Category::SUPPLEMENTS->value,
                 'created_at' => now(),
@@ -32,9 +31,9 @@ class ProductsSeeder extends Seeder
                 'name' => 'AGF Vainilla',
                 'description' => 'Malteada de vainilla con vitaminas.',
                 'cover' => 'product.jpg',
-                'price' => 19.99,
+                'price' => 54999,
                 'points' => 1,
-                'slug' => "agf-vainilla",
+                'slug' => 'agf-vainilla',
                 'presentation' => Presentation::POWDER->value,
                 'category' => Category::FOOD_BEVERAGE->value,
                 'created_at' => now(),
@@ -44,9 +43,9 @@ class ProductsSeeder extends Seeder
                 'name' => 'LBL',
                 'description' => 'Bebida energizante',
                 'cover' => 'product.jpg',
-                'price' => 19.99,
+                'price' => 39999,
                 'points' => 1,
-                'slug' => "lbl",
+                'slug' => 'lbl',
                 'presentation' => Presentation::LIQUID->value,
                 'category' => Category::FOOD_BEVERAGE->value,
                 'created_at' => now(),

@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         CostCenter::factory(10)->create();
         $this->call([
             RolesAndPermissionsSeeder::class,
+            PlanSeeder::class,
+            BenefitSeeder::class,
         ]);
     }
 }

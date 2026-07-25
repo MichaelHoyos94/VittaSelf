@@ -29,6 +29,7 @@ export default function Sidebar() {
             href: "/dashboard",
             icon: Squares2X2Icon,
             active: isCurrent("dashboard"),
+            permission: 'dashboard.view',
         },
         {
             label: "Catalog",
@@ -104,6 +105,7 @@ export default function Sidebar() {
             label: "Operations",
             icon: WrenchScrewdriverIcon,
             active: isCurrent("products"),
+            permission: 'operations.view',
             items: [
                 {
                     label: "Manage Products",
@@ -131,7 +133,6 @@ export default function Sidebar() {
             id: "human-resources",
             label: "Human Resources",
             icon: UsersIcon,
-            permission: 'users.view',
             active:
                 isCurrent("human-resources.*") ||
                 isCurrent("human-resources.employees") ||
@@ -142,18 +143,28 @@ export default function Sidebar() {
                     label: "Employees",
                     href: "/human-resources/employees",
                     active: isCurrent("human-resources.employees"),
+                    permission: "employees.view",
                 },
                 {
                     label: "Roles",
                     href: "/human-resources/roles",
                     active: isCurrent("human-resources.roles"),
+                    permission: "roles.view",
                 },
                 {
                     label: "Permissions",
                     href: "/human-resources/permissions",
                     active: isCurrent("human-resources.permissions"),
+                    permission: "roles.view",
                 },
             ],
+        },
+        {
+            label: "Customers",
+            href: "/customers",
+            icon: UsersIcon,
+            permission: 'eui.view',
+            active: isCurrent("customers.*"),
         },
         {
             id: "orders",
@@ -169,11 +180,13 @@ export default function Sidebar() {
                     label: "Internal Orders",
                     href: "/orders/internal-orders",
                     active: isCurrent("orders.internal-orders.index"),
+                    permission: 'internal-orders.view',
                 },
                 {
                     label: "Web Orders",
                     href: "/orders/web-orders",
                     active: isCurrent("orders.web-orders.index"),
+                    permission: 'orders.view',
                 },
             ],
         },
@@ -205,16 +218,22 @@ export default function Sidebar() {
             label: "My Wallet",
             href: '/',
             icon: ArchiveBoxIcon,
+            permission: 'my-wallet.view',
+            active: isCurrent("my-wallet"),
         },
         {
             label: "My Referrals",
             href: "/",
             icon: ArchiveBoxIcon,
+            permission: 'my-referrals.view',
+            active: isCurrent("my-referrals"),
         },
         {
             label: "My Orders",
             href: "/my-orders",
             icon: ArchiveBoxIcon,
+            permission: 'my-orders.view',
+            active: isCurrent("my-orders"),
         },
     ];
 
@@ -225,9 +244,23 @@ export default function Sidebar() {
         setOpenMenu(openMenu === menu ? null : menu);
     };
 
-    const visibleNavigation = navigation.filter((item) => {
-        return !item.permission || can(item.permission);
-    });
+    const visibleNavigation = navigation
+        .map((item) =>
+            item.items
+                ? {
+                    ...item,
+                    items: item.items.filter(
+                        (subItem) =>
+                            !subItem.permission || can(subItem.permission),
+                    ),
+                }
+                : item,
+        )
+        .filter(
+            (item) =>
+                (!item.permission || can(item.permission)) &&
+                (!item.items || item.items.length > 0),
+        );
 
     const renderNavItem = (item) => {
         const Icon = item.icon;

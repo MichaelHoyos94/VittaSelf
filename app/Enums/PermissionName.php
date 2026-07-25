@@ -26,10 +26,7 @@ enum PermissionName: string
         // Auditorías
     case AUDITS_VIEW = 'audits.view';
     case AUDITS_CREATE = 'audits.create';
-    case AUDITS_UPDATE = 'audits.update';
-    case AUDITS_DELETE = 'audits.delete';
-    case AUDITS_ASSIGN = 'audits.assign';
-    case AUDITS_COMPLETE = 'audits.complete';
+    case AUDITS_DOWNLOAD = 'audits.download';
 
     case PRODUCT_COUNTS_EXECUTE = 'product-counts.execute';
     case CASH_COUNTS_EXECUTE = 'cash-counts.execute';
@@ -38,10 +35,11 @@ enum PermissionName: string
         // Sanciones
     case SANCTIONS_VIEW = 'sanctions.view';
     case SANCTIONS_CREATE = 'sanctions.create';
-    case SANCTIONS_UPDATE = 'sanctions.update';
     case SANCTIONS_ASSIGN = 'sanctions.assign';
-    case SANCTIONS_CLOSE = 'sanctions.close';
-    case SANCTIONS_DELETE = 'sanctions.delete';
+
+        // Resolutions
+    case RESOLUTIONS_VIEW = 'resolutions.view';
+    case RESOLUTIONS_CREATE = 'resolutions.create';
 
         // Internal orders
     case INTERNAL_ORDERS_VIEW = 'internal-orders.view';
@@ -51,15 +49,18 @@ enum PermissionName: string
     case ORDERS_VIEW = 'orders.view';
     case ORDERS_CREATE = 'orders.create';
 
-    // My orders
-    case MY_ORDERS_VIEW = 'my-orders.view';
 
         // Products
     case PRODUCTS_CATALOG_VIEW = 'products-catalog.view';
     case PRODUCTS_MANAGE_VIEW = 'products-manage.view';
     case PRODUCTS_MANAGE_CREATE = 'products-manage.create';
 
-    // Cash registers
+        // Cash registers
     case CASH_REGISTERS_VIEW = 'cash-registers.view';
     case MY_CASH_REGISTER_VIEW = 'my-cash-register.view';
+
+        // EUI Views 
+    case MY_REFERRALS = 'my-referrals.view';
+    case MY_WALLET = 'my-wallet.view';
+    case MY_ORDERS_VIEW = 'my-orders.view';
 }
