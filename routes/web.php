@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashRegisters\CashRegisterController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
+use App\Http\Controllers\HumanResources\RolePermissionController;
 use App\Http\Controllers\Orders\InternalOrderController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
@@ -33,6 +34,18 @@ Route::prefix('human-resources')->group(function() {
     Route::put('/employees/{id}', [HumanResourcesController::class, 'update'])->name('human-resources.update');
     Route::delete('/employees/{id}', [HumanResourcesController::class, 'destroy'])->name('human-resources.destroy');
 });
+
+Route::prefix('human-resources/permissions')
+    ->middleware(['auth', 'verified'])
+    ->as('human-resources.')
+    ->group(function () {
+        Route::get('/', [RolePermissionController::class, 'index'])
+            ->middleware('can:human-resources.roles-view')
+            ->name('permissions');
+        Route::put('/{role}', [RolePermissionController::class, 'update'])
+            ->middleware('can:human-resources.roles-assign')
+            ->name('permissions.update');
+    });
 
 Route::prefix('customers')->middleware(['auth', 'verified'])->as('customers.')->group(function (){
     Route::get('/', [UserController::class, 'index'])->name('index');

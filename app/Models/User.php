@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,10 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Audits\Models\ProductCount;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +28,6 @@ class User extends Authenticatable
         'last_name',
         'eui_code',
         'document_number',
-        'role',
         'phone',
         'email',
         'password',
@@ -56,7 +55,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => Role::class,
         ];
     }
 
@@ -74,7 +72,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Plan::class, 'plan_id');
     }
-    
+
     public function cashRegister(): HasOne
     {
         return $this->hasOne(CashRegister::class, 'commercial_agent_id');

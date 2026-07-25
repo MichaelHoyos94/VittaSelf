@@ -12,10 +12,14 @@ import {
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { ArchiveBoxIcon, BuildingStorefrontIcon } from "@heroicons/react/16/solid";
+import useAuthorization from "@/Hooks/useAuthorization";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
 export default function Sidebar() {
+
+    const { can } = useAuthorization();
+
     const isCurrent = (name) =>
         typeof route === "function" ? route().current(name) : false;
 
@@ -25,17 +29,20 @@ export default function Sidebar() {
             href: "/dashboard",
             icon: Squares2X2Icon,
             active: isCurrent("dashboard"),
+            permission: 'dashboard.view',
         },
         {
             label: "Catalog",
             href: "/products",
             icon: BuildingStorefrontIcon,
             active: isCurrent("products.products.index"),
+            permission: 'products-catalog.view',
         },
         {
             id: "sanctions",
             label: "Sanctions",
             icon: ScaleIcon,
+            permission: 'sanctions.sanctions-view',
             active:
                 isCurrent("sanctions.*") ||
                 isCurrent("sanctions.disciplinary-cases.index") ||
@@ -63,6 +70,7 @@ export default function Sidebar() {
             id: "audits",
             label: "Audits",
             icon: ClipboardDocumentCheckIcon,
+            permission: 'audits.audits-view',
             active:
                 isCurrent("audits.*") ||
                 isCurrent("audits.quality-checklists.index") ||
@@ -74,21 +82,25 @@ export default function Sidebar() {
                     label: "Quality Checklists",
                     href: "/audits/quality-checklists",
                     active: isCurrent("audits.quality-checklists.index"),
+                    permission: 'audits.quality-checklists-view',
                 },
                 {
                     label: "Product Counts",
                     href: "/audits/product-counts",
                     active: isCurrent("audits.product-counts.index"),
+                    permission: 'audits.product-counts-view',
                 },
                 {
                     label: "Audit History",
                     href: "/audits/history",
                     active: isCurrent("audits.history.index"),
+                    permission: 'audits.audits-view',
                 },
                 {
                     label: "Cash Register Closings",
                     href: "/audits/cash-register-closures",
                     active: isCurrent("audits.cash-register-closures.index"),
+                    permission: 'audits.cash-counts-view',
                 },
             ],
         },
@@ -97,26 +109,25 @@ export default function Sidebar() {
             label: "Operations",
             icon: WrenchScrewdriverIcon,
             active: isCurrent("products"),
+            permission: 'operations.view',
             items: [
                 {
                     label: "Manage Products",
                     href: "/products/manage-products",
                     active: isCurrent("products.manage-products"),
+                    permission: 'operations.products-manage-view',
                 },
                 {
                     label: "Inventory Entry",
                     href: "/dashboard",
                     active: false,
+                    permission: 'operations.inventory-entry-view',
                 },
                 {
                     label: "Inventory Transfer",
                     href: "/dashboard",
                     active: false,
-                },
-                {
-                    label: "Products",
-                    href: "/dashboard",
-                    active: isCurrent("products"),
+                    permission: 'operations.inventory-transfer-view'
                 },
             ],
         },
@@ -124,6 +135,7 @@ export default function Sidebar() {
             id: "human-resources",
             label: "Human Resources",
             icon: UsersIcon,
+            permission: 'human-resources.view',
             active:
                 isCurrent("human-resources.*") ||
                 isCurrent("human-resources.employees") ||
@@ -134,23 +146,34 @@ export default function Sidebar() {
                     label: "Employees",
                     href: "/human-resources/employees",
                     active: isCurrent("human-resources.employees"),
+                    permission: "human-resources.employees-view",
                 },
                 {
                     label: "Roles",
                     href: "/human-resources/roles",
                     active: isCurrent("human-resources.roles"),
+                    permission: "human-resources.roles-view",
                 },
                 {
                     label: "Permissions",
                     href: "/human-resources/permissions",
                     active: isCurrent("human-resources.permissions"),
+                    permission: "human-resources.roles-view",
                 },
             ],
+        },
+        {
+            label: "Customers",
+            href: "/customers",
+            icon: UsersIcon,
+            permission: 'eui.view',
+            active: isCurrent("customers.*"),
         },
         {
             id: "orders",
             label: "Orders",
             icon: ShoppingBagIcon,
+            permission: 'orders.view',
             active:
                 isCurrent("orders.*") ||
                 isCurrent("orders.internal-orders.index") ||
@@ -160,11 +183,13 @@ export default function Sidebar() {
                     label: "Internal Orders",
                     href: "/orders/internal-orders",
                     active: isCurrent("orders.internal-orders.index"),
+                    permission: 'orders.internal-orders-view',
                 },
                 {
                     label: "Web Orders",
                     href: "/orders/web-orders",
                     active: isCurrent("orders.web-orders.index"),
+                    permission: 'orders.web-orders-view',
                 },
             ],
         },
@@ -172,6 +197,7 @@ export default function Sidebar() {
             id: "cash-register-manage",
             label: "Cash Register Manage",
             icon: ArchiveBoxIcon,
+            permission: 'cash-register-manage.view',
             active:
                 isCurrent("cash-register-manage.*") ||
                 isCurrent("cash-register-manage.cash-registers.index") ||
@@ -181,6 +207,7 @@ export default function Sidebar() {
                     label: "Cash Registers",
                     href: "/cash-registers-manage",
                     active: isCurrent("cash-register-manage.cash-registers.index"),
+                    permission: 'cash-register-manage.cash-registers-view',
                 },
             ],
         },
@@ -188,7 +215,29 @@ export default function Sidebar() {
             label: "My Cash Register",
             href: "/my-cash-register",
             icon: ArchiveBoxIcon,
+            permission: 'my-cash-register.view',
             active: isCurrent("cash-registers.my-cash-register"),
+        },
+        {
+            label: "My Wallet",
+            href: '/',
+            icon: ArchiveBoxIcon,
+            permission: 'my-wallet.view',
+            active: isCurrent("my-wallet"),
+        },
+        {
+            label: "My Referrals",
+            href: "/",
+            icon: ArchiveBoxIcon,
+            permission: 'my-referrals.view',
+            active: isCurrent("my-referrals"),
+        },
+        {
+            label: "My Orders",
+            href: "/my-orders",
+            icon: ArchiveBoxIcon,
+            permission: 'my-orders.view',
+            active: isCurrent("my-orders"),
         },
     ];
 
@@ -198,6 +247,24 @@ export default function Sidebar() {
     const toggleMenu = (menu) => {
         setOpenMenu(openMenu === menu ? null : menu);
     };
+
+    const visibleNavigation = navigation
+        .map((item) =>
+            item.items
+                ? {
+                    ...item,
+                    items: item.items.filter(
+                        (subItem) =>
+                            !subItem.permission || can(subItem.permission),
+                    ),
+                }
+                : item,
+        )
+        .filter(
+            (item) =>
+                (!item.permission || can(item.permission)) &&
+                (!item.items || item.items.length > 0),
+        );
 
     const renderNavItem = (item) => {
         const Icon = item.icon;
@@ -302,7 +369,7 @@ export default function Sidebar() {
             </div>
 
             <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
-                {navigation.map(renderNavItem)}
+                {visibleNavigation.map(renderNavItem)}
             </nav>
 
             <div className="mt-4 border-t border-slate-200 pt-4">
