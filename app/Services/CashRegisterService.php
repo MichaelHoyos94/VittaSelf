@@ -27,6 +27,11 @@ class CashRegisterService
         $cashRegister['commercial_agent_id'] = null;
         return $this->repository->update($cashRegister);
     }
+    public function delete($cashRegisterId)
+    {
+        $cashRegister = $this->repository->getById($cashRegisterId);
+        return $this->repository->delete($cashRegister);
+    }
     public function openCashRegister($commercialAgentId)
     {
         $cashRegister = $this->repository->getByCommercialAgentId($commercialAgentId);

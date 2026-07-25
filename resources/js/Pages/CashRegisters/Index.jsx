@@ -14,8 +14,13 @@ import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
-    const { cashRegisters, flash, users, costCenters } = usePage().props;
-    const { data, setData, post, processing, errors } = useForm({
+    const {
+        cashRegisters = [],
+        flash = {},
+        users = [],
+        costCenters = [],
+    } = usePage().props;
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         code: "",
         base: "",
@@ -28,14 +33,15 @@ export default function Index() {
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedUserId, setSelectedUserId] = useState("");
+    const [pendingAction, setPendingAction] = useState(null);
 
     useEffect(() => {
-        setErrorMessage(flash.error);
-        setSuccessMessage(flash.success);
+        setErrorMessage(flash.error ?? "");
+        setSuccessMessage(flash.success ?? "");
         if (!flash.success && !flash.error) return;
         const timer = setTimeout(() => {
-            setSuccessMessage(null);
-            setErrorMessage(null);
+            setSuccessMessage("");
+            setErrorMessage("");
         }, 5000);
 
         return () => clearTimeout(timer);
@@ -44,12 +50,16 @@ export default function Index() {
     const openCreateModal = () => {
         setModalMode("create");
         setSelectedCashRegister(null);
+        setSelectedUserId("");
         setModalShow(true);
     };
 
-    const openAssignModal = (cashRegister, user) => {
+    const openAssignModal = (cashRegister) => {
         setModalMode("assign");
         setSelectedCashRegister(cashRegister);
+        setSelectedUserId(
+            cashRegister.commercial_agent_id?.toString() ?? "",
+        );
         setModalShow(true);
     };
 
@@ -67,12 +77,23 @@ export default function Index() {
 
     const closeModal = () => {
         setModalShow(false);
+        setSelectedUserId("");
     };
 
     const handleDelete = () => {
-        // Implement the delete logic here, e.g., make an API call to delete the cash register
-        console.log(`Deleting cash register: ${selectedCashRegister.name}`);
-        closeModal();
+        if (!selectedCashRegister || pendingAction) return;
+
+        router.delete(
+            route("cash-register-manage.cash-registers.delete", {
+                cashRegisterId: selectedCashRegister.id,
+            }),
+            {
+                preserveScroll: true,
+                onStart: () => setPendingAction("delete"),
+                onSuccess: closeModal,
+                onFinish: () => setPendingAction(null),
+            },
+        );
     };
 
     const handleSubmit = (e) => {
@@ -80,11 +101,14 @@ export default function Index() {
         post(route("cash-register-manage.cash-registers.store"), {
             onSuccess: () => {
                 closeModal();
+                reset();
             },
         });
     };
 
     const handleAssign = () => {
+        if (!selectedCashRegister || !selectedUserId || pendingAction) return;
+
         router.post(
             route("cash-register-manage.cash-registers.assign", {
                 cashRegisterId: selectedCashRegister.id,
@@ -94,30 +118,28 @@ export default function Index() {
             },
             {
                 preserveScroll: true,
-                onSuccess: () => {
-                    closeModal();
-                    setSelectedCashRegister(null);
-                    setSelectedUserId(null);
-                },
+                onStart: () => setPendingAction("assign"),
+                onSuccess: closeModal,
+                onFinish: () => setPendingAction(null),
             },
         );
     };
 
     const handleRelease = () => {
+        if (!selectedCashRegister || pendingAction) return;
+
         router.post(
-            route('cash-register-manage.cash-registers.release',
-                {
-                    cashRegisterId: selectedCashRegister.id
-                }
-            ),
+            route("cash-register-manage.cash-registers.release", {
+                cashRegisterId: selectedCashRegister.id,
+            }),
             {},
             {
-                onSuccess: () => {
-                    closeModal();
-                    setSelectedCashRegister(null);
-                }
-            }
-        )
+                preserveScroll: true,
+                onStart: () => setPendingAction("release"),
+                onSuccess: closeModal,
+                onFinish: () => setPendingAction(null),
+            },
+        );
     };
 
     return (
@@ -193,7 +215,7 @@ export default function Index() {
                             </div>
                         </div>
                         {/* Buttons */}
-                        <div className="flex justify-end gap-2 mt-4">
+                        <div className="flex flex-wrap justify-end gap-2 mt-4">
                             <PrimaryButton
                                 onClick={() => openAssignModal(cashRegister)}
                             >
@@ -236,7 +258,10 @@ export default function Index() {
                             <div className="flex justify-end gap-4">
                                 <PrimaryButton
                                     onClick={handleAssign}
-                                    disabled={!selectedUserId}
+                                    disabled={
+                                        !selectedUserId ||
+                                        pendingAction === "assign"
+                                    }
                                     type="button"
                                 >
                                     assign
@@ -259,14 +284,14 @@ export default function Index() {
                             <p>
                                 Are you sure you want to unassign{" "}
                                 {
-                                    selectedCashRegister.commercial_agent
-                                        .full_name
+                                    selectedCashRegister?.commercial_agent?.full_name
                                 }{" "}
-                                from {selectedCashRegister.name}?
+                                from {selectedCashRegister?.name}?
                             </p>
                             <div className="flex justify-end gap-4">
                                 <PrimaryButton
                                     onClick={handleRelease}
+                                    disabled={pendingAction === "release"}
                                 >
                                     Release
                                 </PrimaryButton>
@@ -299,13 +324,14 @@ export default function Index() {
                                 />
                                 <Input
                                     label="Code"
-                                    name="core"
+                                    name="code"
                                     type="text"
                                     value={data.code}
                                     placeholder="0001"
                                     onChange={(e) =>
                                         setData("code", e.target.value)
                                     }
+                                    error={errors.code}
                                 />
                                 <Input
                                     label="Base"
@@ -316,6 +342,7 @@ export default function Index() {
                                     onChange={(e) =>
                                         setData("base", e.target.value)
                                     }
+                                    error={errors.base}
                                 />
                                 <Select
                                     label={"Cost Center"}
@@ -332,6 +359,7 @@ export default function Index() {
                                         value: costCenter.id,
                                         label: costCenter.name,
                                     }))}
+                                    error={errors.cost_center_id}
                                 />
                                 <Select
                                     label={"Commercial Agent"}
@@ -348,6 +376,7 @@ export default function Index() {
                                         value: user.id,
                                         label: user.name,
                                     }))}
+                                    error={errors.commercial_agent_id}
                                 />
                                 <PrimaryButton
                                     disabled={processing}
@@ -369,12 +398,12 @@ export default function Index() {
                         <div className="mx-4 my-6">
                             <p>
                                 Are you sure you want to delete{" "}
-                                {selectedCashRegister.name}?
+                                {selectedCashRegister?.name}?
                             </p>
                             <button
-                                onClick={() => {
-                                    handleDelete();
-                                }}
+                                type="button"
+                                onClick={handleDelete}
+                                disabled={pendingAction === "delete"}
                                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 hover:shadow-md transition duration-300"
                             >
                                 Delete

@@ -76,7 +76,7 @@ Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-ma
     Route::post('/', [CashRegisterController::class, 'store'])->name('cash-registers.store');
     Route::post('/assign/{cashRegisterId}', [CashRegisterController::class, 'assign'])->name('cash-registers.assign');
     Route::post('/release/{cashRegisterId}', [CashRegisterController::class, 'release'])->name('cash-registers.release');
-    Route::delete('/delete', [CashRegisterController::class, 'delete'])->name('cash-registers.delete');
+    Route::delete('/{cashRegisterId}', [CashRegisterController::class, 'destroy'])->name('cash-registers.delete');
 });
 
 Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function() {

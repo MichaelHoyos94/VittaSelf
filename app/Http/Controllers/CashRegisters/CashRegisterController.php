@@ -7,6 +7,7 @@ use App\Http\Requests\CashRegisterRequest;
 use App\Services\CashRegisterService;
 use App\Services\CostCenterService;
 use App\Services\UserService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -53,10 +54,19 @@ class CashRegisterController extends Controller
             return redirect()->route('cash-register-manage.cash-registers.index')->with('error', 'Failed to assign cash register');
         }
     }
-    #TODO Implementar logica para eliminar caja
     public function destroy($cashRegisterId)
     {
+        try {
+            $this->service->delete($cashRegisterId);
 
+            return redirect()
+                ->route('cash-register-manage.cash-registers.index')
+                ->with('success', 'Cash register deleted successfully.');
+        } catch (QueryException) {
+            return redirect()
+                ->route('cash-register-manage.cash-registers.index')
+                ->with('error', 'The cash register cannot be deleted because it has related records.');
+        }
     }
     public function openCashRegister()
     {

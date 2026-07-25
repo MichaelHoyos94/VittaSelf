@@ -34,7 +34,7 @@ export default function MyCashRegister() {
         coins_50: "",
         observations: "",
         date: "",
-        cash_register_id: cashRegister.id,
+        cash_register_id: cashRegister?.id,
     });
 
     useEffect(() => {
