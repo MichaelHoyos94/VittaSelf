@@ -16,6 +16,27 @@ import useAuthorization from "@/Hooks/useAuthorization";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
+const NavIcon = ({ icon: Icon, className }) => {
+    if (!Icon) {
+        return null;
+    }
+
+    if (typeof Icon === "string") {
+        return (
+            <i
+                className={cn(
+                    Icon,
+                    "inline-flex items-center justify-center text-xl leading-none",
+                    className,
+                )}
+                aria-hidden="true"
+            />
+        );
+    }
+
+    return <Icon className={className} aria-hidden="true" />;
+};
+
 export default function Sidebar() {
 
     const { can } = useAuthorization();
@@ -34,7 +55,7 @@ export default function Sidebar() {
         {
             label: "Catalog",
             href: "/products",
-            icon: BuildingStorefrontIcon,
+            icon: "fi fi-rr-catalog-magazine",
             active: isCurrent("products.products.index"),
             permission: 'products-catalog.view',
         },
@@ -69,7 +90,7 @@ export default function Sidebar() {
         {
             id: "audits",
             label: "Audits",
-            icon: ClipboardDocumentCheckIcon,
+            icon: "fi fi-rr-audit",
             permission: 'audits.audits-view',
             active:
                 isCurrent("audits.*") ||
@@ -165,7 +186,7 @@ export default function Sidebar() {
         {
             label: "Customers",
             href: "/customers",
-            icon: UsersIcon,
+            icon: "fi fi-rr-users-alt",
             permission: 'eui.view',
             active: isCurrent("customers.*"),
         },
@@ -196,7 +217,7 @@ export default function Sidebar() {
         {
             id: "cash-register-manage",
             label: "Cash Register Manage",
-            icon: ArchiveBoxIcon,
+            icon: "fi fi-rr-cash-register",
             permission: 'cash-register-manage.view',
             active:
                 isCurrent("cash-register-manage.*") ||
@@ -214,28 +235,28 @@ export default function Sidebar() {
         {
             label: "My Cash Register",
             href: "/my-cash-register",
-            icon: ArchiveBoxIcon,
+            icon: "fi fi-rr-cash-register",
             permission: 'my-cash-register.view',
             active: isCurrent("cash-registers.my-cash-register"),
         },
         {
             label: "My Wallet",
             href: '/',
-            icon: ArchiveBoxIcon,
+            icon: "fi fi-rr-wallet",
             permission: 'my-wallet.view',
             active: isCurrent("my-wallet"),
         },
         {
             label: "My Referrals",
             href: "/",
-            icon: ArchiveBoxIcon,
+            icon: "fi fi-rr-chart-tree",
             permission: 'my-referrals.view',
             active: isCurrent("my-referrals"),
         },
         {
             label: "My Orders",
             href: "/my-orders",
-            icon: ArchiveBoxIcon,
+            icon: "fi fi-rr-order-history",
             permission: 'my-orders.view',
             active: isCurrent("my-orders"),
         },
@@ -267,8 +288,6 @@ export default function Sidebar() {
         );
 
     const renderNavItem = (item) => {
-        const Icon = item.icon;
-
         if (!item.items) {
             return (
                 <Link
@@ -281,7 +300,8 @@ export default function Sidebar() {
                             : "border-transparent text-slate-600 hover:bg-slate-100 hover:text-primary-700",
                     )}
                 >
-                    <Icon
+                    <NavIcon
+                        icon={item.icon}
                         className={cn(
                             "h-5 w-5 shrink-0",
                             item.active
@@ -309,7 +329,8 @@ export default function Sidebar() {
                     )}
                     aria-expanded={expanded}
                 >
-                    <Icon
+                    <NavIcon
+                        icon={item.icon}
                         className={cn(
                             "h-5 w-5 shrink-0",
                             item.active
