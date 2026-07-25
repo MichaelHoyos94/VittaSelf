@@ -40,10 +40,10 @@ Route::prefix('human-resources/permissions')
     ->as('human-resources.')
     ->group(function () {
         Route::get('/', [RolePermissionController::class, 'index'])
-            ->middleware('can:roles.view')
+            ->middleware('can:human-resources.roles-view')
             ->name('permissions');
         Route::put('/{role}', [RolePermissionController::class, 'update'])
-            ->middleware('can:roles.assign')
+            ->middleware('can:human-resources.roles-assign')
             ->name('permissions.update');
     });
 

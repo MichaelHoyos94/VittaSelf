@@ -42,7 +42,7 @@ export default function Sidebar() {
             id: "sanctions",
             label: "Sanctions",
             icon: ScaleIcon,
-            permission: 'sanctions.view',
+            permission: 'sanctions.sanctions-view',
             active:
                 isCurrent("sanctions.*") ||
                 isCurrent("sanctions.disciplinary-cases.index") ||
@@ -70,7 +70,7 @@ export default function Sidebar() {
             id: "audits",
             label: "Audits",
             icon: ClipboardDocumentCheckIcon,
-            permission: 'audits.view',
+            permission: 'audits.audits-view',
             active:
                 isCurrent("audits.*") ||
                 isCurrent("audits.quality-checklists.index") ||
@@ -82,21 +82,25 @@ export default function Sidebar() {
                     label: "Quality Checklists",
                     href: "/audits/quality-checklists",
                     active: isCurrent("audits.quality-checklists.index"),
+                    permission: 'audits.quality-checklists-view',
                 },
                 {
                     label: "Product Counts",
                     href: "/audits/product-counts",
                     active: isCurrent("audits.product-counts.index"),
+                    permission: 'audits.product-counts-view',
                 },
                 {
                     label: "Audit History",
                     href: "/audits/history",
                     active: isCurrent("audits.history.index"),
+                    permission: 'audits.audits-view',
                 },
                 {
                     label: "Cash Register Closings",
                     href: "/audits/cash-register-closures",
                     active: isCurrent("audits.cash-register-closures.index"),
+                    permission: 'audits.cash-counts-view',
                 },
             ],
         },
@@ -111,21 +115,19 @@ export default function Sidebar() {
                     label: "Manage Products",
                     href: "/products/manage-products",
                     active: isCurrent("products.manage-products"),
+                    permission: 'operations.products-manage-view',
                 },
                 {
                     label: "Inventory Entry",
                     href: "/dashboard",
                     active: false,
+                    permission: 'operations.inventory-entry-view',
                 },
                 {
                     label: "Inventory Transfer",
                     href: "/dashboard",
                     active: false,
-                },
-                {
-                    label: "Products",
-                    href: "/dashboard",
-                    active: isCurrent("products"),
+                    permission: 'operations.inventory-transfer-view'
                 },
             ],
         },
@@ -133,6 +135,7 @@ export default function Sidebar() {
             id: "human-resources",
             label: "Human Resources",
             icon: UsersIcon,
+            permission: 'human-resources.view',
             active:
                 isCurrent("human-resources.*") ||
                 isCurrent("human-resources.employees") ||
@@ -143,19 +146,19 @@ export default function Sidebar() {
                     label: "Employees",
                     href: "/human-resources/employees",
                     active: isCurrent("human-resources.employees"),
-                    permission: "employees.view",
+                    permission: "human-resources.employees-view",
                 },
                 {
                     label: "Roles",
                     href: "/human-resources/roles",
                     active: isCurrent("human-resources.roles"),
-                    permission: "roles.view",
+                    permission: "human-resources.roles-view",
                 },
                 {
                     label: "Permissions",
                     href: "/human-resources/permissions",
                     active: isCurrent("human-resources.permissions"),
-                    permission: "roles.view",
+                    permission: "human-resources.roles-view",
                 },
             ],
         },
@@ -180,13 +183,13 @@ export default function Sidebar() {
                     label: "Internal Orders",
                     href: "/orders/internal-orders",
                     active: isCurrent("orders.internal-orders.index"),
-                    permission: 'internal-orders.view',
+                    permission: 'orders.internal-orders-view',
                 },
                 {
                     label: "Web Orders",
                     href: "/orders/web-orders",
                     active: isCurrent("orders.web-orders.index"),
-                    permission: 'orders.view',
+                    permission: 'orders.web-orders-view',
                 },
             ],
         },
@@ -194,7 +197,7 @@ export default function Sidebar() {
             id: "cash-register-manage",
             label: "Cash Register Manage",
             icon: ArchiveBoxIcon,
-            permission: 'cash-registers.view',
+            permission: 'cash-register-manage.view',
             active:
                 isCurrent("cash-register-manage.*") ||
                 isCurrent("cash-register-manage.cash-registers.index") ||
@@ -204,6 +207,7 @@ export default function Sidebar() {
                     label: "Cash Registers",
                     href: "/cash-registers-manage",
                     active: isCurrent("cash-register-manage.cash-registers.index"),
+                    permission: 'cash-register-manage.cash-registers-view',
                 },
             ],
         },

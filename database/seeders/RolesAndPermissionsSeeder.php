@@ -52,23 +52,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'guard_name' => $guard,
         ]);
 
-        $administrator->syncPermissions($permissions);
-
-        $commercialAgent->syncPermissions([
-            PermissionName::INTERNAL_ORDERS_VIEW->value,
-            PermissionName::INTERNAL_ORDERS_CREATE->value,
-            PermissionName::QUALITY_CHECKLISTS_EXECUTE->value,
-            PermissionName::CASH_COUNTS_EXECUTE->value,
-            PermissionName::PRODUCT_COUNTS_EXECUTE->value,
-            PermissionName::MY_CASH_REGISTER_VIEW->value,
-        ]);
-
-        $eui->syncPermissions([
-            PermissionName::MY_ORDERS_VIEW->value,
-            PermissionName::ORDERS_CREATE->value,
-            PermissionName::PRODUCTS_CATALOG_VIEW->value,
-        ]);
-
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }
