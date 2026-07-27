@@ -164,7 +164,7 @@ export default function Index() {
                 </div>
             )}
             {/* Buttons */}
-            <div className="flex gap-4 mb-4">
+            <div className="flex gap-4 mt-4">
                 <PrimaryButton onClick={openCreateModal}>Create</PrimaryButton>
             </div>
             {/* Cash registers cards */}
@@ -223,6 +223,7 @@ export default function Index() {
                             </PrimaryButton>
                             <SecondaryButton
                                 onClick={() => openReleaseModal(cashRegister)}
+                                disabled={!cashRegister.commercial_agent_id}
                             >
                                 Release
                             </SecondaryButton>
@@ -252,7 +253,7 @@ export default function Index() {
                                 placeholder="Select Commercial Agent"
                                 options={users.map((user) => ({
                                     value: user.id,
-                                    label: user.name,
+                                    label: user.full_name,
                                 }))}
                             />
                             <div className="flex justify-end gap-4">

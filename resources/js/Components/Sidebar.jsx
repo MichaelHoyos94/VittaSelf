@@ -140,14 +140,18 @@ export default function Sidebar() {
                 },
                 {
                     label: "Inventory Entry",
-                    href: "/dashboard",
-                    active: false,
+                    href: "/coming-soon/inventory-entry",
+                    active: isCurrent("coming-soon", {
+                        feature: "inventory-entry",
+                    }),
                     permission: 'operations.inventory-entry-view',
                 },
                 {
                     label: "Inventory Transfer",
-                    href: "/dashboard",
-                    active: false,
+                    href: "/coming-soon/inventory-transfer",
+                    active: isCurrent("coming-soon", {
+                        feature: "inventory-transfer",
+                    }),
                     permission: 'operations.inventory-transfer-view'
                 },
             ],
@@ -241,17 +245,17 @@ export default function Sidebar() {
         },
         {
             label: "My Wallet",
-            href: '/',
+            href: "/coming-soon/my-wallet",
             icon: "fi fi-rr-wallet",
             permission: 'my-wallet.view',
-            active: isCurrent("my-wallet"),
+            active: isCurrent("coming-soon", { feature: "my-wallet" }),
         },
         {
             label: "My Referrals",
-            href: "/",
+            href: "/coming-soon/my-referrals",
             icon: "fi fi-rr-chart-tree",
             permission: 'my-referrals.view',
-            active: isCurrent("my-referrals"),
+            active: isCurrent("coming-soon", { feature: "my-referrals" }),
         },
         {
             label: "My Orders",
