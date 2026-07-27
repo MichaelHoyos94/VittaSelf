@@ -59,7 +59,7 @@ export default function MyCashRegister() {
 
     const handleCloseCashRegister = (e) => {
         e.preventDefault();
-        post(route("cash-register-closures.store"), {
+        post(route("audits.cash-register-closures.store"), {
             onSuccess: () => {
                 closeModal();
             }

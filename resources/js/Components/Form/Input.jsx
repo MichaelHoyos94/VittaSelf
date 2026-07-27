@@ -7,7 +7,8 @@ export default function Input({
     value,
     onChange,
     error,
-    placeholder
+    placeholder,
+    ...props
 }) {
     return (
         <div className="mb-4">
@@ -15,6 +16,7 @@ export default function Input({
                 {label}
             </label>}
             <input 
+                {...props}
                 type={type}
                 name={name}
                 id={name}

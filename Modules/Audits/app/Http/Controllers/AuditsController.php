@@ -3,6 +3,7 @@
 namespace Modules\Audits\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\CashRegisterService;
 use Inertia\Inertia;
 use Modules\Audits\Http\Requests\CashRegisterClosureAuditRequest;
 use Modules\Audits\Http\Requests\ProductCountAuditRequest;
@@ -19,6 +20,7 @@ class AuditsController extends Controller
         private QualityChecklistAuditService $service,
         private ProductCountAuditService $productCountAuditService,
         private CashRegisterClosureAuditService $cashRegisterClosureAuditService,
+        private CashRegisterService $cashRegisterService,
         private PdfService $pdfService
     ) {}
 
@@ -63,6 +65,9 @@ class AuditsController extends Controller
     {
         $validated = $request->validated();
         $audit = $this->cashRegisterClosureAuditService->create($validated);
+        $audit->load(['cashRegisterClosure.commercialAgent']);
+        $commercialAgentId = $audit->cashRegisterClosure->commercialAgent->id;
+        if ($audit->status === 'approved') $this->cashRegisterService->closeCashRegister($commercialAgentId);
         $pdfPath = $this->pdfService->generateCashRegisterClosureAuditPdf($audit);
         $audit->update(['pdf_path' => $pdfPath]);
         return redirect()->route('audits.history.index')->with('success', 'Cash register closure audit created successfully! ID: ' . $audit->id);

@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(20)->create();
         CostCenter::factory(10)->create();
         $this->call([
             RolesAndPermissionsSeeder::class,
             PlanSeeder::class,
             BenefitSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
