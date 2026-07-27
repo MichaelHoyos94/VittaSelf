@@ -23,6 +23,10 @@ class CashRegisterRepository
     {
         return $cashRegister->save();
     }
+    public function delete($cashRegister)
+    {
+        return $cashRegister->delete();
+    }
     public function getByCommercialAgentId($commercialAgentId)
     {
         return CashRegister::where('commercial_agent_id', $commercialAgentId)->first();

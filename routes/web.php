@@ -22,6 +22,33 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/coming-soon/{feature}', function (string $feature) {
+    $features = [
+        'inventory-entry' => [
+            'title' => 'Inventory Entry',
+            'description' => 'We are preparing a simpler way to register incoming inventory and keep every movement clear and organized.',
+        ],
+        'inventory-transfer' => [
+            'title' => 'Inventory Transfer',
+            'description' => 'We are building a faster, more reliable experience for transferring inventory between locations.',
+        ],
+        'my-wallet' => [
+            'title' => 'My Wallet',
+            'description' => 'Your wallet experience is taking shape. Soon you will be able to view and manage everything from one place.',
+        ],
+        'my-referrals' => [
+            'title' => 'My Referrals',
+            'description' => 'We are creating a clear, friendly space where you can follow your referrals and see their progress.',
+        ],
+    ];
+
+    abort_unless(isset($features[$feature]), 404);
+
+    return Inertia::render('ComingSoon', [
+        'feature' => $features[$feature],
+    ]);
+})->middleware(['auth', 'verified'])->name('coming-soon');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -76,7 +103,7 @@ Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-ma
     Route::post('/', [CashRegisterController::class, 'store'])->name('cash-registers.store');
     Route::post('/assign/{cashRegisterId}', [CashRegisterController::class, 'assign'])->name('cash-registers.assign');
     Route::post('/release/{cashRegisterId}', [CashRegisterController::class, 'release'])->name('cash-registers.release');
-    Route::delete('/delete', [CashRegisterController::class, 'delete'])->name('cash-registers.delete');
+    Route::delete('/{cashRegisterId}', [CashRegisterController::class, 'destroy'])->name('cash-registers.delete');
 });
 
 Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function() {

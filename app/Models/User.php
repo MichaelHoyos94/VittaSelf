@@ -30,6 +30,7 @@ class User extends Authenticatable
         'document_number',
         'phone',
         'email',
+        'address',
         'password',
         'cost_center_id',
         'plan_id',

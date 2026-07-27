@@ -18,7 +18,7 @@ import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
-    const { policies, complianceSources, disciplinaryCases, userToSanction } =
+    const { policies, complianceSources, disciplinaryCases, userToSanction, flash } =
         usePage().props;
     const { data, setData, post, errors, reset } = useForm({
         facts_description: "",
@@ -42,6 +42,8 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isDraggingFiles, setIsDraggingFiles] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const user = usePage().props.auth.user;
 
     const formatFileSize = (bytes) => {
@@ -285,13 +287,42 @@ export default function Index() {
         setData("user_id", userToSanction ? userToSanction.id : "");
     }, [userToSanction]);
 
+    useEffect(() => {
+        setErrorMessage(flash.error);
+        setSuccessMessage(flash.success);
+        if (!flash.success && !flash.error) return;
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.error, flash.success])
+
     return (
         <div className="p-4 rounded bg-white shadow">
             <div>
                 <h1>Disciplinary cases</h1>
                 <p>Investigations on going</p>
             </div>
-            <div className="flex flex-row items-center mb-4 justify-start gap-2">
+            {/* Messages */}
+            {successMessage && (
+                <div
+                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert"
+                >
+                    <span className="block sm:inline">{successMessage}</span>
+                </div>
+            )}
+            {errorMessage && (
+                <div
+                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                >
+                    <span className="block sm:inline">{errorMessage}</span>
+                </div>
+            )}
+            <div className="flex flex-row items-center my-4 justify-start gap-2">
                 <PrimaryButton onClick={handleOpenCreateModal}>
                     Create Case
                 </PrimaryButton>
@@ -531,11 +562,10 @@ export default function Index() {
                                         setIsDraggingFiles(false);
                                     }}
                                     onDrop={handleDropFiles}
-                                    className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition ${
-                                        isDraggingFiles
-                                            ? "border-primary-600 bg-primary-50"
-                                            : "border-primary-300 bg-gray-50 hover:border-primary-500 hover:bg-primary-50/50"
-                                    }`}
+                                    className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition ${isDraggingFiles
+                                        ? "border-primary-600 bg-primary-50"
+                                        : "border-primary-300 bg-gray-50 hover:border-primary-500 hover:bg-primary-50/50"
+                                        }`}
                                 >
                                     <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-primary-100">
                                         <ArrowUpOnSquareIcon className="h-7 w-7 text-primary-700" />
