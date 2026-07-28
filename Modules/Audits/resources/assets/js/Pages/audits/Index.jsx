@@ -1,7 +1,8 @@
+import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const tabs = [
@@ -120,8 +121,12 @@ export default function Index() {
         {
             header: "audited by",
             render: (row) => (
-                <div className="flex gap-4">
-                    <div></div>
+                <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.auditor?.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
                     <div className="flex flex-col">
                         <strong>{row.auditor?.name}</strong>
                         <span>{row.auditor?.email}</span>
@@ -180,14 +185,14 @@ export default function Index() {
             header: "Report",
             render: (row) => (
                 <div>
-                    <a
+                    <Link
                         href={route(
                             "audits.cash-register-closure.audit.download",
                             row.id,
                         )}
                     >
-                        Report
-                    </a>
+                        <PrimaryButton><i className="fi fi-rr-download" />report</PrimaryButton>
+                    </Link>
                 </div>
             ),
         },
