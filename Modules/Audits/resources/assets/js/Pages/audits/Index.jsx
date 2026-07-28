@@ -1,7 +1,8 @@
+import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const tabs = [
@@ -11,8 +12,12 @@ const tabs = [
 ];
 
 export default function Index() {
-    const { productCountAudits, qualityChecklistAudits, flash } =
-        usePage().props;
+    const {
+        productCountAudits,
+        qualityChecklistAudits,
+        cashRegisterClosuresAudits,
+        flash,
+    } = usePage().props;
 
     const productCountAuditsColumns = [
         {
@@ -108,6 +113,91 @@ export default function Index() {
         },
     ];
 
+    const cashRegisterClosuresAuditsColumns = [
+        {
+            header: "#",
+            accessor: "id",
+        },
+        {
+            header: "audited by",
+            render: (row) => (
+                <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.auditor?.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <div className="flex flex-col">
+                        <strong>{row.auditor?.name}</strong>
+                        <span>{row.auditor?.email}</span>
+                        <span>{row.auditor?.phone}</span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            header: "status",
+            accessor: "status",
+        },
+        {
+            header: "cash",
+            render: (row) => (
+                <div className="flex flex-col gap-4 flex-wrap">
+                    <div>
+                        <strong>Expected: </strong>
+                        <span className="text-gray-500">
+                            {row.expected_cash}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Reported: </strong>
+                        <span className="text-gray-500">
+                            {row.counted_cash}
+                        </span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            header: "bank transfers",
+            render: (row) => (
+                <div className="flex flex-col gap-4 flex-wrap">
+                    <div>
+                        <strong>Expected: </strong>
+                        <span className="text-gray-500">
+                            {row.expected_bank_transfer}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Reported: </strong>
+                        <span className="text-gray-500">
+                            {row.counted_bank_transfer}
+                        </span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            header: "observations",
+            accessor: "observations",
+        },
+        {
+            header: "Report",
+            render: (row) => (
+                <div>
+                    <Link
+                        href={route(
+                            "audits.cash-register-closure.audit.download",
+                            row.id,
+                        )}
+                    >
+                        <PrimaryButton><i className="fi fi-rr-download" />report</PrimaryButton>
+                    </Link>
+                </div>
+            ),
+        },
+    ];
+
     const [activeTab, setActiveTab] = useState(tabs[0]);
     const [activeColumns, setActiveColumns] = useState(
         qualityChecklistAuditsColumns,
@@ -125,8 +215,18 @@ export default function Index() {
             setActiveTab(tab);
             setActiveData(qualityChecklistAudits);
         } else {
+            setActiveColumns(cashRegisterClosuresAuditsColumns);
             setActiveTab(tab);
+            setActiveData(cashRegisterClosuresAudits);
         }
+    };
+
+    const handleSearch = (search) => {
+        router.get(
+            route("audits.history.index"),
+            { search: search },
+            { preserveState: true, replace: true },
+        );
     };
 
     return (
@@ -155,11 +255,17 @@ export default function Index() {
             {/* Content for the selected tab will go here */}
             <div className="mt-4">
                 {/* For now just h1 with the selected tab's name, implement switching */}
-                <h1 className="text-xl font-bold">
-                    Selected Tab: {activeTab.label}
-                </h1>
                 <div>
-                    <Table columns={activeColumns} data={activeData} />
+                    <Table
+                        filterable={true}
+                        handleSearch={handleSearch}
+                        columns={activeColumns}
+                        data={activeData.data}
+                        from={activeData.from}
+                        to={activeData.to}
+                        totalResults={activeData.total}
+                        links={activeData.links}
+                    />
                 </div>
             </div>
         </div>

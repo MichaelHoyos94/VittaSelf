@@ -42,6 +42,7 @@ class CashRegisterService
     {
         $cashRegister = $this->repository->getByCommercialAgentId($commercialAgentId);
         $cashRegister->is_open = false;
+        $cashRegister = $this->resetCashRegister($cashRegister);
         return $this->repository->update($cashRegister);
     }
     public function addCash($commercialAgentId, $amount, $paymentMethod)
@@ -53,5 +54,11 @@ class CashRegisterService
             $cashRegister->bank_transfer += $amount;
         }
         return $this->repository->update($cashRegister);
+    }
+
+    private function resetCashRegister($cashRegister) {
+        $cashRegister->cash = 0;
+        $cashRegister->bank_transfer = 0;
+        return $cashRegister;
     }
 }

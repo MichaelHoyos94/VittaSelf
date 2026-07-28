@@ -44,15 +44,11 @@
             font-size: 11px;
         }
 
-        .correct {
+        .approved {
             background: #15803d;
         }
 
-        .correct_with_issues {
-            background: #2563eb;
-        }
-
-        .incorrect {
+        .rejected {
             background: #d91b06;
         }
 
@@ -85,7 +81,7 @@
         <div class="meta">
             <strong>Auditado por:</strong> {{ $audit->auditor->full_name ?? 'No registrado' }} <br>
             <strong>Fecha:</strong> {{ $audit->created_at->format('d/m/Y H:i') }} <br>
-            <strong>Caja:</strong> {{ $audit->cash_register_closure->cash_register->name ?? 'No registrada' }} <br>
+            <strong>Caja:</strong> {{ $audit->cashRegisterClosure->cashRegister->name ?? 'No registrada' }} <br>
             <strong>Efectivo esperado:</strong> {{ number_format($audit->expected_cash, 2) }} <br>
             <strong>Efectivo contado:</strong> {{ number_format($audit->counted_cash, 2) }} <br>
             <strong>Transferencias esperadas:</strong> {{ number_format($audit->expected_transfers, 2) }} <br>

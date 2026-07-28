@@ -103,12 +103,14 @@ export default function Table({
                 <div className="flex flex-col sm:flex-row justify-between items-center px-4">
                     {/* Center horizontal */}
                     <div>
-                        <p>
-                            Showing{" "}
-                            <span>
-                                {from} to {to} from {totalResults} results.
-                            </span>
-                        </p>
+                        {data.length > 0 && (
+                            <p>
+                                Showing{" "}
+                                <span>
+                                    {from} to {to} from {totalResults} results.
+                                </span>
+                            </p>
+                        )}
                     </div>
                     <div className="m-2 flex flex-row items-center justify-center space-x-2">
                         {links.map((link, index) => (

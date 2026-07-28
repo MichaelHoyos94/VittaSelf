@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -58,5 +59,17 @@ class UserSeeder extends Seeder
             ],
         ];
         DB::table('users')->insert($users);
+        $this->assign();
+    }
+
+    private function assign() {
+        $user = User::where('email', 'sistemas@vittaself.com')->first();
+        $user->assignRole('super-admin');
+        $user = User::where('email', 'sistemasaux@vittaself.com')->first();
+        $user->assignRole('administrator');
+        $user = User::where('email', 'asesor-armenia@vittaself.com')->first();
+        $user->assignRole('commercial-agent');
+        $user = User::where('email', 'laurape@gmail.com')->first();
+        $user->assignRole('eui');
     }
 }

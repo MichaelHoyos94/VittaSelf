@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cash_register_closure_audits', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['aproved', 'rejected']);
+            $table->enum('status', ['approved', 'rejected']);
             $table->decimal('expected_cash');
             $table->decimal('counted_cash', 13, 2);
             $table->decimal('expected_bank_transfer', 13, 2);

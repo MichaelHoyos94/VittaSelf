@@ -10,10 +10,12 @@ export default function Show() {
 
     const { cashRegisterClosure } = usePage().props;
 
+    console.log(cashRegisterClosure);
+
     const { data, setData, post, processing, errors } = useForm({
-        expected_cash: '',
+        expected_cash: cashRegisterClosure.cash_register?.cash,
         counted_cash: '',
-        expected_bank_transfer: '',
+        expected_bank_transfer: cashRegisterClosure.cash_register?.bank_transfer,
         counted_bank_transfer: '',
         observations: '',
         report: '',
@@ -54,9 +56,9 @@ export default function Show() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Input
+                                    readonly
                                     label={"Expected Cash"}
                                     value={data.expected_cash}
-                                    onChange={(e) => setData('expected_cash', e.target.value)}
                                 />
                             </div>
                             <div>
@@ -68,9 +70,9 @@ export default function Show() {
                             </div>
                             <div>
                                 <Input
+                                    readonly
                                     label={"Expected Bank Transfer"}
                                     value={data.expected_bank_transfer}
-                                    onChange={(e) => setData('expected_bank_transfer', e.target.value)}
                                 />
                             </div>
                             <div>

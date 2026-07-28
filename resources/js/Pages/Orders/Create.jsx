@@ -343,7 +343,7 @@ export default function Create() {
                                                 plan
                                             </p>
                                             <p className="font-medium text-gray-700">
-                                                {userToOrder.plan.name}
+                                                {userToOrder?.plan?.name || "This EUI has no plan."}
                                             </p>
                                         </div>
                                     </div>
@@ -386,7 +386,7 @@ export default function Create() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Catalogo de productos with scroll*/}
                             <div className="max-h-96 overflow-y-auto space-y-4">
-                                {products.map((product) => (
+                                {products.data.map((product) => (
                                     <div
                                         className="border rounded-xl border-2 p-4 transform transition duration-300 hover:shadow-lg"
                                         key={product.id}
@@ -436,7 +436,7 @@ export default function Create() {
                                                     <div className="flex flex-row flex-wrap justify-between gap-4">
                                                         <div>
                                                             {
-                                                                products.find(
+                                                                products.data.find(
                                                                     (item) =>
                                                                         item.id ===
                                                                         product.id,
@@ -616,7 +616,7 @@ export default function Create() {
                                                     <div className="flex flex-col items-end">
                                                         <span>Product</span>
                                                         {
-                                                            products.find(
+                                                            products.data.find(
                                                                 (item) =>
                                                                     item.id ===
                                                                     product.id,
