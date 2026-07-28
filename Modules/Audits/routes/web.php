@@ -16,6 +16,7 @@ Route::prefix('audits')->middleware(['auth', 'verified'])->as('audits.')->group(
     Route::post('/cash-register-closure/audit', [AuditsController::class, 'storeCashRegisterClosureAudit'])->name('cash-register-closure.audit');
     Route::get('/download-product-count-audit/{id}', [AuditsController::class, 'downloadProductCountAuditReport'])->name('product-counts.audit.download');
     Route::get('/download-quality-checklist-audit/{id}', [AuditsController::class, 'downloadQualityChecklistAuditReport'])->name('quality-checklists.audit.download');
+    Route::get('/download-cash-register-closure-audit/{id}', [AuditsController::class, 'downloadCashRegisterClosureAuditReport'])->name('cash-register-closure.audit.download');
     // ================================================== Quality Checklists ==================================================
     Route::get('/quality-checklists', [QualityChecklistsController::class, 'index'])->name('quality-checklists.index');
     Route::post('/quality-checklists', [QualityChecklistsController::class, 'store'])->name('quality-checklists.store');
