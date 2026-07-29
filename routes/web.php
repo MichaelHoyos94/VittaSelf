@@ -76,7 +76,7 @@ Route::prefix('human-resources/permissions')
 
 Route::prefix('customers')->middleware(['auth', 'verified'])->as('customers.')->group(function (){
     Route::get('/', [UserController::class, 'index'])->name('index');
-    Route::get('/create', [UserController::class, 'create'])->name('create');
+    Route::post('/', [UserController::class, 'store'])->name('store');
 });
 
 Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
