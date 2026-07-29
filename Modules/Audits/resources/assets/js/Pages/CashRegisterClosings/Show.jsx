@@ -5,6 +5,7 @@ import TextArea from "@/Components/Form/TextArea";
 import PrimaryButton from "@/Components/PrimaryButton";
 import MainLayout from "@/Layouts/MainLayout"
 import { useForm, usePage } from "@inertiajs/react"
+import formatCurrency from "@/Utils/formatCurrency";
 
 export default function Show() {
 
@@ -45,9 +46,9 @@ export default function Show() {
                         <strong>Commercial Agent:</strong>
                         <span>{cashRegisterClosure.commercial_agent.full_name}</span>
                         <strong>Cash Reported:</strong>
-                        <span>{cashRegisterClosure.cash}</span>
+                        <span>{formatCurrency(cashRegisterClosure.cash)}</span>
                         <strong>Bank Transfer Reported:</strong>
-                        <span>{cashRegisterClosure.bank_transfer}</span>
+                        <span>{formatCurrency(cashRegisterClosure.bank_transfer)}</span>
                     </div>
                 </div>
                 <div>

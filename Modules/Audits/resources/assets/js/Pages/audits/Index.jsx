@@ -4,6 +4,7 @@ import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
 import { useState } from "react";
+import formatCurrency from "@/Utils/formatCurrency";
 
 const tabs = [
     { id: "quality", label: "Quality" },
@@ -152,17 +153,17 @@ export default function Index() {
         {
             header: "cash",
             render: (row) => (
-                <div className="flex flex-col gap-4 flex-wrap">
+                <div className="flex flex-col">
                     <div>
                         <strong>Expected: </strong>
                         <span className="text-gray-500">
-                            {row.expected_cash}
+                            {formatCurrency(row.expected_cash)}
                         </span>
                     </div>
                     <div>
                         <strong>Reported: </strong>
                         <span className="text-gray-500">
-                            {row.counted_cash}
+                            {formatCurrency(row.counted_cash)}
                         </span>
                     </div>
                 </div>
@@ -171,17 +172,17 @@ export default function Index() {
         {
             header: "bank transfers",
             render: (row) => (
-                <div className="flex flex-col gap-4 flex-wrap">
+                <div className="flex flex-col">
                     <div>
                         <strong>Expected: </strong>
                         <span className="text-gray-500">
-                            {row.expected_bank_transfer}
+                            {formatCurrency(row.expected_bank_transfer)}
                         </span>
                     </div>
                     <div>
                         <strong>Reported: </strong>
                         <span className="text-gray-500">
-                            {row.counted_bank_transfer}
+                            {formatCurrency(row.counted_bank_transfer)}
                         </span>
                     </div>
                 </div>

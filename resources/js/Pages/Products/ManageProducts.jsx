@@ -3,6 +3,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { Link, router, usePage } from "@inertiajs/react";
+import formatCurrency from "@/Utils/formatCurrency";
 
 export default function ManageProducts() {
     const { products, flash } = usePage().props;
@@ -15,6 +16,10 @@ export default function ManageProducts() {
         {
             header: "name",
             accessor: "name",
+        },
+        {
+            header: "price",
+            render: (row) => <div>{formatCurrency(row.price)}</div>,
         },
         {
             header: "cover",

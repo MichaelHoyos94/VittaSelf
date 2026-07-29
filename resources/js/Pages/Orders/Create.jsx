@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import formatCurrency from "@/Utils/formatCurrency";
 
 export default function Create() {
     const {
@@ -40,7 +41,6 @@ export default function Create() {
     );
     const discountValue = Number(discountBenefit?.value ?? 0);
     const hasDiscount = discountValue > 0;
-    const formatPrice = (price) => Number(price).toFixed(2);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         user_id: userToOrder ? userToOrder.id : null,
@@ -394,7 +394,7 @@ export default function Create() {
                                         <div className="flex flex-row flex-wrap justify-between gap-4">
                                             <h3>{product.name}</h3>
                                             <p>{product.description}</p>
-                                            <span>${product.price}</span>
+                                            <span>{formatCurrency(product.price)}</span>
                                             <br />
                                             <strong>
                                                 {product.points} points
@@ -476,8 +476,7 @@ export default function Create() {
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            {/* Money format $###.###,dd */}
-                                                            {product.price * product.quantity}
+                                                            {formatCurrency(product.price * product.quantity)}
                                                         </div>
                                                         <div>
                                                             <button
@@ -639,12 +638,12 @@ export default function Create() {
                                                                     Total
                                                                 </span>
                                                                 <span className="line-through text-gray-500">
-                                                                    {formatPrice(
+                                                                    {formatCurrency(
                                                                         linePrice,
                                                                     )}
                                                                 </span>
                                                                 <span>
-                                                                    {formatPrice(
+                                                                    {formatCurrency(
                                                                         discountedLinePrice,
                                                                     )}
                                                                 </span>
@@ -655,7 +654,7 @@ export default function Create() {
                                                                     Total
                                                                 </span>
                                                                 <span>
-                                                                    {formatPrice(
+                                                                    {formatCurrency(
                                                                         linePrice,
                                                                     )}
                                                                 </span>
