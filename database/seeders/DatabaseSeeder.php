@@ -14,8 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        CostCenter::factory(10)->create();
         $this->call([
+            ProductsSeeder::class,
+            CostCenterSeeder::class,
             RolesAndPermissionsSeeder::class,
             PlanSeeder::class,
             BenefitSeeder::class,
