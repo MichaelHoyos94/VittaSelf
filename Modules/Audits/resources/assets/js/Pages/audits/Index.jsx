@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, router, usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const tabs = [
@@ -44,14 +44,19 @@ export default function Index() {
             header: "Report",
             render: (row) => (
                 <div>
-                    <a
-                        href={route(
-                            "audits.product-counts.audit.download",
-                            row.id,
-                        )}
+                    <PrimaryButton
+                        type="button"
+                        className="gap-1"
+                        onClick={() => {
+                            window.location.href = route(
+                                "audits.product-counts.audit.download",
+                                row.id,
+                            );
+                        }}
                     >
+                        <i className="fi fi-rr-download" />
                         Report
-                    </a>
+                    </PrimaryButton>
                 </div>
             ),
         },
@@ -87,14 +92,19 @@ export default function Index() {
             header: "Report",
             render: (row) => (
                 <div>
-                    <a
-                        href={route(
-                            "audits.quality-checklists.audit.download",
-                            row.id,
-                        )}
+                    <PrimaryButton
+                        type="button"
+                        className="gap-1"
+                        onClick={() => {
+                            window.location.href = route(
+                                "audits.quality-checklists.audit.download",
+                                row.id,
+                            );
+                        }}
                     >
+                        <i className="fi fi-rr-download" />
                         Report
-                    </a>
+                    </PrimaryButton>
                 </div>
             ),
         },
@@ -185,14 +195,19 @@ export default function Index() {
             header: "Report",
             render: (row) => (
                 <div>
-                    <Link
-                        href={route(
-                            "audits.cash-register-closure.audit.download",
-                            row.id,
-                        )}
+                    <PrimaryButton
+                        type="button"
+                        className="gap-1"
+                        onClick={() => {
+                            window.location.href = route(
+                                "audits.cash-register-closure.audit.download",
+                                row.id,
+                            );
+                        }}
                     >
-                        <PrimaryButton><i className="fi fi-rr-download" />report</PrimaryButton>
-                    </Link>
+                        <i className="fi fi-rr-download" />
+                        Report
+                    </PrimaryButton>
                 </div>
             ),
         },

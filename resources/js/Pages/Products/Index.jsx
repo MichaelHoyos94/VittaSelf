@@ -1,6 +1,7 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
+import formatCurrency from "@/Utils/formatCurrency";
 import { router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
@@ -63,7 +64,7 @@ export default function Index() {
                             <p>
                                 {product.description}
                             </p>
-                            <span>${product.price}</span><br />
+                            <span>{formatCurrency(product.price)}</span><br />
                             <strong>{product.points} points</strong>
                             <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:flex-wrap">
                                 <PrimaryButton
