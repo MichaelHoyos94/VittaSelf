@@ -34,7 +34,16 @@ export default function Index() {
         },
         {
             header: "name",
-            render: (row) => <div>{row.full_name}</div>,
+            render: (row) => (
+                <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <span>{row.full_name}</span>
+                </div>
+            ),
         },
         {
             header: "document number",
@@ -92,9 +101,7 @@ export default function Index() {
         });
     };
 
-    const handleSearch = (search) => {
-
-    }
+    const handleSearch = (search) => {};
 
     return (
         <div className="bg-white p-4 shadow-lg rounded-lg min-h-full">
@@ -126,7 +133,7 @@ export default function Index() {
                 </PrimaryButton>
                 <SecondaryButton>export</SecondaryButton>
             </div>
-            <Table 
+            <Table
                 columns={columns}
                 data={users.data}
                 filterable={true}
