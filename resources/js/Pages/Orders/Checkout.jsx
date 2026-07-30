@@ -6,17 +6,21 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import formatCurrency from "@/Utils/formatCurrency";
 
 export default function Checkout() {
     const { cart, user, flash, sanctions } = usePage().props;
-    const planFreezeSanction = sanctions.some((sanction) => sanction.FREEZE_PLAN);
-    const pointsFreezeSanction = sanctions.some((sanction) => sanction.FREEZE_POINTS);
+    const planFreezeSanction = sanctions.some(
+        (sanction) => sanction.FREEZE_PLAN,
+    );
+    const pointsFreezeSanction = sanctions.some(
+        (sanction) => sanction.FREEZE_POINTS,
+    );
     const discountBenefit = user.plan?.benefits?.find(
         (benefit) => benefit.type === "discount",
     );
     const discountValue = Number(discountBenefit?.value ?? 0);
     const hasDiscount = discountValue > 0;
-    const formatPrice = (price) => Number(price).toFixed(2);
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const [errorMessage, setErrorMessage] = useState(flash.error);
     const { data, setData, post, processing, errors } = useForm({
@@ -24,7 +28,7 @@ export default function Checkout() {
         email: user.email,
         phone: user.phone,
         shipping_address: user.address ? user.address : "—",
-        payment_method: '',
+        payment_method: "",
         products: cart.products,
     });
     const handleSubmit = (e) => {
@@ -38,7 +42,7 @@ export default function Checkout() {
                 console.log(errors);
             },
         });
-    }
+    };
     useEffect(() => {
         setSuccessMessage(flash.success);
         setErrorMessage(flash.error);
@@ -58,23 +62,44 @@ export default function Checkout() {
             <p>Confirm the data.</p>
             <div className="space-y-4 my-4">
                 {successMessage && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                        <span className="block sm:inline">{successMessage}</span>
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {successMessage}
+                        </span>
                     </div>
                 )}
                 {errorMessage && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
                         <span className="block sm:inline">{errorMessage}</span>
                     </div>
                 )}
                 {planFreezeSanction && (
-                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
-                        <span className="block sm:inline">Your plan is currently frozen due to a sanction. Benefits will not be available until the freeze is lifted.</span>
+                    <div
+                        className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            Your plan is currently frozen due to a sanction.
+                            Benefits will not be available until the freeze is
+                            lifted.
+                        </span>
                     </div>
                 )}
                 {pointsFreezeSanction && (
-                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
-                        <span className="block sm:inline">Your points are currently frozen due to a sanction. Points will not increment in this order.</span>
+                    <div
+                        className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            Your points are currently frozen due to a sanction.
+                            Points will not increment in this order.
+                        </span>
                     </div>
                 )}
             </div>
@@ -128,7 +153,10 @@ export default function Checkout() {
                                     name="shipping_address"
                                     value={data.shipping_address}
                                     onChange={(e) =>
-                                        setData("shipping_address", e.target.value)
+                                        setData(
+                                            "shipping_address",
+                                            e.target.value,
+                                        )
                                     }
                                     placeholder="123 Main St, City, Country"
                                     error={errors.shipping_address}
@@ -147,18 +175,16 @@ export default function Checkout() {
                                             e.target.value,
                                         )
                                     }
-                                    options={
-                                        [
-                                            {
-                                                value: "cash",
-                                                label: "Cash",
-                                            },
-                                            {
-                                                value: "bank_transfer",
-                                                label: "Bank Transfer",
-                                            },
-                                        ]
-                                    }
+                                    options={[
+                                        {
+                                            value: "cash",
+                                            label: "Cash",
+                                        },
+                                        {
+                                            value: "bank_transfer",
+                                            label: "Bank Transfer",
+                                        },
+                                    ]}
                                     error={errors.payment_method}
                                 />
                             </div>
@@ -191,32 +217,31 @@ export default function Checkout() {
                                             </div>
                                             <div className="flex flex-col items-end">
                                                 <span>Unit price</span>
-                                                {unitPrice}
+                                                {formatCurrency(unitPrice)}
                                             </div>
                                             <div>
-                                                {(hasDiscount && !planFreezeSanction) ? (
+                                                {hasDiscount &&
+                                                !planFreezeSanction ? (
                                                     <div className="flex flex-col items-end">
                                                         <span>Total</span>
                                                         <span className="line-through text-gray-500">
-                                                            {
-                                                                formatPrice(
-                                                                    linePrice,
-                                                                )
-                                                            }
+                                                            {formatCurrency(
+                                                                linePrice,
+                                                            )}
                                                         </span>
                                                         <span>
-                                                            {
-                                                                formatPrice(
-                                                                    discountedLinePrice,
-                                                                )
-                                                            }
+                                                            {formatCurrency(
+                                                                discountedLinePrice,
+                                                            )}
                                                         </span>
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
                                                         <span>Total</span>
                                                         <span>
-                                                            {formatPrice(linePrice)}
+                                                            {formatCurrency(
+                                                                linePrice,
+                                                            )}
                                                         </span>
                                                     </div>
                                                 )}
@@ -235,9 +260,9 @@ export default function Checkout() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
-                                                        <span>Points</span>
+                                                        <span>Total Points</span>
                                                         <span>
-                                                            {product.points}
+                                                            {product.points * product.pivot.quantity}
                                                         </span>
                                                     </div>
                                                 )}
@@ -251,7 +276,7 @@ export default function Checkout() {
                     <div className="col-span-1 sm:col-span-2">
                         <div className="flex flex-wrap justify-evenly gap-2 mt-4">
                             <PrimaryButton type="submit" disabled={processing}>
-                                Send
+                                {processing ? "sending..." : "send"}
                             </PrimaryButton>
                             <SecondaryButton type="button">
                                 Cancel

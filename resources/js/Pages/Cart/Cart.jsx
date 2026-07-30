@@ -4,7 +4,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-
+import formatCurrency from "@/Utils/formatCurrency";
 export default function Cart() {
     const { cart, flash } = usePage().props;
     const [successMessage, setSuccessMessage] = useState(flash.success);
@@ -102,7 +102,7 @@ export default function Cart() {
                                         </div>
                                     </div>
                                     <div>
-                                        {product.price * product.pivot.quantity}
+                                        {formatCurrency(product.price * product.pivot.quantity)}
                                     </div>
                                     <div>
                                         <button

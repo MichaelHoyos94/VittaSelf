@@ -17,7 +17,9 @@ class UserRepository
 
     public function create($data)
     {
-        return User::create($data);
+        $user = new User($data);
+        $user->assignRole('eui');
+        return $user->save();
     }
 
     public function getById($id)

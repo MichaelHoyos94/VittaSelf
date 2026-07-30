@@ -3,6 +3,7 @@ import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import formatCurrency from "@/Utils/formatCurrency";
 
 export default function InternalOrders() {
     const { internalOrders, flash } = usePage().props;
@@ -42,7 +43,7 @@ export default function InternalOrders() {
                             {row.commercial_agent.name.charAt(0).toUpperCase()}
                         </span>
                     </div>
-                    <span>{row.commercial_agent.name}</span>
+                    <span>{row.commercial_agent.full_name}</span>
                 </div>
             ),
         },
@@ -52,21 +53,21 @@ export default function InternalOrders() {
                 <div className="flex flex-col">
                     <div>
                         <strong>Subtotal: </strong>
-                        <span className="text-gray-500">{row.subtotal}</span>
+                        <span className="text-gray-500">{formatCurrency(row.subtotal)}</span>
                     </div>
                     <div>
                         <strong>Shipping: </strong>
                         <span className="text-gray-500">
-                            {row.shipping_price}
+                            {formatCurrency(row.shipping_price)}
                         </span>
                     </div>
                     <div>
                         <strong>Discount: </strong>
-                        <span className="text-gray-500">{row.discount}</span>
+                        <span className="text-gray-500">{formatCurrency(row.discount)}</span>
                     </div>
                     <div>
                         <strong>Total: </strong>
-                        <span className="text-gray-500">{row.total}</span>
+                        <span className="text-gray-500">{formatCurrency(row.total)}</span>
                     </div>
                 </div>
             ),
@@ -120,7 +121,7 @@ export default function InternalOrders() {
                 )}
             </div>
             {/* Buttons */}
-            <div className="flex justify-between mb-4 items-center">
+            <div className="flex justify-between mb-4 items-center mt-4">
                 <Link href={route("orders.internal-orders.create")}>
                     <PrimaryButton>Create</PrimaryButton>
                 </Link>
