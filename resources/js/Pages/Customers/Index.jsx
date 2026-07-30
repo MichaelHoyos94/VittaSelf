@@ -5,10 +5,12 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, useForm } from "@inertiajs/react";
-import { useState } from "react";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 
 export default function Index() {
+    const { users, flash } = usePage().props;
+
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
@@ -22,6 +24,41 @@ export default function Index() {
 
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState("create");
+    const [successMessage, setSuccessMessage] = useState(flash.success);
+    const [errorMessage, setErrorMessage] = useState(flash.error);
+
+    const columns = [
+        {
+            header: "#",
+            accessor: "id",
+        },
+        {
+            header: "name",
+            render: (row) => <div>{row.full_name}</div>,
+        },
+        {
+            header: "document number",
+            accessor: "document_number",
+        },
+        {
+            header: "eui code",
+            accessor: "eui_code",
+        },
+        {
+            header: "contact",
+            render: (row) => (
+                <div className="flex flex-col">
+                    <strong>{row.email}</strong>
+                    <span className="text-gray-400">{row.phone}</span>
+                    <span className="text-gray-400">{row.address}</span>
+                </div>
+            ),
+        },
+        {
+            header: "actions",
+            render: (row) => <div></div>,
+        },
+    ];
 
     const closeModal = () => {
         setModalMode("");
@@ -34,15 +71,51 @@ export default function Index() {
         setShowModal(true);
     };
 
+    useEffect(() => {
+        setErrorMessage(flash.error);
+        setSuccessMessage(flash.success);
+        if (!flash.success && !flash.error) return;
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.error, flash.success]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
+        post(route("customers.store"), {
+            onFinish: () => {
+                closeModal();
+            },
+        });
     };
+
+    const handleSearch = (search) => {
+
+    }
 
     return (
         <div className="bg-white p-4 shadow-lg rounded-lg min-h-full">
             <h2>Customers</h2>
             <p>Manage customers.</p>
+            {successMessage && (
+                <div
+                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert"
+                >
+                    <span className="block sm:inline">{successMessage}</span>
+                </div>
+            )}
+            {errorMessage && (
+                <div
+                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                >
+                    <span className="block sm:inline">{errorMessage}</span>
+                </div>
+            )}
             {/* Buttons */}
             <div className="flex flex-wrap gap-4">
                 <PrimaryButton
@@ -53,7 +126,15 @@ export default function Index() {
                 </PrimaryButton>
                 <SecondaryButton>export</SecondaryButton>
             </div>
-            <Table />
+            <Table 
+                columns={columns}
+                data={users.data}
+                filterable={true}
+                handleSearch={handleSearch}
+                from={users.from}
+                to={users.to}
+                totalResults={users.total}
+            />
             <Modal show={showModal} onClose={closeModal}>
                 {modalMode === "create" && (
                     <div>
@@ -151,8 +232,18 @@ export default function Index() {
                                     }
                                 />
                                 <div className="flex flex-wrap gap-4 justify-end">
-                                    <PrimaryButton type="submit" disabled={processing}>{processing ? "sending..." : "send"}</PrimaryButton>
-                                    <SecondaryButton type="button" onClick={closeModal}>cancel</SecondaryButton>
+                                    <PrimaryButton
+                                        type="submit"
+                                        disabled={processing}
+                                    >
+                                        {processing ? "sending..." : "send"}
+                                    </PrimaryButton>
+                                    <SecondaryButton
+                                        type="button"
+                                        onClick={closeModal}
+                                    >
+                                        cancel
+                                    </SecondaryButton>
                                 </div>
                             </Form>
                         </div>

@@ -11,8 +11,21 @@ class UserRepository
      */
     public function __construct() {}
 
-    public function getAll() {
-        return User::all();
+    public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
+    {
+        return User::query()
+            ->role('eui')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('document_number', 'like', "%{$search}%")
+                        ->orWhere('eui_code', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function create($data)

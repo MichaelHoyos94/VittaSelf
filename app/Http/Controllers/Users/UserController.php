@@ -14,7 +14,11 @@ class UserController extends Controller
     public function __construct(private UserService $userService) {}
     public function index(Request $request)
     {
-        return Inertia::render('Customers/Index');
+        $search = $request->filled('search') ? $request->input('search') : null;
+        $users = $this->userService->getAll($search);
+        return Inertia::render('Customers/Index')->with([
+            'users' => $users
+        ]);
     }
     public function store(UserRequest $request) {
         $data = $request->validated();
