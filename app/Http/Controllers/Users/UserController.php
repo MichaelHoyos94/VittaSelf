@@ -23,6 +23,8 @@ class UserController extends Controller
     public function store(UserRequest $request) {
         $data = $request->validated();
         $user = $this->userService->create($data);
-        return redirect()->route('customers.index')->with([]);
+        return redirect()->route('customers.index')->with([
+            'success', 'Eui created successfully.'
+        ]);
     }
 }
