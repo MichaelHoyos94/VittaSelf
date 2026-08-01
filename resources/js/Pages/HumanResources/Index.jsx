@@ -157,7 +157,7 @@ export default function Index() {
     }
 
     return (
-        <div className="p-4 bg-white rounded-xl shadow-lg">
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/75 p-8 shadow-lg backdrop-blur-md">
             <h1 className="text-green-500">Human Resources</h1>
             <div className="flex justify-between items-center mb-4">
                 <button
