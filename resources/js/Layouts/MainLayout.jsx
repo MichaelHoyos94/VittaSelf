@@ -8,7 +8,7 @@ export default function MainLayout({ children }) {
             <Sidebar />
             <div className="flex min-w-0 flex-1 flex-col">
                 <Header />
-                <main className="min-h-0 flex-1 overflow-auto bg-gradient-to-tr from-slate-50 to-slate-200 p-10">
+                <main className="bg-soft-aurora min-h-0 flex-1 overflow-auto p-10">
                     {children}
                 </main>
                 <Footer />
