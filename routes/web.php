@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashRegisters\CashRegisterController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
 use App\Http\Controllers\HumanResources\RolePermissionController;
 use App\Http\Controllers\Orders\InternalOrderController;
@@ -18,9 +19,7 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/coming-soon/{feature}', function (string $feature) {
     $features = [
