@@ -35,6 +35,25 @@ class DashboardRepository
         ->count();
     }
 
+    public function getEuisByPlanCount()
+    {
+        // Group by plan including null as "no plan" and count
+        return User::whereHas('roles', function ($query) {
+            $query->where('name', 'eui');
+        })->with('plan')
+            ->get()
+            ->groupBy(function ($user) {
+                return $user->plan?->name ?? 'No Plan';
+            })
+            ->map(function ($users, $plan) {
+                return [
+                    'plan' => $plan,
+                    'count' => $users->count(),
+                ];
+            })
+            ->values();
+    }
+
     // ==================================================== EMPLOYEES ==================================================== //
 
     public function usersByRole()

@@ -10,15 +10,13 @@ class DashboardService
     
     public function getData()
     {
-        $euis = $this->repository->getEuisCount();
-        $usersByRole = $this->repository->usersByRole();
-        $monthlyOrders = $this->repository->getMonthlyWebOrdersCount();
-        $currentMonthOrders = $this->repository->getCurrentMonthWebOrdersCount();
         return [
             'metrics' => [
                 'euis' => $this->repository->getEuisCount(),
                 'euisCreatedThisMonth' => $this->repository->getEuisRegisteredThisMountCount(),
                 'euisCreatedThisYear' => $this->repository->getEuisRegisteredThisYearCount(),
+                'euisByPlan' => $this->repository->getEuisByPlanCount(),
+                'monthlyOrders' => $this->repository->getMonthlyWebOrdersCount(),
             ],
             'usersByRoles' => $this->repository->usersByRole(),
         ];

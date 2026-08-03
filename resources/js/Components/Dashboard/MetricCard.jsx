@@ -21,7 +21,7 @@ export default function MetricCard({ title, value, icon: Icon, trend, descriptio
                     {Icon && (
                         <div className="rounded-full bg-primary-100 p-3">
                             <Icon
-                                className="h-6 w-6 text-primary-400"
+                                className="h-6 w-6 text-primary-800"
                                 aria-hidden="true"
                             />
                         </div>
