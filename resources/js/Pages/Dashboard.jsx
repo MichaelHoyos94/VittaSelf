@@ -1,6 +1,7 @@
 import ChartCard from "@/Components/Dashboard/ChartCard";
 import EmployeesByRoleChart from "@/Components/Dashboard/EmployeesByRole";
 import MetricCard from "@/Components/Dashboard/MetricCard";
+import PieChartComponent from "@/Components/Dashboard/PieChartComponent";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { UserGroupIcon, UsersIcon } from "@heroicons/react/16/solid";
@@ -8,7 +9,6 @@ import { Head } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Dashboard({ data }) {
-    console.log(data);
     const tabs = [
         {
             id: "customers",
@@ -33,6 +33,14 @@ export default function Dashboard({ data }) {
                         icon={UserGroupIcon}
                         description="EUIs registered in the current month."
                     />
+                    <div className="col-span-1 md:col-span-2">
+                        <ChartCard
+                            title="Users by plan"
+                            description="Distribution of registered EUIs by their current plan."
+                        >
+                            <PieChartComponent data={data.euisByPlan} />
+                        </ChartCard>
+                    </div>
                 </div>
             ),
         },
