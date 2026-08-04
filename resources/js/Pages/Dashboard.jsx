@@ -3,6 +3,7 @@ import EmployeesByRoleChart from "@/Components/Dashboard/EmployeesByRole";
 import MetricCard from "@/Components/Dashboard/MetricCard";
 import PieChartComponent from "@/Components/Dashboard/PieChartComponent";
 import SecondaryButton from "@/Components/SecondaryButton";
+import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { UserGroupIcon, UsersIcon } from "@heroicons/react/16/solid";
 import { Head } from "@inertiajs/react";
@@ -14,26 +15,28 @@ export default function Dashboard({ data }) {
             id: "customers",
             label: "customers",
             content: () => (
-                <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-                    <MetricCard
-                        title="EUIs"
-                        value={data.metrics.euis}
-                        icon={UsersIcon}
-                        description="EUIs registered in the system."
-                    />
-                    <MetricCard
-                        title="EUIs this year"
-                        value={data.metrics.euisCreatedThisYear}
-                        icon={UserGroupIcon}
-                        description={"EUIs registered in the current year."}
-                    />
-                    <MetricCard
-                        title={"EUIs this month"}
-                        value={data.metrics.euisCreatedThisMonth}
-                        icon={UserGroupIcon}
-                        description="EUIs registered in the current month."
-                    />
-                    <div className="col-span-1 md:col-span-2">
+                <>
+                    <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+                        <MetricCard
+                            title="EUIs"
+                            value={data.metrics.euis}
+                            icon={UsersIcon}
+                            description="EUIs registered in the system."
+                        />
+                        <MetricCard
+                            title="EUIs this year"
+                            value={data.metrics.euisCreatedThisYear}
+                            icon={UserGroupIcon}
+                            description={"EUIs registered in the current year."}
+                        />
+                        <MetricCard
+                            title={"EUIs this month"}
+                            value={data.metrics.euisCreatedThisMonth}
+                            icon={UserGroupIcon}
+                            description="EUIs registered in the current month."
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <ChartCard
                             title="Users by plan"
                             description="Distribution of registered EUIs by their current plan."
@@ -41,7 +44,7 @@ export default function Dashboard({ data }) {
                             <PieChartComponent data={data.euisByPlan} />
                         </ChartCard>
                     </div>
-                </div>
+                </>
             ),
         },
         {
