@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\InternalOrder;
 use App\Models\Order;
 use App\Models\User;
+use Modules\Sanctions\Models\DisciplinaryCase;
 
 class DashboardRepository
 {
@@ -32,7 +34,7 @@ class DashboardRepository
         return User::whereHas('roles', function ($query) {
             $query->where('name', 'eui');
         })->whereYear('created_at', now()->year)
-        ->count();
+            ->count();
     }
 
     public function getEuisByPlanCount()
@@ -54,15 +56,35 @@ class DashboardRepository
             ->values();
     }
 
+    public function getEuisRegisteredByMount()
+    {
+        return User::whereHas('roles', function ($query) {
+            $query->where('name', 'eui');
+        })->whereYear('created_at', now()->year)
+            ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->get();
+    }
+
     // ==================================================== EMPLOYEES ==================================================== //
+
+    public function getEmployeesCount()
+    {
+        // NO eui role, NO super-admin role
+        return User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'eui')
+                ->orWhere('name', 'super-admin');
+        })->count();
+    }
 
     public function usersByRole()
     {
         // Count roles with roles excep "eui" rol
         return User::whereDoesntHave('roles', function ($query) {
-                $query->where('name', 'eui')
+            $query->where('name', 'eui')
                 ->orWhere('name', 'super-admin');
-            })
+        })
             ->with('roles')
             ->get()
             ->groupBy(function ($user) {
@@ -79,11 +101,16 @@ class DashboardRepository
 
     // ==================================================== ORDERS ==================================================== //
 
-    public function getCurrentMonthWebOrdersCount()
+    public function getCurrentYearWebOrdersCount()
     {
         // Count orders current month
         return Order::whereYear('created_at', now()->year)
-            ->whereMonth('created_at', now()->month)
+            ->count();
+    }
+
+    public function getCurrentYearInternalOrders()
+    {
+        return InternalOrder::whereYear('created_at', now()->year)
             ->count();
     }
 
@@ -100,9 +127,74 @@ class DashboardRepository
             $query->whereDate('created_at', '<=', $to);
         }
 
-        return $query->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+        return $query->whereYear('created_at', now()->year)
+            ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as count')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
+    }
+
+    // ======================================== Sanctions ======================================== //
+
+    public function getDisciplinaryCasesCount()
+    {
+        return DisciplinaryCase::count();
+    }
+
+    public function getDisciplinaryCasesUnassignedCount()
+    {
+        return DisciplinaryCase::whereHas('caseStatus', function ($query) {
+            $query->where('code', 'UNASSIGNED');
+        })
+            ->count();
+    }
+
+    public function getDisciplinaryCasesOpenCount()
+    {
+        return DisciplinaryCase::whereHas('caseStatus', function ($query) {
+            $query->where('code', 'OPEN');
+        })
+            ->count();
+    }
+
+    public function getDisciplinaryCasesAwaitingEvidencesCount()
+    {
+        return DisciplinaryCase::whereHas('caseStatus', function ($query) {
+            $query->where('code', 'AWAITING_EVIDENCES');
+        })
+            ->count();
+    }
+
+    public function getDisciplinaryCasesOnResolutionCount()
+    {
+        return DisciplinaryCase::whereHas('caseStatus', function ($query) {
+            $query->where('code', 'ON_RESOLUTION');
+        })
+            ->count();
+    }
+
+    public function getDisciplinaryCasesClosedCount()
+    {
+        return DisciplinaryCase::whereHas('caseStatus', function ($query) {
+            $query->where('code', 'CLOSED');
+        })
+            ->count();
+    }
+
+    // ============================================ Audits ============================================== //
+
+    public function getProductCountAuditsCount()
+    {
+
+    }
+
+    public function getCashRegisterClosureAuditsCount()
+    {
+        
+    }
+
+    public function getQualityChecklistAuditsCount()
+    {
+        
     }
 }
