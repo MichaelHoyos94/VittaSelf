@@ -114,20 +114,18 @@ class DashboardRepository
             ->count();
     }
 
-    public function getMonthlyWebOrdersCount($from = null, $to = null)
+    public function getMonthlyWebOrdersCount()
     {
-        // Count orders by month
-        $query = Order::query();
+        return Order::query()->whereYear('created_at', now()->year)
+            ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+    }
 
-        if ($from) {
-            $query->whereDate('created_at', '>=', $from);
-        }
-
-        if ($to) {
-            $query->whereDate('created_at', '<=', $to);
-        }
-
-        return $query->whereYear('created_at', now()->year)
+    public function getMonthlyInternalOrdersCount()
+    {
+        return InternalOrder::query()->whereYear('created_at', now()->year)
             ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as count')
             ->groupBy('month')
             ->orderBy('month')
@@ -181,20 +179,46 @@ class DashboardRepository
             ->count();
     }
 
+    public function getDisciplinaryCasesByPolicy()
+    {
+        // Policie cant be null no need 'no policie'
+        return DisciplinaryCase::query()
+            ->whereHas('policy')
+            ->with('policy:id,policy')
+            ->get()
+            ->groupBy(fn($case) => $case->policy->policy)
+            ->map(function ($cases, $policy) {
+                return [
+                    'label' => $policy,
+                    'count' => $cases->count(),
+                ];
+            })
+            ->sortByDesc('count')
+            ->values();
+    }
+
+    public function getDisciplinaryCasesByUser()
+    {
+        return DisciplinaryCase::query()
+            ->whereHas('user')
+            ->with('user:id,name')
+            ->get()
+            ->groupBy(fn($case) => $case->user->name)
+            ->map(function ($cases, $user) {
+                return [
+                    'label' => $user,
+                    'count' => $cases->count(),
+                ];
+            })
+            ->sortByDesc('count')
+            ->values();
+    }
+
     // ============================================ Audits ============================================== //
 
-    public function getProductCountAuditsCount()
-    {
+    public function getProductCountAuditsCount() {}
 
-    }
+    public function getCashRegisterClosureAuditsCount() {}
 
-    public function getCashRegisterClosureAuditsCount()
-    {
-        
-    }
-
-    public function getQualityChecklistAuditsCount()
-    {
-        
-    }
+    public function getQualityChecklistAuditsCount() {}
 }

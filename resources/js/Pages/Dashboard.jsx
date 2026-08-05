@@ -1,10 +1,10 @@
 import ChartCard from "@/Components/Dashboard/ChartCard";
 import EmployeesByRoleChart from "@/Components/Dashboard/EmployeesByRole";
+import HorBarChartComponent from "@/Components/Dashboard/HorBarChartComponent";
 import LineChartComponent from "@/Components/Dashboard/LineChartComponent";
 import MetricCard from "@/Components/Dashboard/MetricCard";
 import PieChartComponent from "@/Components/Dashboard/PieChartComponent";
 import SecondaryButton from "@/Components/SecondaryButton";
-import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import {
     ShoppingBagIcon,
@@ -104,51 +104,83 @@ export default function Dashboard({ data }) {
                             value={data.metrics.webOrders}
                         />
                         <ChartCard
-                            title="Orders by months"
-                            description="Orders by months"
+                            title="Web orders by month"
+                            description="Web orders registered for each month."
                         >
                             <LineChartComponent data={data.webOrdersMonthly} />
+                        </ChartCard>
+                        <ChartCard
+                            title="Internal orders by month"
+                            description="Internal orders registered for each month."
+                        >
+                            <LineChartComponent
+                                data={data.internalOrdersMonthly}
+                            />
                         </ChartCard>
                     </div>
                 </>
             ),
         },
-        { id: "sanctions", label: "sanctions", content: () => (
-            <>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <MetricCard 
-                        title="All Cases"
-                        value={data.metrics.disciplinaryCases}
-                        icon={UsersIcon}
-                        description="All disciplinary cases."
-                    />
-                    <MetricCard 
-                        title="Unassigned Cases"
-                        value={data.metrics.disciplinaryCasesUnassigned}
-                        icon={UsersIcon}
-                        description="Unassigned disciplinary cases."
-                    />
-                    <MetricCard 
-                        title="Open Cases"
-                        value={data.metrics.disciplinaryCasesOpen}
-                        icon={UsersIcon}
-                        description="Investigations on going."
-                    />
-                    <MetricCard 
-                        title="Awaiting Evidences"
-                        value={data.metrics.disciplinaryCasesAwaitingEvidences}
-                        icon={UsersIcon}
-                        description="Cases awaiting for evidences."
-                    />
-                    <MetricCard 
-                        title="On Resolution."
-                        value={data.metrics.disciplinaryCasesOnResolution}
-                        icon={UsersIcon}
-                        description="Cases about to be solved."
-                    />
-                </div>
-            </>
-        )},
+        {
+            id: "sanctions",
+            label: "sanctions",
+            content: () => (
+                <>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <MetricCard
+                            title="All Cases"
+                            value={data.metrics.disciplinaryCases}
+                            icon={UsersIcon}
+                            description="All disciplinary cases."
+                        />
+                        <MetricCard
+                            title="Unassigned Cases"
+                            value={data.metrics.disciplinaryCasesUnassigned}
+                            icon={UsersIcon}
+                            description="Unassigned disciplinary cases."
+                        />
+                        <MetricCard
+                            title="Open Cases"
+                            value={data.metrics.disciplinaryCasesOpen}
+                            icon={UsersIcon}
+                            description="Investigations on going."
+                        />
+                        <MetricCard
+                            title="Awaiting Evidences"
+                            value={
+                                data.metrics.disciplinaryCasesAwaitingEvidences
+                            }
+                            icon={UsersIcon}
+                            description="Cases awaiting for evidences."
+                        />
+                        <MetricCard
+                            title="On Resolution."
+                            value={data.metrics.disciplinaryCasesOnResolution}
+                            icon={UsersIcon}
+                            description="Cases about to be solved."
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <ChartCard
+                            title="Most broken policy."
+                            description="Most broken policy by disciplinary cases."
+                        >
+                            <HorBarChartComponent
+                                data={data.disciplinaryCasesByPolicy}
+                            />
+                        </ChartCard>
+                        <ChartCard
+                            title="Most investigated EUIs"
+                            description="Euis with more investigations on going."
+                        >
+                            <HorBarChartComponent
+                                data={data.disciplinaryCasesByUser}
+                            />
+                        </ChartCard>
+                    </div>
+                </>
+            ),
+        },
         { id: "audits", label: "audits" },
     ];
     const [activeTab, setActiveTab] = useState(tabs[0].id);

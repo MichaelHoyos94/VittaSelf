@@ -31,6 +31,9 @@ class DashboardService
             'usersRegisteredByMonth' => $this->repository->getEuisRegisteredByMount(),
             'euisByPlan' => $this->repository->getEuisByPlanCount(),
             'webOrdersMonthly' => $this->repository->getMonthlyWebOrdersCount(),
+            'internalOrdersMonthly' => $this->repository->getMonthlyInternalOrdersCount(),
+            'disciplinaryCasesByPolicy' => $this->repository->getDisciplinaryCasesByPolicy(),
+            'disciplinaryCasesByUser' => $this->repository->getDisciplinaryCasesByUser(),
         ];
     }
 }
