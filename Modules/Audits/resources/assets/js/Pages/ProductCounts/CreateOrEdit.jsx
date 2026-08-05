@@ -23,14 +23,8 @@ export default function Create() {
         ],
     });
 
-    console.log(costCenter);
-    if (errors) {
-        console.log(errors);
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route("audits.product-counts.store"));
     };
 
@@ -83,7 +77,7 @@ export default function Create() {
                                         )
                                     }
                                     value={item.product_id}
-                                    options={products.map((product) => ({
+                                    options={products.data.map((product) => ({
                                         value: product.id,
                                         label: product.name,
                                     }))}

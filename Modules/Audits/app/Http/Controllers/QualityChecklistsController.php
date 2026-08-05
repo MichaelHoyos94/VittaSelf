@@ -15,7 +15,8 @@ class QualityChecklistsController extends Controller
     public function index() {
         // Load curren user -> costcenter
         $costCenter = auth()->user()->costCenter;
-        $qualityChecklists = $this->service->getByCostCenter($costCenter->id);
+        $costCenterId = $costCenter?->id;
+        $qualityChecklists = $this->service->getAll($costCenterId);
         return Inertia::render('Audits/QualityChecklists/Index')->with([
             'costCenter' => $costCenter,
             'qualityChecklists' => $qualityChecklists,

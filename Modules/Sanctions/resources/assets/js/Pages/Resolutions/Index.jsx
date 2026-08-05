@@ -4,7 +4,6 @@ import { usePage } from "@inertiajs/react";
 
 export default function Index() {
     const { resolutions } = usePage().props;
-    console.log(resolutions[0].disciplinary_case);
     const columns = [
         { header: "ID", accessor: "id" },
         {

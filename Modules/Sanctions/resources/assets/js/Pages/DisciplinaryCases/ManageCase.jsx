@@ -347,7 +347,7 @@ export default function ManageCase() {
                                 <p>Admin in charge</p>
                             </div>
                             <div>
-                                <p>ADMIN</p>
+                                <p>{disciplinaryCase.admin?.name}</p>
                             </div>
                             <div>
                                 <p>Policy</p>
