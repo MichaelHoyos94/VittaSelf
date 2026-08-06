@@ -1,4 +1,10 @@
-export default function MetricCard({ title, value, icon: Icon, trend, description }) {
+export default function MetricCard({
+    title,
+    value,
+    icon: Icon,
+    trend,
+    description,
+}) {
     const isPositiveTrend = trend >= 0;
 
     return (
@@ -18,14 +24,22 @@ export default function MetricCard({ title, value, icon: Icon, trend, descriptio
                             </p>
                         )}
                     </div>
-                    {Icon && (
-                        <div className="rounded-full bg-primary-100 p-3">
-                            <Icon
-                                className="h-6 w-6 text-primary-800"
-                                aria-hidden="true"
-                            />
-                        </div>
-                    )}
+                    {/* If string then <i classname=icon... else <Icon ...> */}
+                    {Icon &&
+                        (typeof Icon === "string" ? (
+                            <div className="rounded-full bg-primary-100 p-3">
+                                <i
+                                    className={`h-6 w-6 text-primary-800 ${Icon}`}
+                                />
+                            </div>
+                        ) : (
+                            <div className="rounded-full bg-primary-100 p-3">
+                                <Icon
+                                    className="h-6 w-6 text-primary-800"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                        ))}
                 </div>
             </div>
         </article>

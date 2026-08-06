@@ -181,7 +181,56 @@ export default function Dashboard({ data }) {
                 </>
             ),
         },
-        { id: "audits", label: "audits" },
+        {
+            id: "audits",
+            label: "audits",
+            content: () => (
+                <>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <MetricCard
+                            title="Product Count Audits"
+                            icon={"fi fi-rr-box-check"}
+                            description="Product count audits by the current year."
+                            value={data.metrics.productCountAudits}
+                        />
+                        <MetricCard
+                            title="Cash Register Closures Audits"
+                            description="Cash register closure audits by the current year."
+                            value={data.metrics.cashRegisterClosureAudits}
+                        />
+                        <MetricCard
+                            title="Quality Checklist Audits"
+                            description="Quality checklist audits by the current year."
+                            value={data.metrics.qualityChecklistAudits}
+                        />
+                        <ChartCard
+                            title="Product Count Audits"
+                            description="Product count audits by status."
+                        >
+                            <PieChartComponent
+                                data={data.productCountAuditsByStatus}
+                            />
+                        </ChartCard>
+                        <ChartCard
+                            title="Cash Register Closure Audits"
+                            description="Cash register closure audits by status."
+                        >
+                            <PieChartComponent 
+                                data={data.cashRegisterClosureAuditsByStatus}
+                            />
+                        </ChartCard>
+                        <ChartCard
+                            title="Quality Cheklist Audits"
+                            description="Quality check list audits by status."
+                        >
+                            <PieChartComponent
+                                data={data.qualityChecklistAuditsByStatus}
+                            />
+                        </ChartCard>
+                    </div>
+                </>
+            ),
+        },
     ];
     const [activeTab, setActiveTab] = useState(tabs[0].id);
     const activeTabContent = tabs.find((tab) => tab.id === activeTab);

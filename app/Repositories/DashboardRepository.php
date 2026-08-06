@@ -5,6 +5,9 @@ namespace App\Repositories;
 use App\Models\InternalOrder;
 use App\Models\Order;
 use App\Models\User;
+use Modules\Audits\Models\CashRegisterClosureAudit;
+use Modules\Audits\Models\ProductCountAudit;
+use Modules\Audits\Models\QualityChecklistAudit;
 use Modules\Sanctions\Models\DisciplinaryCase;
 
 class DashboardRepository
@@ -216,9 +219,61 @@ class DashboardRepository
 
     // ============================================ Audits ============================================== //
 
-    public function getProductCountAuditsCount() {}
+    public function getProductCountAuditsCount()
+    {
+        return ProductCountAudit::whereYear('created_at', now()->year)->count();
+    }
 
-    public function getCashRegisterClosureAuditsCount() {}
+    public function getCashRegisterClosureAuditsCount()
+    {
+        return CashRegisterClosureAudit::whereYear('created_at', now()->year)->count();
+    }
 
-    public function getQualityChecklistAuditsCount() {}
+    public function getQualityChecklistAuditsCount()
+    {
+        return QualityChecklistAudit::whereYear('created_at', now()->year)->count();
+    }
+
+    public function getProductCountAuditsByStatus()
+    {
+        // Get count agroup by status COLUMN not RELATION
+        return ProductCountAudit::query()
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->get()
+            ->map(function ($audit) {
+                return [
+                    'label' => $audit->status,
+                    'count' => $audit->count,
+                ];
+            });
+    }
+
+    public function getCashRegisterClosureAuditsByStatus()
+    {
+        return CashRegisterClosureAudit::query()
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->get()
+            ->map(function ($audit) {
+                return [
+                    'label' => $audit->status,
+                    'count' => $audit->count,
+                ];
+            });
+    }
+
+    public function getQualityChecklistAuditsByStatus()
+    {
+        return QualityChecklistAudit::query()
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->get()
+            ->map(function ($audit) {
+                return [
+                    'label' => $audit->status,
+                    'count' => $audit->count,
+                ];
+            });
+    }
 }

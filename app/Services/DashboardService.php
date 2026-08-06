@@ -26,6 +26,9 @@ class DashboardService
                 'disciplinaryCasesAwaitingEvidences' => $this->repository->getDisciplinaryCasesAwaitingEvidencesCount(),
                 'disciplinaryCasesOnResolution' => $this->repository->getDisciplinaryCasesOnResolutionCount(),
                 'disciplinaryCasesClosed' => $this->repository->getDisciplinaryCasesClosedCount(),
+                'productCountAudits' => $this->repository->getProductCountAuditsCount(),
+                'qualityChecklistAudits' => $this->repository->getQualityChecklistAuditsCount(),
+                'cashRegisterClosureAudits' => $this->repository->getCashRegisterClosureAuditsCount(),
             ],
             'usersByRoles' => $this->repository->usersByRole(),
             'usersRegisteredByMonth' => $this->repository->getEuisRegisteredByMount(),
@@ -34,6 +37,9 @@ class DashboardService
             'internalOrdersMonthly' => $this->repository->getMonthlyInternalOrdersCount(),
             'disciplinaryCasesByPolicy' => $this->repository->getDisciplinaryCasesByPolicy(),
             'disciplinaryCasesByUser' => $this->repository->getDisciplinaryCasesByUser(),
+            'productCountsAuditsByStatus' => $this->repository->getProductCountAuditsByStatus(),
+            'cashRegisterClosureAuditsByStatus' => $this->repository->getCashRegisterClosureAuditsByStatus(),
+            'qualityChecklistAuditsByStatus' => $this->repository->getQualityChecklistAuditsByStatus(),
         ];
     }
 }
