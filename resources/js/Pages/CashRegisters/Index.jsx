@@ -251,7 +251,7 @@ export default function Index() {
                                 value={selectedUserId}
                                 onChange={(e) => setSelectedUserId(e.target.value)}
                                 placeholder="Select Commercial Agent"
-                                options={users.map((user) => ({
+                                options={users.data.map((user) => ({
                                     value: user.id,
                                     label: user.full_name,
                                 }))}
@@ -373,7 +373,7 @@ export default function Index() {
                                         )
                                     }
                                     placeholder="Commercial Agent"
-                                    options={users.map((user) => ({
+                                    options={users.data.map((user) => ({
                                         value: user.id,
                                         label: user.name,
                                     }))}

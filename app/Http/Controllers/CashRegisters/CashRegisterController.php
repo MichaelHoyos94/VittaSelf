@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CashRegisterRequest;
 use App\Services\CashRegisterService;
 use App\Services\CostCenterService;
-use App\Services\UserService;
+use App\Services\HumanResourcesService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,13 +15,13 @@ class CashRegisterController extends Controller
 {
     public function __construct(
         private CashRegisterService $service,
-        private UserService $userService,
+        private HumanResourcesService $humanResourcesService,
         private CostCenterService $costCenterService,
     ) {}
     public function index()
     {
         $cashRegisters = $this->service->getAll();
-        $users = $this->userService->getAll();
+        $users = $this->humanResourcesService->getAll();
         $costCenters = $this->costCenterService->getAll();
         return Inertia::render('CashRegisters/Index')->with([
             'cashRegisters' => $cashRegisters,
@@ -35,7 +35,7 @@ class CashRegisterController extends Controller
         $cashRegister = $this->service->create($data);
         return redirect()->route('cash-register-manage.cash-registers.index')->with('success', 'Cash register created successfully with ID:' . $cashRegister->id);
     }
-    #TODO: Implementar funcionalidad para liberar caja
+
     public function release($cashRegisterId)
     {
         $released = $this->service->free($cashRegisterId);
@@ -44,7 +44,7 @@ class CashRegisterController extends Controller
         else
             return redirect()->route('cash-register-manage.cash-registers.index')->with('error', 'Failed to release cash register.');
     }
-    #TODO Implementar logica para asignar empleado
+    
     public function assign(Request $request, $cashRegisterId)
     {
         $assigned = $this->service->assign($cashRegisterId, $request->commercial_agent_id);

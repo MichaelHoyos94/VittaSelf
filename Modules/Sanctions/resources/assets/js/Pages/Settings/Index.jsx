@@ -5,28 +5,28 @@ import { ScaleIcon } from "@heroicons/react/16/solid"
 export default function Index() {
 
     return (
-        <div className="p-4 bg-white rounded shadow-md">
+        <div className="p-8 bg-white/80 backdrop-blur-lg rounded-xl shadow-xl">
             <h3>Settings</h3>
             <p>Custom your catalogues in your sanctions process.</p>
-            <div className="flex flex-wrap flex-shrink-0 items-center justify-evenly gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 flex-shrink-0 items-center justify-evenly gap-4 mt-4">
 
                 <a href="/sanctions/disciplinary-cases">
                     <NavigationCard
-                        icon={<ScaleIcon className="w-32 h-32 text-primary-400" />}
+                        icon="fi fi-rs-contract"
                         title={"Policies"}
                         text={"Manage policies"}
                     />
                 </a>
                 <a href="">
                     <NavigationCard
-                        icon={<ScaleIcon className="w-32 h-32 text-primary-200" />}
+                        icon={ScaleIcon}
                         title={"Mitigations"}
                         text={"Manage mitigations"}
                     />
                 </a>
                 <a href="">
                     <NavigationCard
-                        icon={<ScaleIcon className="w-32 h-32 text-primary-200" />}
+                        icon={ScaleIcon}
                         title={"Sources"}
                         text={"Manage sources"}
                     />

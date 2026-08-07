@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('human-resources')->group(function() {
+Route::prefix('human-resources')->group(function () {
     Route::get('/employees', [HumanResourcesController::class, 'index'])->name('human-resources.index');
     Route::post('/employees', [HumanResourcesController::class, 'store'])->name('human-resources.store');
     Route::put('/employees/{id}', [HumanResourcesController::class, 'update'])->name('human-resources.update');
@@ -73,7 +73,7 @@ Route::prefix('human-resources/permissions')
             ->name('permissions.update');
     });
 
-Route::prefix('customers')->middleware(['auth', 'verified'])->as('customers.')->group(function (){
+Route::prefix('customers')->middleware(['auth', 'verified'])->as('customers.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');
     Route::post('/', [UserController::class, 'store'])->name('store');
 });
@@ -92,10 +92,11 @@ Route::prefix('orders')->middleware('auth')->as('orders.')->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/', [OrderController::class, 'store'])->name('store');
     Route::post('/create-internal-order', [InternalOrderController::class, 'store'])->name('internal-orders.store');
-    Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
     Route::get('/web-orders', [OrderController::class, 'index'])->name('web-orders.index');
     Route::get('/internal-orders', [InternalOrderController::class, 'index'])->name('internal-orders.index');
 });
+
+Route::get('/my-orders', [OrderController::class, 'myOrders'])->middleware(['auth', 'verified'])->name('my-orders');
 
 Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-manage.')->group(function () {
     Route::get('/', [CashRegisterController::class, 'index'])->name('cash-registers.index');
@@ -105,7 +106,7 @@ Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-ma
     Route::delete('/{cashRegisterId}', [CashRegisterController::class, 'destroy'])->name('cash-registers.delete');
 });
 
-Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function() {
+Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function () {
     Route::get('/', [CashRegisterController::class, 'myCashRegister'])->name('index');
     Route::post('/close-cash-register', [CashRegisterController::class, 'closeCashRegister'])->name('close');
     Route::post('/open-cash-register', [CashRegisterController::class, 'openCashRegister'])->name('open');
@@ -116,4 +117,4 @@ Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->gr
     Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('manage-products');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
