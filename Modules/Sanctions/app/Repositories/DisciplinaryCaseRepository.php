@@ -24,6 +24,14 @@ class DisciplinaryCaseRepository
         }
         return $query->get();
     }
+
+    public function getByUserId($userId, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
+    {
+        return DisciplinaryCase::where('user_id', $userId)
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage);
+    }
+
     public function getById($id)
     {
         // Retorning always ID 1, need to fix this

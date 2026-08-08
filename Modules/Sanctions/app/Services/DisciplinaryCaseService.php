@@ -17,6 +17,10 @@ class DisciplinaryCaseService
     {
         return $this->repository->getAll();
     }
+    public function getMyCases($userId)
+    {
+        return $this->repository->getByUserId($userId);
+    }
     public function create(array $data)
     {
         $data['case_status_id'] = 1; // Set default case status to "Open"
