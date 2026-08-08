@@ -78,4 +78,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(CashRegister::class, 'commercial_agent_id');
     }
+
+    public function cart(): HasOne
+    {
+        return $this->hasOne(Cart::class);
+    }
 }
