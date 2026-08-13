@@ -11,7 +11,7 @@ export default function Input({
     ...props
 }) {
     return (
-        <div className="mb-4">
+        <div>
             {label && <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor={name}>
                 {label}
             </label>}

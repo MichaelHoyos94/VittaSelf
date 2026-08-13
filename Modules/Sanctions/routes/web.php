@@ -27,5 +27,13 @@ Route::prefix('sanctions')->middleware(['auth', 'verified'])->as('sanctions.')->
     Route::delete('/resolutions/{id}', [ResolutionsController::class, 'destroy'])->name('resolutions.destroy');
 
     // ============================================== Settings ================================================================ //
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    //Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::prefix('/settings')->middleware(['auth', 'verified'])->as('settings.')->group(function() {
+        Route::get('/', [SettingsController::class, 'index'])->name('index');
+        Route::get('/policies', [SettingsController::class, 'policies'])->name('policies.index');
+        Route::post('/policies', [SettingsController::class, 'storePolicy'])->name('policies.store');
+        Route::put('/policies/{id}', [SettingsController::class, 'updatePolicy'])->name('policies.update');
+        Route::put('/policies/{id}/activate', [SettingsController::class, 'activatePolicy'])->name('policies.activate');
+        Route::put('/policies/{id}/inactivate', [SettingsController::class, 'inactivatePolicy'])->name('policies.inactivate');
+    });
 });
