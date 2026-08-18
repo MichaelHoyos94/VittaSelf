@@ -12,11 +12,14 @@ enum PermissionName: string
     case PRODUCTS_CATALOG_VIEW = 'products-catalog.view';
 
         // Sanciones
-    case SANCTIONS_VIEW = 'sanctions.sanctions-view';
-    case SANCTIONS_CREATE = 'sanctions.sanctions-create';
-    case SANCTIONS_ASSIGN = 'sanctions.sanctions-assign';
+    case SANCTIONS_VIEW = 'sanctions.view';
+    case CASES_VIEW = 'sanctions.cases-view';
+    case CASES_CREATE = 'sanctions.cases-create';
+    case CASES_ASSIGN = 'sanctions.cases-assign';
     case RESOLUTIONS_VIEW = 'sanctions.resolutions-view';
     case RESOLUTIONS_CREATE = 'sanctions.resolutions-create';
+    case MY_CASES = 'sanctions.my-cases-view';
+    case SETTINGS = 'sanctions.settings';
 
         // Auditorías
     case AUDITS_VIEW = 'audits.audits-view';

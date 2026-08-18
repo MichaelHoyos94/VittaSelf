@@ -74,21 +74,25 @@ export default function Sidebar() {
                     label: "Disciplinary Cases",
                     href: "/sanctions/disciplinary-cases",
                     active: isCurrent("sanctions.disciplinary-cases.index"),
+                    permission: 'sanctions.cases-view'
                 },
                 {
                     label: "Resolutions History",
                     href: "/sanctions/resolutions",
                     active: isCurrent("sanctions.resolutions.index"),
+                    permission: 'sanctions.resolutions-view',
                 },
                 {
                     label: "Settings",
                     href: "/sanctions/settings",
                     active: isCurrent("sanctions.settings"),
+                    permission: 'sanctions.settings',
                 },
                 {
                     label: "My Cases",
                     href: "/sanctions/my-cases",
                     active: isCurrent("sanctions.disciplinary-cases.my-cases"),
+                    permission: 'sanctions.my-cases-view',
                 },
             ],
         },

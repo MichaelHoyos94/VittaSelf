@@ -27,7 +27,8 @@ class DisciplinaryCaseRepository
 
     public function getByUserId($userId, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
     {
-        return DisciplinaryCase::where('user_id', $userId)
+        return DisciplinaryCase::with(['user', 'policy', 'admin', 'caseStatus'])
+            ->where('user_id', $userId)
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPage);
     }
