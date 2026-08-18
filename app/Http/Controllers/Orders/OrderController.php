@@ -46,7 +46,7 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
         }
-        return redirect()->route('orders.my-orders')->with([
+        return redirect()->route('my-orders')->with([
             'success' => 'Order created successfully with ID: ',
         ]);
     }

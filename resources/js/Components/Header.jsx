@@ -7,6 +7,7 @@ import {
     Cog6ToothIcon,
     GlobeAltIcon,
     MagnifyingGlassIcon,
+    ShoppingCartIcon,
     UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
@@ -16,6 +17,7 @@ export default function Header() {
     const [openProfile, setOpenProfile] = useState(false);
     const { auth } = usePage().props;
     const user = auth?.user;
+    const cartCount = auth?.cart_count;
     const displayName = user?.full_name || user?.name || "Michael";
     const email = user?.email || "admin@vittaself.com";
     const initials = displayName
@@ -38,6 +40,19 @@ export default function Header() {
             </div>
 
             <div className="ml-6 flex items-center gap-3">
+                {cartCount !== null && cartCount !== undefined && (
+                    <Link
+                        href="/carts/my-cart"
+                        className="relative rounded-full p-2.5 text-slate-600 transition duration-200 hover:bg-slate-100 hover:text-primary-700 active:scale-95"
+                        aria-label={`Carrito: ${cartCount} productos`}
+                    >
+                        <ShoppingCartIcon className="h-5 w-5" />
+                        <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-700 px-1 text-[10px] font-bold leading-none text-white">
+                            {cartCount > 99 ? "99+" : cartCount}
+                        </span>
+                    </Link>
+                )}
+
                 <button
                     type="button"
                     className="relative rounded-full p-2.5 text-slate-600 transition duration-200 hover:bg-slate-100 hover:text-primary-700 active:scale-95"

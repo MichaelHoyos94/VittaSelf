@@ -85,6 +85,11 @@ export default function Sidebar() {
                     href: "/sanctions/settings",
                     active: isCurrent("sanctions.settings"),
                 },
+                {
+                    label: "My Cases",
+                    href: "/sanctions/my-cases",
+                    active: isCurrent("sanctions.disciplinary-cases.my-cases"),
+                },
             ],
         },
         {

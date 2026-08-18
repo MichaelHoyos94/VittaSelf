@@ -31,7 +31,7 @@ export default function Index() {
     }, [flash])
 
     return (
-        <div className="bg-white p-4 rounded">
+        <div className="bg-white/70 p-4 rounded-xl shadow-xl backdrop-blur-lg">
             <h2>Products</h2>
             <div>
                 {successMessage && (
