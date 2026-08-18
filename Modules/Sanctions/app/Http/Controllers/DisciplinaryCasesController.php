@@ -8,25 +8,25 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Sanctions\Exceptions\UserSanctionedException;
 use Modules\Sanctions\Http\Requests\DisciplinaryCaseRequest;
-use Modules\Sanctions\Services\CatCaseStatusService;
-use Modules\Sanctions\Services\CatComplianceSourceService;
-use Modules\Sanctions\Services\CatMitigationService;
-use Modules\Sanctions\Services\CatPolicyService;
-use Modules\Sanctions\Services\CatSanctionLevelService;
-use Modules\Sanctions\Services\CatSanctionService;
+use Modules\Sanctions\Repositories\CatCaseStatusRepository;
+use Modules\Sanctions\Repositories\CatComplianceSourceRepository;
+use Modules\Sanctions\Repositories\CatMitigationRepository;
+use Modules\Sanctions\Repositories\CatPolicyRepository;
+use Modules\Sanctions\Repositories\CatSanctionLevelRepository;
+use Modules\Sanctions\Repositories\CatSanctionRepository;
 use Modules\Sanctions\Services\DisciplinaryCaseService;
 
 class DisciplinaryCasesController extends Controller
 {
     public function __construct(
-        protected DisciplinaryCaseService $service,
-        protected CatPolicyService $policiesService,
-        protected CatComplianceSourceService $compliancesService,
-        protected CatCaseStatusService $caseStatusService,
-        protected CatSanctionService $sanctionsService,
-        protected CatSanctionLevelService $sanctionLevelsService,
-        protected CatMitigationService $mitigationsService,
-        protected UserService $userService
+        private DisciplinaryCaseService $service,
+        private CatPolicyRepository $policyRepository,
+        private CatComplianceSourceRepository $complianceSourceRepository,
+        private CatCaseStatusRepository $caseStatusRepository,
+        private CatSanctionRepository $sanctionRepository,
+        private CatSanctionLevelRepository $sanctionLevelRepository,
+        private CatMitigationRepository $mitigationRepository,
+        private UserService $userService
     ) {}
     /**
      * Display a listing of the resource.
@@ -37,8 +37,8 @@ class DisciplinaryCasesController extends Controller
         if ($request->filled('eui_code')) {
             $userToSanction = $this->userService->getByEuiCode($request->eui_code);
         }
-        $policies = $this->policiesService->getAll();
-        $complianceSources = $this->compliancesService->getAll();
+        $policies = $this->policyRepository->getAll();
+        $complianceSources = $this->complianceSourceRepository->getAll();
         $disciplinaryCases = $this->service->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
             'userToSanction' => $userToSanction,
@@ -64,10 +64,10 @@ class DisciplinaryCasesController extends Controller
         if ($disciplinaryCase->caseStatus->case_status !== 'Sin asignar' && $disciplinaryCase->admin_id !== auth()->id()) {
             abort(403, 'You are not authorized to manage this case.');
         }
-        $statuses = $this->caseStatusService->getAllStatuses();
-        $sanctions = $this->sanctionsService->getAll();
-        $sanctionLevels = $this->sanctionLevelsService->getAll();
-        $mitigations = $this->mitigationsService->getAll();
+        $statuses = $this->caseStatusRepository->getAll();
+        $sanctions = $this->sanctionRepository->getAll();
+        $sanctionLevels = $this->sanctionLevelRepository->getAll();
+        $mitigations = $this->mitigationRepository->getAll();
         return Inertia::render('Sanctions/DisciplinaryCases/ManageCase')->with([
             'disciplinaryCase' => $disciplinaryCase,
             'caseStatuses' => $statuses,
