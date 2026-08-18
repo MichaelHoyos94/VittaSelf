@@ -1,6 +1,6 @@
 import NavigationCard from "@/Components/NavigationCard"
 import MainLayout from "@/Layouts/MainLayout"
-import { ScaleIcon } from "@heroicons/react/16/solid"
+import { DocumentTextIcon, ScaleIcon } from "@heroicons/react/16/solid"
 
 export default function Index() {
 
@@ -10,9 +10,9 @@ export default function Index() {
             <p>Custom your catalogues in your sanctions process.</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 flex-shrink-0 items-center justify-evenly gap-4 mt-4">
 
-                <a href="/sanctions/disciplinary-cases">
+                <a href="/sanctions/settings/policies">
                     <NavigationCard
-                        icon="fi fi-rs-contract"
+                        icon={DocumentTextIcon}
                         title={"Policies"}
                         text={"Manage policies"}
                     />
