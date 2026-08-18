@@ -36,6 +36,13 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
                 'roles' => $request->user() ? $request->user()->getRoleNames() : [],
                 'permissions' => $request->user() ? $request->user()->getAllPermissions()->pluck('name')->values()->all() : [],
+                'cart_count' => function () use ($request) {
+                    $cart = $request->user()?->cart;
+
+                    return $cart
+                        ? (int) $cart->products()->sum('cart_product.quantity')
+                        : null;
+                },
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

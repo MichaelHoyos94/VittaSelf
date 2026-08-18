@@ -48,6 +48,15 @@ class DisciplinaryCasesController extends Controller
         ]);
     }
 
+    public function myCases()
+    {
+        $userId = auth()->user()->id;
+        $myCases = $this->service->getMyCases($userId);
+        return Inertia::render('Sanctions/DisciplinaryCases/MyCases')->with([
+            'cases' => $myCases,
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
