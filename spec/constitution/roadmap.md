@@ -19,6 +19,7 @@ Orden de las features.
 13. **013 . Gestión de catalogos del modulo de sanciones**: Seccion donde el administrador puede gestionar los catalogos de datos del módulo de sanciones.
 14. **014 . Historico de resoluciones**: Ventana de consulta con tabla de las resoluciones creadas en los procesos disciplinarios.
 15. **015 . Vista mis casos**: Pagina donde el empresario consulta en una tabla los casos disciplinarios asociados a el.
+16. **016 . Descargos del empresario**: Modal que se accede desde la vista `MyCases.jsx` donde el empresario puede subir los descargos del proceso.
 17. **017 . Aplicación de sanciones**: Modificación de las features de ordenes para que se comporten distinto si el empresario esta sancionado.
 18. **018 . Lista de checkeo de calidad**: Flujo donde el asesor comercial consulta y crea listas de checkeo de calidad para ser auditadas.
 19. **019 . Conteo de productos**: Flujo donde el asesor comercial consulta y crea conteos de productos para ser auditados.
@@ -28,7 +29,7 @@ Orden de las features.
 
 ## Siguiente 🏗️
 
-16. **016 . Descargos del empresario**: Modal que se accede desde la vista `MyCases.jsx` donde el empresario puede subir los descargos del proceso.
+Sin features en curso.
 
 ## Backlog / ideas 💡
 

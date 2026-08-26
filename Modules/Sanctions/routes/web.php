@@ -19,6 +19,7 @@ Route::prefix('sanctions')->middleware(['auth', 'verified'])->as('sanctions.')->
 
     // =============================================== EVIDENCES ========================================================= //
     Route::post('/disciplinary-cases/{disciplinaryCaseId}/evidences', [SanctionEvidencesController::class, 'store'])->name('evidences.store');
+    Route::post('/disciplinary-cases/{disciplinaryCaseId}/rebuttals', [SanctionEvidencesController::class, 'storeRebuttals'])->name('rebuttals.store');
     // =============================================== RESOLUTIONS ========================================================= //
     Route::get('/resolutions', [ResolutionsController::class, 'index'])->name('resolutions.index');
     Route::post('/resolutions', [ResolutionsController::class, 'store'])->name('resolutions.store');

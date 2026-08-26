@@ -1,6 +1,6 @@
 # 016 . Descargos del empresario — Plan
 
-**Estado**: Pendiente ⌛
+**Estado**: Hecho ✅
 
 ## Que hace
 
@@ -12,9 +12,9 @@ El caso disciplinario tiene un flujo secuencial de estados, y en uno de estos es
 
 ## Criterios de aceptación
 
-- [ ] El boton `rebuttals` de la columna actions solo es visible si el caso esta en `AWAITING_EVIDENCES`.
-- [ ] El boton `rebuttals` despliega el modal con el droparea que permite subir los descargos.
-- [ ] Al subir los documentos, se previsualizan los archivos cargados.
-- [ ] Al dar click en `send` se guardan los archivos en storage y se persisten en DB.
-- [ ] Se redirige a la pagina `MyCases` y se muestra mensaje de success o error.
-- [ ] Si se subieron descargos, el administrador asociado al caso puede verlos en una modal en `ManageCase`.
+- [x] El boton `rebuttals` de la columna actions solo es visible si el caso esta en `AWAITING_EVIDENCES`.
+- [x] El boton `rebuttals` despliega el modal con el droparea que permite subir los descargos.
+- [x] Al subir los documentos, se previsualizan los archivos cargados.
+- [x] Al dar click en `send` se guardan los archivos en storage y se persisten en DB.
+- [x] Se redirige a la pagina `MyCases` y se muestra mensaje de success o error.
+- [x] Si se subieron descargos, el administrador asociado al caso puede verlos en una modal en `ManageCase`.

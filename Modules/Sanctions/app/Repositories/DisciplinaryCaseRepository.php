@@ -22,6 +22,7 @@ class DisciplinaryCaseRepository
         if ($pagination) {
             return $query->paginate($pagination['per_page']);
         }
+
         return $query->get();
     }
 
@@ -35,8 +36,6 @@ class DisciplinaryCaseRepository
 
     public function getById($id)
     {
-        // Retorning always ID 1, need to fix this
-
         return DisciplinaryCase::with([
             'user',
             'policy',
@@ -44,27 +43,35 @@ class DisciplinaryCaseRepository
             'caseStatus',
             'complianceSource',
             'sanctionEvidences',
+            'userEvidences',
         ])->findOrFail($id);
     }
+
     public function create(array $data)
     {
         return DisciplinaryCase::create($data);
     }
+
     public function update($id, array $data)
     {
         $disciplinaryCase = DisciplinaryCase::findOrFail($id);
         $disciplinaryCase->update($data);
+
         return $disciplinaryCase;
     }
+
     public function delete($id)
     {
         $disciplinaryCase = DisciplinaryCase::findOrFail($id);
         $disciplinaryCase->delete();
+
         return true;
     }
+
     public function save($disciplinaryCase)
     {
         $disciplinaryCase->save();
+
         return $disciplinaryCase->fresh();
     }
 }
