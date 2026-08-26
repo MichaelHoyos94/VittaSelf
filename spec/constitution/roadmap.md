@@ -30,12 +30,11 @@ Orden de las features.
 
 ## Siguiente 🏗️
 
-Sin features en curso.
+24. **024 . Gestión de productos**: Flujo gestion del catalogo de productos CRUD.
+25. **025 . Ingresos de inventario**: Operación que ingresa productos al **stock** de un centro de costos y actualiza su inventario.
+26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
 
 ## Backlog / ideas 💡
 
-24. **024 . Gestión de productos**: #TODO
-25. **025 . Ingresos de inventario**: #TODO
-26. **026 . Transferencias de inventario**: #TODO
 
 > Cada feature nueva se crea como `spec/features/NNN-name` con `spec.md`, `plan.md` y `tasks.md` antes de tocar código.
