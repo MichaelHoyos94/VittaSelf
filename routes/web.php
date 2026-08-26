@@ -121,6 +121,9 @@ Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash
 Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
     Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('manage-products');
+    Route::post('/manage-products', [ProductController::class, 'store'])->name('store');
+    Route::put('/manage-products/{id}', [ProductController::class, 'update'])->name('update');
+    Route::delete('/manage-products/{id}', [ProductController::class, 'destroy'])->name('destroy');
 });
 
 require __DIR__.'/auth.php';
