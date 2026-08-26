@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashRegisters\CashRegisterController;
+use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HumanResources\HumanResourcesController;
 use App\Http\Controllers\HumanResources\RolePermissionController;
@@ -12,8 +13,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Modules\Audits\Http\Controllers\CashRegisterClosureController;
-use Modules\Audits\Models\CashRegisterClosure;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -106,6 +105,13 @@ Route::prefix('cash-registers-manage')->middleware('auth')->as('cash-register-ma
     Route::delete('/{cashRegisterId}', [CashRegisterController::class, 'destroy'])->name('cash-registers.delete');
 });
 
+Route::prefix('cost-centers')->middleware(['auth', 'verified'])->as('cost-centers.')->group(function () {
+    Route::get('/', [CostCenterController::class, 'index'])->name('index');
+    Route::post('/', [CostCenterController::class, 'store'])->name('store');
+    Route::put('/{id}', [CostCenterController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CostCenterController::class, 'destroy'])->name('destroy');
+});
+
 Route::prefix('my-cash-register')->middleware(['auth', 'verified'])->as('my-cash-register.')->group(function () {
     Route::get('/', [CashRegisterController::class, 'myCashRegister'])->name('index');
     Route::post('/close-cash-register', [CashRegisterController::class, 'closeCashRegister'])->name('close');
@@ -117,4 +123,4 @@ Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->gr
     Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('manage-products');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

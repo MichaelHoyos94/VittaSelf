@@ -163,6 +163,11 @@ export default function Sidebar() {
                     }),
                     permission: 'operations.inventory-transfer-view'
                 },
+                {
+                    label: "Cost Centers",
+                    href: "/cost-centers",
+                    active: isCurrent("cost-centers.*"),
+                },
             ],
         },
         {
