@@ -7,9 +7,9 @@ Sistema ERP de una plataforma de ventas multinivel. Se gestionan productos, empr
 ## Stack
 - Lenguaje: php 8.13.6
 - Framework backend: Laravel 11
-- Framework frontend: React 18.2
+- Frontend: React 18.2
 - Base de datos: MySQL 8.0.30
-- Tests: pestphp/pest 2.0
+- Tests: pestphp/pest 2.0 y phpunit
 
 ## Forma De La App
 - Es Laravel 11 + Inertia React 18, con módulos de `nwidart/laravel-modules` en `Modules/`.
@@ -72,9 +72,8 @@ El proyecto sigue una arquitectura en capas estrictas. Toda nueva funcionalidad 
 
 ## Documentacion sdd
 - `spec/` documentacion para Spec Driven Development.
-- `spec/constitution/`: Constitucion del proyecto (mission, tech-stack y roadmap)
+- `spec/constitution/`: Constitucion del proyecto (mission y roadmap)
     - `mission.md`: Que construimos y para quien.
-    - `tech-stack.md`: Tecnologías
     - `roadmap.md`: Orden de las features (hecho, siguiente, backlog)
 - `spec/features/NNN-name/`: Una carpeta por feature cada una con:
     - `spec.md`: Que hace + criterios de aceptacion
@@ -85,7 +84,7 @@ El proyecto sigue una arquitectura en capas estrictas. Toda nueva funcionalidad 
 1. **Antes de implementar**: Lee la `constitution` y la `spec.md` de la feature afectada para no contradecirlas.
 2. **Para feature nueva**: Crea `spec/features/NNN-name/` (Siguiente numero libre) y escribe `spec.md` -> `plan.md` -> `tasks.md` antes de escribir codigo.
 3. **Al terminar**: Marca las tareas en `tasks.md` y mueve la feature a "hecho" en `roadmap.md`.
-4. **Constitution manda**: Si una feature choca con `mission.md` o `tech-stack.md` se replantea la feature, no constitution.
+4. **Constitution manda**: Si una feature choca con `mission.md` se replantea la feature, no constitution.
 
 ## Tests Y Datos
 - Pest vincula `Tests\TestCase` y `RefreshDatabase` a todos los tests en `tests/Feature`.
