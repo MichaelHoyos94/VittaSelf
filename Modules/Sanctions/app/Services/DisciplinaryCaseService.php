@@ -13,9 +13,9 @@ class DisciplinaryCaseService
         protected DisciplinaryCaseRepository $repository,
         protected CatCaseStatusRepository $caseStatusRepository
     ) {}
-    public function getAll()
+    public function getAll($search)
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($search);
     }
     public function getMyCases($userId)
     {

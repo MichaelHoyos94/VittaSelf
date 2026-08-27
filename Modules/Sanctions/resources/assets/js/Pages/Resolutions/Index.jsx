@@ -1,6 +1,6 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 
 export default function Index() {
     const { resolutions } = usePage().props;
@@ -57,19 +57,61 @@ export default function Index() {
             ),
         },
         { header: "RESOLUTION TYPE", accessor: "resolution_type" },
-        { header: "RESOLUTION TEXT", accessor: "resolution_text" },
-        { header: "RESOLUTION DATE", accessor: "created_at" },
-    ];
-    return (
-        <div className="p-4 rounded bg-white shadow">
+        { header: "RESOLUTION TEXT", render: (row) => (
             <div>
-                <h1>Resolutions history</h1>
-                <p>Resolutions history</p>
+                {/* Truncate the resolution text to 32 characters */}
+                <span>
+                    {row.resolution_text.length > 32
+                        ? row.resolution_text.substring(0, 32) + "..."
+                        : row.resolution_text}
+                </span>
+            </div>
+        )},
+        { header: "RESOLUTION DATE", render: (row) => (
+            <span>
+                {new Date(row.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                })}
+            </span>
+        )},
+    ];
+
+    const handleSearch = (search) => {
+        router.get(
+            route("sanctions.resolutions.index"),
+            { search },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ["resolutions"],
+            }
+        );
+    }
+
+    const handlePageChange = (url) => {
+        if (url) router.visit(url);
+    };
+
+    return (
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/75 p-8 shadow-lg backdrop-blur-md">
+            <div>
+                <h2>Resolutions history</h2>
+                <p>Review the history of resolutions for disciplinary cases.</p>
             </div>
             <Table
                 columns={columns}
-                data={resolutions}
+                data={resolutions.data}
+                from={resolutions.from}
+                to={resolutions.to}
+                total={resolutions.total}
+                links={resolutions.links}
+                filterable={true}
+                handleSearch={handleSearch}
                 emptyText="No resolutions found."
+                onPageChange={handlePageChange}
             />
         </div>
     );
