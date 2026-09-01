@@ -34,6 +34,7 @@ Orden de las features.
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al **stock** de un centro de costos y actualiza su inventario.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
+28. **028 . Escalamiento de planes por puntos**: Flujo para que los empresarios asciendan en su plan, por medio de los puntos obtenidos por las ordenes web e internas.
 
 ## Backlog / ideas 💡
 
