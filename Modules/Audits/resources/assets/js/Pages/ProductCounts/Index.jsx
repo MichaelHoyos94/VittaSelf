@@ -40,7 +40,7 @@ export default function Index() {
     ];
 
     return (
-        <div className="bg-white/70 p-8 shadow-lg rounded-xl backdrop-blur-lg">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
                 <h2>Product counts</h2>
                 <p>Daily product counts by cost center</p>

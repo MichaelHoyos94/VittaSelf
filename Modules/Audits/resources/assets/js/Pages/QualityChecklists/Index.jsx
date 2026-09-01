@@ -165,7 +165,7 @@ export default function Index() {
     ];
 
     return (
-        <div className="bg-white/70 p-8 shadow-lg rounded-xl backdrop-blur-lg">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
                 <h1>Quality Checklists</h1>
                 <p>Daily quality checklist records by cost center</p>

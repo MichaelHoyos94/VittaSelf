@@ -165,7 +165,7 @@ export default function Create() {
         post(route("orders.internal-orders.store"));
     };
     return (
-        <div className="p-4 bg-white rounded">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>Create Internal Order</h2>
             <p>Complete the steps and create de order.</p>
             <div className="space-y-4 my-4">

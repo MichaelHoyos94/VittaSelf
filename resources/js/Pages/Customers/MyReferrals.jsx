@@ -40,7 +40,7 @@ export default function MyReferrals() {
     };
 
     return (
-        <div className="min-h-full space-y-4 rounded-xl bg-white/70 p-8 shadow-lg backdrop-blur-lg">
+        <div className="min-h-full space-y-4 rounded-xl bg-white/80 p-6 shadow-lg backdrop-blur-lg">
             <div>
                 <h2 className="text-2xl font-bold text-slate-800">My Referrals</h2>
                 <p className="text-sm text-slate-500">

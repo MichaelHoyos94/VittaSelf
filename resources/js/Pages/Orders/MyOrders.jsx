@@ -78,10 +78,12 @@ export default function MyOrders() {
         }, 5000);
 
         return () => clearTimeout(timer);
+
+
     }, [flash.success]);
 
     return (
-        <div className="bg-white p-4 rounded space-y-2">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>My Orders</h2>
             <div>
                 {successMessage && (

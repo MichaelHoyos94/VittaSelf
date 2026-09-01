@@ -5,7 +5,7 @@ import { DocumentTextIcon, ScaleIcon } from "@heroicons/react/16/solid"
 export default function Index() {
 
     return (
-        <div className="p-8 bg-white/80 backdrop-blur-lg rounded-xl shadow-xl">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h3>Settings</h3>
             <p>Custom your catalogues in your sanctions process.</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 flex-shrink-0 items-center justify-evenly gap-4 mt-4">

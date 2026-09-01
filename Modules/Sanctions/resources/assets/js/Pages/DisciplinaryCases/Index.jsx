@@ -320,7 +320,7 @@ export default function Index() {
     }, [flash.error, flash.success])
 
     return (
-        <div className="min-h-full rounded-xl border border-white/50 bg-white/75 p-8 shadow-lg backdrop-blur-md">
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-md">
             <div>
                 <h1>Disciplinary cases</h1>
                 <p>Investigations on going.</p>

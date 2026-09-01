@@ -246,10 +246,10 @@ export default function Index() {
     };
 
     return (
-        <div className="bg-white/70 p-8 shadow-lg rounded-xl backdrop-blur-lg">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
-                <h1 className="text-2xl font-bold mb-4">Audits Module</h1>
-                <p>Welcome to the Audits module! This is the index page.</p>
+                <h1 className="text-2xl font-bold">Audits History</h1>
+                <p>Manage and review audit activities.</p>
             </div>
             {/* Three navigation tabs: Quality, Products, Cash with <SecondaryButtons> */}
             <div className="flex space-x-4 mt-4">

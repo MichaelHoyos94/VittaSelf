@@ -57,10 +57,10 @@ export default function Checkout() {
         return () => clearTimeout(timer);
     }, [flash.success, flash.error]);
     return (
-        <div className="bg-white p-4 rounded">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>Checkout</h2>
             <p>Confirm the data.</p>
-            <div className="space-y-4 my-4">
+            <div>
                 {successMessage && (
                     <div
                         className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"

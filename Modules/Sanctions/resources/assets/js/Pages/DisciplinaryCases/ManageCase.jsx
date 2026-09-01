@@ -188,7 +188,7 @@ export default function ManageCase() {
     };
 
     return (
-        <div className="p-4 bg-white shadow-md rounded">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
                 <h1>Manage Case</h1>
                 <p>Managing case {disciplinaryCase.id}</p>

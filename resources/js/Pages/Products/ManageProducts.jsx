@@ -208,7 +208,7 @@ export default function ManageProducts() {
     ];
 
     return (
-        <div className="p-4 bg-white shadow-lg rounded-lg">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h2>Manage Products</h2>

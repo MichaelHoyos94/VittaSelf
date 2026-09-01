@@ -1,6 +1,6 @@
 export default function NavigationCard({ icon: Icon, title, text }) {
     return (
-        <div className="bg-white border-2 rounded-lg shadow-lg p-4 transform transition-transform hover:scale-110 cursor-pointer">
+        <div className="bg-white border-2 rounded-lg shadow-lg p-4 transform transition-transform hover:scale-105 cursor-pointer">
             <div className="flex sm:flex-col items-center">
                 {Icon && typeof Icon === "string" ? (
                     <div className="rounded-full bg-primary-100 p-3">

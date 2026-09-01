@@ -96,7 +96,7 @@ export default function Index() {
     };
 
     return (
-        <div className="min-h-full rounded-xl border border-white/50 bg-white/75 p-8 shadow-lg backdrop-blur-md">
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-md">
             <div>
                 <h2>Resolutions history</h2>
                 <p>Review the history of resolutions for disciplinary cases.</p>
