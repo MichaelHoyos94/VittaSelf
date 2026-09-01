@@ -28,12 +28,12 @@ Orden de las features.
 22. **022 . Informes de auditorias**: Generacion de informes en PDF con almacenamiento local al crear una auditoria.
 23. **023 . Gestión de centros de costos**: Flujo para gestionar la creacion, edicion, lectura (pagina y tabla) y eliminacion de centros de costos del sistema.
 24. **024 . Gestión de productos**: Flujo gestion del catalogo de productos CRUD.
+27. **027 . Sistema multinivel para empresarios**: Funcionalidad de representantes y representados.
 
 ## Siguiente 🏗️
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al **stock** de un centro de costos y actualiza su inventario.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
-27. **027 . Sistema multinivel para empresarios**: Funcionalidad de representantes y representados.
 
 ## Backlog / ideas 💡
 

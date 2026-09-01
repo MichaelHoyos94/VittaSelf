@@ -77,6 +77,10 @@ Route::prefix('customers')->middleware(['auth', 'verified'])->as('customers.')->
     Route::post('/', [UserController::class, 'store'])->name('store');
 });
 
+Route::get('/my-referrals', [UserController::class, 'myReferrals'])
+    ->middleware(['auth', 'verified'])
+    ->name('my-referrals');
+
 Route::prefix('carts')->middleware('auth')->as('carts.')->group(function () {
     Route::get('/my-cart', [CartController::class, 'myCart'])->name('my-cart');
     Route::post('/add-product', [CartController::class, 'addProduct'])->name('add-product');

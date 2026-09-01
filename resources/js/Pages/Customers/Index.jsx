@@ -5,13 +5,14 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
-    const { users, flash } = usePage().props;
+    const { users, flash, representativeCandidate } = usePage().props;
 
-    const { data, setData, post, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
         document_number: "",
@@ -20,12 +21,14 @@ export default function Index() {
         address: "",
         password: "",
         password_confirmation: "",
+        representative_eui_code: "",
     });
 
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState("create");
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const [errorMessage, setErrorMessage] = useState(flash.error);
+    const representativeBlocked = representativeCandidate?.is_available === false;
 
     const columns = [
         {
@@ -52,6 +55,26 @@ export default function Index() {
         {
             header: "eui code",
             accessor: "eui_code",
+        },
+        {
+            header: "representative",
+            render: (row) =>
+                row.representative ? (
+                    <div className="flex flex-col">
+                        <strong>
+                            {row.representative.name} {row.representative.last_name}
+                        </strong>
+                        <span className="text-gray-400">
+                            {row.representative.eui_code}
+                        </span>
+                    </div>
+                ) : (
+                    "N/A"
+                ),
+        },
+        {
+            header: "represented",
+            accessor: "represented_users_count",
         },
         {
             header: "contact",
@@ -95,13 +118,53 @@ export default function Index() {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("customers.store"), {
-            onFinish: () => {
+            onSuccess: () => {
                 closeModal();
             },
         });
     };
 
-    const handleSearch = (search) => {};
+    const handleSearch = (search) => {
+        router.get(route("customers.index"), { search }, { preserveState: true });
+    };
+
+    const handlePageChange = (url) => {
+        if (url) {
+            router.get(url, {}, { preserveState: true });
+        }
+    };
+
+    const searchRepresentative = () => {
+        if (representativeCandidate) {
+            setData("representative_eui_code", "");
+            router.get(
+                route("customers.index"),
+                {},
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                    only: ["representativeCandidate"],
+                },
+            );
+            return;
+        }
+
+        if (!data.representative_eui_code) {
+            return;
+        }
+
+        router.get(
+            route("customers.index"),
+            { representative_eui_code: data.representative_eui_code },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ["representativeCandidate"],
+            },
+        );
+    };
 
     return (
         <div className="bg-white/70 p-8 shadow-lg rounded-xl min-h-full space-y-4 backdrop-blur-lg">
@@ -138,9 +201,11 @@ export default function Index() {
                 data={users.data}
                 filterable={true}
                 handleSearch={handleSearch}
+                onPageChange={handlePageChange}
                 from={users.from}
                 to={users.to}
                 totalResults={users.total}
+                links={users.links}
             />
             <Modal show={showModal} onClose={closeModal}>
                 {modalMode === "create" && (
@@ -217,6 +282,84 @@ export default function Index() {
                                     }
                                     placeholder={"Street..."}
                                 />
+                                <div className="grid grid-cols-8 gap-4">
+                                    <div className="col-span-7">
+                                        <Input
+                                            name={"representative_eui_code"}
+                                            label={"Representative EUI Code"}
+                                            type="text"
+                                            value={data.representative_eui_code}
+                                            disabled={!!representativeCandidate}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "representative_eui_code",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder={"col00001"}
+                                        />
+                                    </div>
+                                    <div className="col-span-1 flex content-center">
+                                        <button
+                                            type="button"
+                                            onClick={searchRepresentative}
+                                            aria-label={
+                                                representativeCandidate
+                                                    ? "Remove representative"
+                                                    : "Search representative"
+                                            }
+                                            className="mt-8 flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-primary-50"
+                                        >
+                                            {representativeCandidate ? (
+                                                <XMarkIcon className="h-4 w-4 text-red-600 hover:text-red-700" />
+                                            ) : (
+                                                <MagnifyingGlassIcon className="h-4 w-4 text-primary-700 hover:text-primary-800" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                                {errors.representative_eui_code && (
+                                    <p className="text-sm text-red-600">
+                                        {errors.representative_eui_code}
+                                    </p>
+                                )}
+                                {representativeCandidate && (
+                                    <div
+                                        className={`rounded-lg border p-4 ${representativeCandidate.is_available
+                                            ? "border-primary-100 bg-primary-50/60"
+                                            : "border-yellow-300 bg-yellow-50"
+                                            }`}
+                                    >
+                                        {representativeCandidate.user ? (
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-700 text-sm font-semibold text-white">
+                                                    {representativeCandidate.user.name
+                                                        .charAt(0)
+                                                        .toUpperCase()}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="truncate text-sm font-semibold text-gray-900">
+                                                        {representativeCandidate.user.full_name}
+                                                    </p>
+                                                    <p className="truncate text-sm text-gray-500">
+                                                        {representativeCandidate.user.eui_code} · {representativeCandidate.user.email}
+                                                    </p>
+                                                    <p className="truncate text-sm text-gray-500">
+                                                        Document: {representativeCandidate.user.document_number}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ) : null}
+                                        <p
+                                            className={`mt-3 text-sm ${representativeCandidate.is_available
+                                                ? "text-primary-700"
+                                                : "text-yellow-700"
+                                                }`}
+                                        >
+                                            {representativeCandidate.message}
+                                        </p>
+                                    </div>
+                                )}
                                 <Input
                                     label="Password"
                                     name="password"
@@ -241,7 +384,7 @@ export default function Index() {
                                 <div className="flex flex-wrap gap-4 justify-end">
                                     <PrimaryButton
                                         type="submit"
-                                        disabled={processing}
+                                        disabled={processing || representativeBlocked}
                                     >
                                         {processing ? "sending..." : "send"}
                                     </PrimaryButton>

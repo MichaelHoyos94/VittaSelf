@@ -15,6 +15,10 @@ class UserRepository
     {
         return User::query()
             ->role('eui')
+            ->with('representative:id,name,last_name,eui_code')
+            ->withCount([
+                'representedUsers' => fn ($query) => $query->role('eui'),
+            ])
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -46,6 +50,32 @@ class UserRepository
     public function getByEuiCode($euiCode)
     {
         return User::with('plan')->where('eui_code', $euiCode)->first();
+    }
+
+    public function getRepresentativeByEuiCode(string $euiCode): ?User
+    {
+        return User::query()
+            ->role('eui')
+            ->where('eui_code', $euiCode)
+            ->first();
+    }
+
+    public function getRepresentativeCandidateByEuiCode(string $euiCode): ?User
+    {
+        return User::withTrashed()
+            ->where('eui_code', $euiCode)
+            ->first();
+    }
+
+    public function getRepresentedUsers(User $user)
+    {
+        return User::query()
+            ->role('eui')
+            ->with('plan:id,name')
+            ->where('representative_id', $user->id)
+            ->orderByDesc('created_at')
+            ->paginate(10)
+            ->withQueryString();
     }
 
     public function generateNextEuiCode(): string
