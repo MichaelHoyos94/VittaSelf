@@ -87,7 +87,7 @@ export default function Index() {
     };
 
     return (
-        <div className="rounded-xl bg-white p-4 shadow-lg sm:p-6">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2 sm:p-6">
             <div className="mb-6">
                 <h2 className="text-xl font-semibold text-slate-900">
                     Role permissions

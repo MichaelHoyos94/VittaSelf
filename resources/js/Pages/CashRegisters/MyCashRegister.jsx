@@ -74,7 +74,7 @@ export default function MyCashRegister() {
     const closeModal = () => setShowModal(false);
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-lg min-h-full">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full">
             <h2>My Cash Register</h2>
             <p>Manage your cash register settings and operations.</p>
             {/* Flash Messages */}

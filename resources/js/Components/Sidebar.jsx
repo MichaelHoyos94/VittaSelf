@@ -163,6 +163,11 @@ export default function Sidebar() {
                     }),
                     permission: 'operations.inventory-transfer-view'
                 },
+                {
+                    label: "Cost Centers",
+                    href: "/cost-centers",
+                    active: isCurrent("cost-centers.*"),
+                },
             ],
         },
         {
@@ -261,10 +266,10 @@ export default function Sidebar() {
         },
         {
             label: "My Referrals",
-            href: "/coming-soon/my-referrals",
+            href: "/my-referrals",
             icon: "fi fi-rr-chart-tree",
             permission: 'my-referrals.view',
-            active: isCurrent("coming-soon", { feature: "my-referrals" }),
+            active: isCurrent("my-referrals"),
         },
         {
             label: "My Orders",

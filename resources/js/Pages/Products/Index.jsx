@@ -55,11 +55,13 @@ export default function Index() {
                 {/* Card per product */}
                 {products.data.map((product) => (
                     <div
-                        className="border rounded-xl border-2 p-4 transform transition duration-100 hover:scale-110"
+                        className="border rounded-xl border-2 p-4 transform transition duration-100 hover:scale-105"
                         key={product.id}
                     >
                         <div>
-                            <img alt="Product image" />
+                            {/* Sure shows all image */}
+                            <img src={`storage/${product.cover}`} alt={product.name} className="w-full h-48 object-contain rounded-t-xl" />
+
                             <h3>{product.name}</h3>
                             <p>
                                 {product.description}

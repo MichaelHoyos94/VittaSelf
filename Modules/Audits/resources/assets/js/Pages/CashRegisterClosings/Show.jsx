@@ -33,7 +33,7 @@ export default function Show() {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-lg p-4">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>Cash Register Closure Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 space-y-4">
                 <div>

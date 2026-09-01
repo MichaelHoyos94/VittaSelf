@@ -26,16 +26,17 @@ Orden de las features.
 20. **020 . Mi caja registradora**: Ventana donde el asesor puede abrir y cerrar su caja. El cierre de caja sera auditado.
 21. **021 . Auditorias**: Modulo para consultar y crear auditar los procesos auditables (Conteo de productos, lista de checkeo de calidad y cierre de caja).
 22. **022 . Informes de auditorias**: Generacion de informes en PDF con almacenamiento local al crear una auditoria.
+23. **023 . Gestión de centros de costos**: Flujo para gestionar la creacion, edicion, lectura (pagina y tabla) y eliminacion de centros de costos del sistema.
+24. **024 . Gestión de productos**: Flujo gestion del catalogo de productos CRUD.
+27. **027 . Sistema multinivel para empresarios**: Funcionalidad de representantes y representados.
+28. **028 . Escalamiento de planes por puntos**: Flujo para que los empresarios asciendan en su plan, por medio de los puntos obtenidos por las ordenes web e internas.
 
 ## Siguiente 🏗️
 
-Sin features en curso.
+25. **025 . Ingresos de inventario**: Operación que ingresa productos al `stock` de un `cost_center` y queda registrado como un `inventory-entry` para posteriores consultas.
+26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
 
 ## Backlog / ideas 💡
 
-23. **023 . Gestión de centros de costos**: #TODO
-24. **024 . Gestión de productos**: #TODO
-25. **025 . Ingresos de inventario**: #TODO
-26. **026 . Transferencias de inventario**: #TODO
 
 > Cada feature nueva se crea como `spec/features/NNN-name` con `spec.md`, `plan.md` y `tasks.md` antes de tocar código.

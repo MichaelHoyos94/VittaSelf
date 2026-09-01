@@ -105,7 +105,7 @@ export default function InternalOrders() {
     };
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-lg">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h1>Internal Orders</h1>
             {/* Flash messages */}
             <div>

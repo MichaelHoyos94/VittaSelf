@@ -242,7 +242,7 @@ export default function MyCases() {
     ];
 
     return (
-        <div className="bg-white/70 p-8 rounded-xl shadow-xl backdrop-blur-lg min-h-full">
+        <div className="bg-white/80 p-6 rounded-xl shadow-xl backdrop-blur-lg min-h-full">
             <h2>My Cases</h2>
             <p>You have {cases.data?.length} disciplinary cases.</p>
             <div>

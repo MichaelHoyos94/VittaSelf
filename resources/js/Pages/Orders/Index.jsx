@@ -84,10 +84,10 @@ export default function Index() {
     };
 
     return (
-        <div className="bg-white p-4 shadow-lg rounded-lg">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>Orders</h2>
             <p>Orders History</p>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center">
                 <SecondaryButton>export</SecondaryButton>
             </div>
             <Table

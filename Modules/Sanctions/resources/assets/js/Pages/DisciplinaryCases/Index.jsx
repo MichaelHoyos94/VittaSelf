@@ -44,6 +44,7 @@ export default function Index() {
     const [isDraggingFiles, setIsDraggingFiles] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [selectedCaseId, setSelectedCaseId] = useState(null);
     const user = usePage().props.auth.user;
 
     const formatFileSize = (bytes) => {
@@ -117,6 +118,9 @@ export default function Index() {
     const closeModal = () => {
         setModalOpen(false);
         setIsDraggingFiles(false);
+        setSelectedFiles([]);
+        reset();
+        setSelectedCaseId(null);
     };
 
     const columns = [
@@ -199,7 +203,7 @@ export default function Index() {
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        handleOpenUploadEvidences(row)
+                                        handleOpenUploadEvidences(row.id)
                                     }
                                     className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
                                 >
@@ -250,7 +254,8 @@ export default function Index() {
             },
         );
     };
-    const handleOpenUploadEvidences = (row) => {
+    const handleOpenUploadEvidences = (caseId) => {
+        setSelectedCaseId(caseId);
         setModalMode("upload");
         setSelectedFiles([]);
         setModalOpen(true);
@@ -258,11 +263,9 @@ export default function Index() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Submitting disciplinary case:", data);
         post(route("sanctions.disciplinary-cases.store"), {
             onSuccess: () => {
-                setModalOpen(false);
-                reset();
+                closeModal();
             },
         });
     };
@@ -272,7 +275,7 @@ export default function Index() {
         setEvidenceData("evidences", selectedFiles);
         console.log("Submitting evidences:", evidenceData);
         postEvidence(
-            route("sanctions.evidences.store", { disciplinaryCaseId: 1 }),
+            route("sanctions.evidences.store", { disciplinaryCaseId: selectedCaseId }),
             {
                 onSuccess: () => {
                     setModalOpen(false);
@@ -281,6 +284,23 @@ export default function Index() {
                 },
             },
         );
+    };
+
+    const handleSearch = (search) => {
+        router.get(
+            route("sanctions.disciplinary-cases.index"),
+            { search },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ["disciplinaryCases"],
+            },
+        );
+    }
+
+    const handlePageChange = (url) => {
+        if (url) router.visit(url);
     };
 
     useEffect(() => {
@@ -300,28 +320,30 @@ export default function Index() {
     }, [flash.error, flash.success])
 
     return (
-        <div className="p-4 rounded bg-white shadow">
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-md">
             <div>
                 <h1>Disciplinary cases</h1>
-                <p>Investigations on going</p>
+                <p>Investigations on going.</p>
             </div>
             {/* Messages */}
-            {successMessage && (
-                <div
-                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-                    role="alert"
-                >
-                    <span className="block sm:inline">{successMessage}</span>
-                </div>
-            )}
-            {errorMessage && (
-                <div
-                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
-                >
-                    <span className="block sm:inline">{errorMessage}</span>
-                </div>
-            )}
+            <div>
+                {successMessage && (
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{successMessage}</span>
+                    </div>
+                )}
+                {errorMessage && (
+                    <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{errorMessage}</span>
+                    </div>
+                )}
+            </div>
             <div className="flex flex-row items-center my-4 justify-start gap-2">
                 <PrimaryButton onClick={handleOpenCreateModal}>
                     Create Case
@@ -330,9 +352,16 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
-                data={disciplinaryCases}
+                data={disciplinaryCases.data}
+                filterable={true}
+                handleSearch={handleSearch}
+                onPageChange={handlePageChange}
+                from={disciplinaryCases.from}
+                to={disciplinaryCases.to}
+                total={disciplinaryCases.total}
+                links={disciplinaryCases.links}
                 emptyText="No disciplinary cases found"
-            ></Table>
+            />
             <Modal show={modalOpen} onClose={closeModal} maxWidth="xl">
                 {modalMode === "create" && (
                     <div>
@@ -399,7 +428,7 @@ export default function Index() {
                                                     <div className="min-w-0">
                                                         <p className="truncate text-sm font-semibold text-gray-900">
                                                             {
-                                                                userToSanction.name
+                                                                userToSanction.full_name
                                                             }
                                                         </p>
                                                         <p className="truncate text-sm text-gray-500">
@@ -415,7 +444,7 @@ export default function Index() {
                                                             EUI Code
                                                         </p>
                                                         <p className="font-medium text-gray-700">
-                                                            {userToSanction.id}
+                                                            {userToSanction.eui_code}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -433,7 +462,7 @@ export default function Index() {
                                                             Position
                                                         </p>
                                                         <p className="font-medium text-gray-700">
-                                                            position
+                                                            {userToSanction.plan?.name || "N/A"}
                                                         </p>
                                                     </div>
                                                 </div>

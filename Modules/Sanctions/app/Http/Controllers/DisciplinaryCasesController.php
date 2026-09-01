@@ -39,7 +39,8 @@ class DisciplinaryCasesController extends Controller
         }
         $policies = $this->policyRepository->getAll();
         $complianceSources = $this->complianceSourceRepository->getAll();
-        $disciplinaryCases = $this->service->getAll();
+        $search = $request->input('search');
+        $disciplinaryCases = $this->service->getAll($search);
         return Inertia::render('Sanctions/DisciplinaryCases/Index')->with([
             'userToSanction' => $userToSanction,
             'policies' => $policies,

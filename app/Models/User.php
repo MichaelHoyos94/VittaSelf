@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -33,7 +33,9 @@ class User extends Authenticatable
         'address',
         'password',
         'cost_center_id',
+        'points',
         'plan_id',
+        'representative_id',
     ];
 
     /**
@@ -72,6 +74,16 @@ class User extends Authenticatable
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class, 'plan_id');
+    }
+
+    public function representative(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'representative_id');
+    }
+
+    public function representedUsers(): HasMany
+    {
+        return $this->hasMany(User::class, 'representative_id');
     }
 
     public function cashRegister(): HasOne

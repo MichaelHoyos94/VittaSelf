@@ -75,7 +75,7 @@ export default function Index() {
     };
 
     return (
-        <div className="bg-white/80 p-8 rounded-xl shadow-xl backdrop-blur-lg min-h-full space-y-4">
+        <div className="bg-white/80 p-6 rounded-xl shadow-xl backdrop-blur-lg min-h-full space-y-4">
             <h2>Policies</h2>
             <p>Manage the policies in the system.</p>
             {/* Flash message section */}

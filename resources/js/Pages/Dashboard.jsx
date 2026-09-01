@@ -235,9 +235,10 @@ export default function Dashboard({ data }) {
     const [activeTab, setActiveTab] = useState(tabs[0].id);
     const activeTabContent = tabs.find((tab) => tab.id === activeTab);
     return (
-        <div className="min-h-full rounded-xl border border-white/50 bg-white/75 p-8 shadow-lg backdrop-blur-lg space-y-4">
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-8 shadow-xl backdrop-blur-lg space-y-4">
             <Head title="Dashboard" />
             <h1 className="text-2xl font-bold">Dashboard</h1>
+            <p>Overview of key metrics and analytics.</p>
             {/* Buttons */}
             <div className="my-4 flex flex-wrap gap-4">
                 {tabs.map((tab) => (
