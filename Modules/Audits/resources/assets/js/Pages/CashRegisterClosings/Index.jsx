@@ -83,7 +83,7 @@ export default function Index() {
     ];
 
     return (
-        <div className="p-4 bg-white rounded-xl shadow-xl">
+        <div className="bg-white/70 p-8 shadow-lg rounded-xl backdrop-blur-lg">
             <h2>Cash Register Closures</h2>
             <p>Check the cash registers closings and make audits.</p>
             <Table columns={columns} data={cashRegisterClosures} />

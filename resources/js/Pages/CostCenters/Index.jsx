@@ -185,7 +185,7 @@ export default function Index() {
     ];
 
     return (
-        <div className="bg-white/80 p-6 rounded-xl shadow-xl backdrop-blur-lg min-h-full">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-semibold text-gray-900">

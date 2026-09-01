@@ -246,7 +246,7 @@ export default function Index() {
     };
 
     return (
-        <div className="p-4 bg-white rounded-lg">
+        <div className="bg-white/70 p-8 shadow-lg rounded-xl backdrop-blur-lg">
             <div>
                 <h1 className="text-2xl font-bold mb-4">Audits Module</h1>
                 <p>Welcome to the Audits module! This is the index page.</p>

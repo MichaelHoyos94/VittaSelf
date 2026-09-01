@@ -143,7 +143,7 @@ export default function Index() {
     };
 
     return (
-        <div className="p-4 rounded-xl bg-white">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full">
             <h2>Cash Registers</h2>
             <p>Manage and assign cash registers.</p>
             {/* Flash Messages */}
@@ -168,7 +168,7 @@ export default function Index() {
                 <PrimaryButton onClick={openCreateModal}>Create</PrimaryButton>
             </div>
             {/* Cash registers cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                 {cashRegisters.map((cashRegister) => (
                     <div className="border rounded-xl shadow-lg p-4 transform transition duration-100 hover:scale-105" key={cashRegister.id}>
                         {/* Each item at extreme */}

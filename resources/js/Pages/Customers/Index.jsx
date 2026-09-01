@@ -104,7 +104,7 @@ export default function Index() {
     const handleSearch = (search) => {};
 
     return (
-        <div className="bg-white p-4 shadow-lg rounded-lg min-h-full">
+        <div className="bg-white/70 p-8 shadow-lg rounded-xl min-h-full space-y-4 backdrop-blur-lg">
             <h2>Customers</h2>
             <p>Manage customers.</p>
             {successMessage && (
