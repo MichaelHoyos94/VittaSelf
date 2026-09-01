@@ -29,12 +29,12 @@ Orden de las features.
 23. **023 . Gestión de centros de costos**: Flujo para gestionar la creacion, edicion, lectura (pagina y tabla) y eliminacion de centros de costos del sistema.
 24. **024 . Gestión de productos**: Flujo gestion del catalogo de productos CRUD.
 27. **027 . Sistema multinivel para empresarios**: Funcionalidad de representantes y representados.
+28. **028 . Escalamiento de planes por puntos**: Flujo para que los empresarios asciendan en su plan, por medio de los puntos obtenidos por las ordenes web e internas.
 
 ## Siguiente 🏗️
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al **stock** de un centro de costos y actualiza su inventario.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
-28. **028 . Escalamiento de planes por puntos**: Flujo para que los empresarios asciendan en su plan, por medio de los puntos obtenidos por las ordenes web e internas.
 
 ## Backlog / ideas 💡
 

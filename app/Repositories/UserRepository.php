@@ -47,6 +47,14 @@ class UserRepository
         return User::find($id);
     }
 
+    public function getByIdForUpdate($id)
+    {
+        return User::query()
+            ->whereKey($id)
+            ->lockForUpdate()
+            ->first();
+    }
+
     public function getByEuiCode($euiCode)
     {
         return User::with('plan')->where('eui_code', $euiCode)->first();

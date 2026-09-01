@@ -16,7 +16,8 @@ class InternalOrderService
         private SanctionEnforcementService $sanctionEnforcementService,
     ) {}
 
-    public function getAll($search) {
+    public function getAll($search)
+    {
         return $this->internalOrderRepository->getAll($search);
     }
 
@@ -25,7 +26,8 @@ class InternalOrderService
         $restrictions = $this->checkRestrictions($data['user_id']);
         $data = $this->prepareOrderData($data, $restrictions);
         $data = $this->applyUserPlanBenefits($data, $restrictions);
-        return $this->persistOrder($data);
+
+        return $this->persistOrder($data, $restrictions);
     }
 
     private function prepareOrderData($data, $restrictions)
@@ -45,15 +47,27 @@ class InternalOrderService
         $user = $this->userService->getById($data['user_id']);
         $user->load('plan.benefits');
 
-        if ($user->plan && !$restrictions['freeze_plan']) {
+        if ($user->plan && ! $restrictions['freeze_plan']) {
             return $this->planService->applyBenefits($data, $user->plan);
         }
+
         return $data;
     }
 
-    private function persistOrder($data)
+    private function persistOrder($data, $restrictions)
     {
-        return $this->internalOrderRepository->create($data);
+        $order = $this->internalOrderRepository->create($data);
+
+        if ($order) {
+            $this->planService->applyOrderPoints(
+                $data['user_id'],
+                (float) $data['points'],
+                $restrictions['freeze_points'],
+                $restrictions['freeze_plan'],
+            );
+        }
+
+        return $order;
     }
 
     private function calculateSubtotal($products)
@@ -62,6 +76,7 @@ class InternalOrderService
         foreach ($products as $product) {
             $subtotal += $product['quantity'] * $product['price'];
         }
+
         return $subtotal;
     }
 
@@ -72,11 +87,14 @@ class InternalOrderService
 
     private function calculatePoints($products, $restrictions)
     {
-        if ($restrictions['freeze_points']) return 0;
+        if ($restrictions['freeze_points']) {
+            return 0;
+        }
         $points = 0;
         foreach ($products as $product) {
             $points += $product['quantity'] * $product['points'];
         }
+
         return $points;
     }
 
@@ -88,11 +106,17 @@ class InternalOrderService
             'freeze_plan' => false,
         ];
         foreach ($sanctions as $sanction) {
-            if (($sanction->FREEZE_ORDER ?? false) || ($sanction->BLOCK_ORDERS ?? false))
-                throw new Exception("This user is restricted from placing orders due to sanctions.");
-            if ($sanction->FREEZE_POINTS) $restrictions['freeze_points'] = true;
-            if ($sanction->FREEZE_PLAN) $restrictions['freeze_plan'] = true;
+            if (($sanction->FREEZE_ORDER ?? false) || ($sanction->BLOCK_ORDERS ?? false)) {
+                throw new Exception('This user is restricted from placing orders due to sanctions.');
+            }
+            if ($sanction->FREEZE_POINTS) {
+                $restrictions['freeze_points'] = true;
+            }
+            if ($sanction->FREEZE_PLAN) {
+                $restrictions['freeze_plan'] = true;
+            }
         }
+
         return $restrictions;
     }
 }

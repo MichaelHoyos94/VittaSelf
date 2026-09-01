@@ -33,6 +33,7 @@ class User extends Authenticatable
         'address',
         'password',
         'cost_center_id',
+        'points',
         'plan_id',
         'representative_id',
     ];
