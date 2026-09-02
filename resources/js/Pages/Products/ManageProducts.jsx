@@ -33,6 +33,28 @@ const categories = [
     "Merchandising",
 ];
 
+function ProductThumbnail({ product }) {
+    const [hasError, setHasError] = useState(false);
+    const hasCover = product.cover && product.cover !== 'product.jpg';
+
+    if (!hasCover || hasError) {
+        return (
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-800">
+                {product.name?.charAt(0)?.toUpperCase() ?? 'P'}
+            </div>
+        );
+    }
+
+    return (
+        <img
+            src={`/storage/${product.cover.replace(/^\/+/, '')}`}
+            alt={`Cover of ${product.name}`}
+            className="h-10 w-10 shrink-0 rounded-full object-cover"
+            onError={() => setHasError(true)}
+        />
+    );
+}
+
 export default function ManageProducts() {
     const { products = {}, flash = {} } = usePage().props;
     const { data, setData, post, processing, errors, reset, clearErrors } =
@@ -163,9 +185,7 @@ export default function ManageProducts() {
             header: "Product",
             render: (row) => (
                 <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-800">
-                        {row.name?.charAt(0)?.toUpperCase() ?? "P"}
-                    </div>
+                    <ProductThumbnail product={row} />
                     <div className="min-w-0">
                         <p className="truncate font-semibold text-gray-800">
                             {row.name}
