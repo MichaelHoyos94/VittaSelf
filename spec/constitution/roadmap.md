@@ -35,6 +35,7 @@ Orden de las features.
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al `stock` de un `cost_center` y queda registrado como un `inventory-entry` para posteriores consultas.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
+29. **029 . Despliegue de rama develop**: Configuracion para el despliegue de este proyecto en **render** para CI/CD.
 
 ## Backlog / ideas 💡
 
