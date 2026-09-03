@@ -16,8 +16,9 @@ it('adds web order points and upgrades the user plan', function () {
     ]);
     createPlanEscalationCart($user);
     $product = Product::factory()->create(['price' => 10000, 'points' => 4]);
+    attachProductToPlanEscalationCart($user, $product, 2);
 
-    app(OrderService::class)->create([
+    $order = app(OrderService::class)->create([
         'payment_method' => 'cash',
         'shipping_address' => 'Main street',
         'email' => $user->email,
@@ -36,6 +37,13 @@ it('adds web order points and upgrades the user plan', function () {
     expect($user->fresh())
         ->points->toBe('18.00')
         ->plan_id->toBe($comet->id);
+    expect((float) $order->subtotal)->toBe(20000.0)
+        ->and((float) $order->shipping_price)->toBe(29500.0)
+        ->and((float) $order->discount)->toBe(0.0)
+        ->and((float) $order->shipping_discount)->toBe(0.0)
+        ->and((float) $order->total)->toBe(49500.0)
+        ->and((float) $order->points)->toBe(8.0);
+    expect(DB::table('cart_product')->count())->toBe(0);
 });
 
 it('adds internal order points and upgrades the user plan', function () {
@@ -47,8 +55,10 @@ it('adds internal order points and upgrades the user plan', function () {
         'plan_id' => $asteroid->id,
     ]);
     $product = Product::factory()->create(['price' => 10000, 'points' => 2]);
+    createPlanEscalationCart($user);
+    attachProductToPlanEscalationCart($user, $product, 2);
 
-    app(InternalOrderService::class)->create([
+    $order = app(InternalOrderService::class)->create([
         'payment_method' => 'cash',
         'shipping_address' => 'Main street',
         'phone' => '3001234567',
@@ -69,6 +79,13 @@ it('adds internal order points and upgrades the user plan', function () {
     expect($user->fresh())
         ->points->toBe('18.00')
         ->plan_id->toBe($comet->id);
+    expect((float) $order->subtotal)->toBe(20000.0)
+        ->and((float) $order->shipping_price)->toBe(29500.0)
+        ->and((float) $order->discount)->toBe(0.0)
+        ->and((float) $order->shipping_discount)->toBe(0.0)
+        ->and((float) $order->total)->toBe(49500.0)
+        ->and((float) $order->points)->toBe(4.0);
+    expect(DB::table('cart_product')->count())->toBe(1);
 });
 
 it('does not add points when points are frozen', function () {
@@ -81,7 +98,7 @@ it('does not add points when points are frozen', function () {
     $product = Product::factory()->create(['price' => 10000, 'points' => 10]);
     createPlanEscalationSanction($user, ['FREEZE_POINTS' => true]);
 
-    app(OrderService::class)->create([
+    $order = app(OrderService::class)->create([
         'payment_method' => 'cash',
         'shipping_address' => 'Main street',
         'email' => $user->email,
@@ -100,6 +117,7 @@ it('does not add points when points are frozen', function () {
     expect($user->fresh())
         ->points->toBe('10.00')
         ->plan_id->toBe($asteroid->id);
+    expect((float) $order->points)->toBe(0.0);
 });
 
 it('adds points without upgrading when plan is frozen', function () {
@@ -159,6 +177,19 @@ function createPlanEscalationCart(User $user): void
 {
     DB::table('carts')->insert([
         'user_id' => $user->id,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
+
+function attachProductToPlanEscalationCart(User $user, Product $product, int $quantity): void
+{
+    $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
+
+    DB::table('cart_product')->insert([
+        'cart_id' => $cartId,
+        'product_id' => $product->id,
+        'quantity' => $quantity,
         'created_at' => now(),
         'updated_at' => now(),
     ]);

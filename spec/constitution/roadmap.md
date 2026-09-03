@@ -31,6 +31,7 @@ Orden de las features.
 27. **027 . Sistema multinivel para empresarios**: Funcionalidad de representantes y representados.
 28. **028 . Escalamiento de planes por puntos**: Flujo para que los empresarios asciendan en su plan, por medio de los puntos obtenidos por las ordenes web e internas.
 29. **029 . Despliegue de rama develop**: Configuracion para el despliegue de este proyecto en **render** para CI/CD.
+30. **030 . Refactor para el procesamiento de las ordenes**: Se reorganiza codigo y se centraliza el procesamiento de las ordenes internas y web.
 
 ## Siguiente 🏗️
 
