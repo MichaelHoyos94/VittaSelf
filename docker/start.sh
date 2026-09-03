@@ -21,6 +21,10 @@ if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
     php artisan migrate --force
 fi
 
+if [ "${RUN_SEEDERS:-false}" = "true" ]; then
+    php artisan db:seed --force
+fi
+
 envsubst '${PORT}' < /etc/nginx/templates/default.conf.template > /etc/nginx/sites-enabled/default
 
 php-fpm -D

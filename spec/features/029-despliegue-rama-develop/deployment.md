@@ -31,6 +31,17 @@ El despliegue se define en `render.yaml` como un web service Docker llamado `vit
 
 `RUN_MIGRATIONS` queda en `false` por defecto. Si se quiere que Render ejecute migraciones en el arranque, cambiarlo a `true` en el Dashboard y confirmar primero que apunta a la base correcta.
 
+## Seeders
+
+`RUN_SEEDERS` queda en `false` por defecto. Para cargar los datos base despues del primer despliegue:
+
+1. Cambiar `RUN_SEEDERS=true` en Render Dashboard.
+2. Ejecutar un redeploy manual.
+3. Confirmar que usuarios, roles, permisos, planes, beneficios, productos y centros de costo quedaron creados.
+4. Volver `RUN_SEEDERS=false` para evitar re-ejecutarlos en cada arranque.
+
+Los seeders base son idempotentes para soportar una re-ejecucion controlada sin duplicar productos, centros de costo ni usuarios iniciales.
+
 ## Limitaciones conocidas
 
 - Render no provisiona MySQL administrado con Blueprint; la disponibilidad depende de Aiden.
