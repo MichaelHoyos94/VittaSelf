@@ -30,12 +30,12 @@ Orden de las features.
 24. **024 . Gestión de productos**: Flujo gestion del catalogo de productos CRUD.
 27. **027 . Sistema multinivel para empresarios**: Funcionalidad de representantes y representados.
 28. **028 . Escalamiento de planes por puntos**: Flujo para que los empresarios asciendan en su plan, por medio de los puntos obtenidos por las ordenes web e internas.
+29. **029 . Despliegue de rama develop**: Configuracion para el despliegue de este proyecto en **render** para CI/CD.
 
 ## Siguiente 🏗️
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al `stock` de un `cost_center` y queda registrado como un `inventory-entry` para posteriores consultas.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
-29. **029 . Despliegue de rama develop**: Configuracion para el despliegue de este proyecto en **render** para CI/CD.
 
 ## Backlog / ideas 💡
 
