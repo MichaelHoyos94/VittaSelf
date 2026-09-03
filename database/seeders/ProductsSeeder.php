@@ -24,6 +24,7 @@ class ProductsSeeder extends Seeder
                 'slug' => 'divilife-plus',
                 'presentation' => Presentation::TABLETS->value,
                 'category' => Category::SUPPLEMENTS->value,
+                'deleted_at' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -36,6 +37,7 @@ class ProductsSeeder extends Seeder
                 'slug' => 'agf-vainilla',
                 'presentation' => Presentation::POWDER->value,
                 'category' => Category::FOOD_BEVERAGE->value,
+                'deleted_at' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -48,11 +50,16 @@ class ProductsSeeder extends Seeder
                 'slug' => 'lbl',
                 'presentation' => Presentation::LIQUID->value,
                 'category' => Category::FOOD_BEVERAGE->value,
+                'deleted_at' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
         ];
 
-        DB::table('products')->insert($products);
+        DB::table('products')->upsert(
+            $products,
+            ['slug'],
+            ['name', 'description', 'cover', 'price', 'points', 'presentation', 'category', 'deleted_at', 'updated_at']
+        );
     }
 }

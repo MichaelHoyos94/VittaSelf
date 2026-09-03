@@ -16,6 +16,8 @@
 - [x] Validar `render.yaml` si Render CLI esta disponible.
 - [x] Documentar pasos manuales para completar el despliegue en Render Dashboard.
 - [x] Actualizar roadmap y marcar feature como hecha.
+- [x] Agregar ejecucion opcional de seeders en Render con `RUN_SEEDERS`.
+- [x] Hacer idempotentes los seeders base para re-ejecucion controlada.
 
 ## Verificacion
 
@@ -23,3 +25,4 @@
 - `php artisan test`: ejecutado, bloqueado por conexion local rechazada a MySQL `vittaself_testing`.
 - `docker --version`: no disponible en esta maquina.
 - `render --version`: no disponible en esta maquina.
+- `vendor\bin\pint database\seeders\UserSeeder.php database\seeders\ProductsSeeder.php database\seeders\CostCenterSeeder.php`: exitoso.

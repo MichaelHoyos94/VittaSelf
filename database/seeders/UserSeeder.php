@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -62,18 +60,39 @@ class UserSeeder extends Seeder
                 'remember_token' => Str::random(10),
             ],
         ];
-        DB::table('users')->insert($users);
+        foreach ($users as $user) {
+            $model = User::withTrashed()->firstOrNew(['email' => $user['email']]);
+
+            if (! $model->exists) {
+                $model->password = $user['password'];
+                $model->remember_token = $user['remember_token'];
+            }
+
+            $model->fill([
+                'name' => $user['name'],
+                'last_name' => $user['last_name'],
+                'document_number' => $user['document_number'],
+                'phone' => $user['phone'],
+                'address' => $user['address'],
+            ]);
+
+            $model->email_verified_at = $user['email_verified_at'];
+            $model->deleted_at = null;
+            $model->save();
+        }
+
         $this->assign();
     }
 
-    private function assign() {
+    private function assign()
+    {
         $user = User::where('email', 'sistemas@vittaself.com')->first();
-        $user->assignRole('super-admin');
+        $user?->assignRole('super-admin');
         $user = User::where('email', 'sistemasaux@vittaself.com')->first();
-        $user->assignRole('administrator');
+        $user?->assignRole('administrator');
         $user = User::where('email', 'asesor-armenia@vittaself.com')->first();
-        $user->assignRole('commercial-agent');
+        $user?->assignRole('commercial-agent');
         $user = User::where('email', 'laurape@gmail.com')->first();
-        $user->assignRole('eui');
+        $user?->assignRole('eui');
     }
 }
