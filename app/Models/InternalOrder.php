@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class InternalOrder extends Model
 {
@@ -18,6 +19,8 @@ class InternalOrder extends Model
         'email',
         'discount',
         'points',
+        'shipping_price',
+        'shipping_discount',
         'user_id',
         'commercial_agent_id',
         'cost_center_id',
@@ -28,8 +31,18 @@ class InternalOrder extends Model
         'created_at' => 'datetime', // Format to Y-m-d H:i:s
         'updated_at' => 'datetime',
     ];
-    public function products(): BelongsTo
+    public function products(): BelongsToMany
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(Product::class)->withPivot('quantity');
+    }
+
+    public function customer():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function commercialAgent(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'commercial_agent_id');
     }
 }

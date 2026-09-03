@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCostCenterRequest extends FormRequest
@@ -11,18 +12,22 @@ class StoreCostCenterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:64',
+            'address' => 'required|string|max:255',
+            'contact_email' => 'nullable|email|max:64',
+            'phone' => 'nullable|string|max:10',
+            'photo' => 'nullable|file|mimes:jpg,png|max:500',
         ];
     }
 }

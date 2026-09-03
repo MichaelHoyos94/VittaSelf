@@ -40,6 +40,7 @@ export default function ManageCase() {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("progress");
     const [activeEvidenceIndex, setActiveEvidenceIndex] = useState(0);
+    const [activeRebuttalIndex, setActiveRebuttalIndex] = useState(0);
     const currentStep = disciplinaryCase.case_status_id;
     const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
@@ -55,7 +56,15 @@ export default function ManageCase() {
         disciplinaryCase.sanction_evidences ||
         disciplinaryCase.sanctionEvidences ||
         [];
-    const activeEvidence = evidences[activeEvidenceIndex];
+    const rebuttals =
+        disciplinaryCase.rebuttals ||
+        disciplinaryCase.user_evidences ||
+        disciplinaryCase.userEvidences ||
+        [];
+    const previewItems = modalMode === "rebuttals" ? rebuttals : evidences;
+    const activePreviewIndex =
+        modalMode === "rebuttals" ? activeRebuttalIndex : activeEvidenceIndex;
+    const activeEvidence = previewItems[activePreviewIndex];
 
     const getEvidenceUrl = (evidence) => {
         if (!evidence?.file) {
@@ -105,13 +114,33 @@ export default function ManageCase() {
         setModalOpen(true);
     };
 
+    const handleOpenRebuttals = () => {
+        setModalMode("rebuttals");
+        setActiveRebuttalIndex(0);
+        setModalOpen(true);
+    };
+
     const handlePreviousEvidence = () => {
+        if (modalMode === "rebuttals") {
+            setActiveRebuttalIndex((currentIndex) =>
+                currentIndex === 0 ? rebuttals.length - 1 : currentIndex - 1,
+            );
+            return;
+        }
+
         setActiveEvidenceIndex((currentIndex) =>
             currentIndex === 0 ? evidences.length - 1 : currentIndex - 1,
         );
     };
 
     const handleNextEvidence = () => {
+        if (modalMode === "rebuttals") {
+            setActiveRebuttalIndex((currentIndex) =>
+                currentIndex === rebuttals.length - 1 ? 0 : currentIndex + 1,
+            );
+            return;
+        }
+
         setActiveEvidenceIndex((currentIndex) =>
             currentIndex === evidences.length - 1 ? 0 : currentIndex + 1,
         );
@@ -159,7 +188,7 @@ export default function ManageCase() {
     };
 
     return (
-        <div className="p-4 bg-white shadow-md rounded">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
                 <h1>Manage Case</h1>
                 <p>Managing case {disciplinaryCase.id}</p>
@@ -347,7 +376,7 @@ export default function ManageCase() {
                                 <p>Admin in charge</p>
                             </div>
                             <div>
-                                <p>ADMIN</p>
+                                <p>{disciplinaryCase.admin?.name}</p>
                             </div>
                             <div>
                                 <p>Policy</p>
@@ -414,7 +443,12 @@ export default function ManageCase() {
                                 </PrimaryButton>
                             </div>
                             <div className="col-span-1">
-                                TEXT
+                                <SecondaryButton
+                                    type="button"
+                                    onClick={handleOpenRebuttals}
+                                >
+                                    Rebuttals
+                                </SecondaryButton>
                             </div>
 
                             <div className="col-span-2">
@@ -677,17 +711,19 @@ export default function ManageCase() {
                         </div>
                     </div>
                 )}
-                {modalMode === "evidences" && (
+                {(modalMode === "evidences" || modalMode === "rebuttals") && (
                     <div>
                         <div className="flex items-center justify-between border-b px-6 py-4">
                             <div>
                                 <h2 className="text-lg font-semibold text-gray-800">
-                                    Case evidences
+                                    {modalMode === "rebuttals"
+                                        ? "Case rebuttals"
+                                        : "Case evidences"}
                                 </h2>
                                 <p className="text-sm text-gray-500">
-                                    {evidences.length
-                                        ? `${activeEvidenceIndex + 1} of ${evidences.length}`
-                                        : "No evidences uploaded yet"}
+                                    {previewItems.length
+                                        ? `${activePreviewIndex + 1} of ${previewItems.length}`
+                                        : `No ${modalMode} uploaded yet`}
                                 </p>
                             </div>
                             <SecondaryButton
@@ -699,11 +735,11 @@ export default function ManageCase() {
                         </div>
 
                         <div className="px-6 py-5">
-                            {!evidences.length && (
+                            {!previewItems.length && (
                                 <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-10 text-center">
                                     <DocumentIcon className="mx-auto h-12 w-12 text-gray-400" />
                                     <p className="mt-3 text-sm font-medium text-gray-700">
-                                        This case has no evidences to preview.
+                                        This case has no {modalMode} to preview.
                                     </p>
                                 </div>
                             )}
@@ -711,7 +747,7 @@ export default function ManageCase() {
                             {activeEvidence && (
                                 <div className="space-y-4">
                                     <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-                                        {evidences.length > 1 && (
+                                        {previewItems.length > 1 && (
                                             <>
                                                 <button
                                                     type="button"
@@ -804,17 +840,19 @@ export default function ManageCase() {
                                         </a>
                                     </div>
 
-                                    {evidences.length > 1 && (
+                                    {previewItems.length > 1 && (
                                         <div className="flex justify-center gap-2">
-                                            {evidences.map((evidence, index) => (
+                                            {previewItems.map((evidence, index) => (
                                                 <button
                                                     key={evidence.id || evidence.file}
                                                     type="button"
                                                     onClick={() =>
-                                                        setActiveEvidenceIndex(index)
+                                                        modalMode === "rebuttals"
+                                                            ? setActiveRebuttalIndex(index)
+                                                            : setActiveEvidenceIndex(index)
                                                     }
                                                     className={`h-2.5 rounded-full transition-all ${
-                                                        index === activeEvidenceIndex
+                                                        index === activePreviewIndex
                                                             ? "w-8 bg-primary-700"
                                                             : "w-2.5 bg-gray-300 hover:bg-gray-400"
                                                     }`}

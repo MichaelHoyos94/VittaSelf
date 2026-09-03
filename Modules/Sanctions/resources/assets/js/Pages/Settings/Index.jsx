@@ -1,32 +1,32 @@
 import NavigationCard from "@/Components/NavigationCard"
 import MainLayout from "@/Layouts/MainLayout"
-import { ScaleIcon } from "@heroicons/react/16/solid"
+import { DocumentTextIcon, ScaleIcon } from "@heroicons/react/16/solid"
 
 export default function Index() {
 
     return (
-        <div className="p-4 bg-white rounded shadow-md">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h3>Settings</h3>
             <p>Custom your catalogues in your sanctions process.</p>
-            <div className="flex flex-wrap flex-shrink-0 items-center justify-evenly gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 flex-shrink-0 items-center justify-evenly gap-4 mt-4">
 
-                <a href="/sanctions/disciplinary-cases">
+                <a href="/sanctions/settings/policies">
                     <NavigationCard
-                        icon={<ScaleIcon className="w-32 h-32 text-primary-400" />}
+                        icon={DocumentTextIcon}
                         title={"Policies"}
                         text={"Manage policies"}
                     />
                 </a>
                 <a href="">
                     <NavigationCard
-                        icon={<ScaleIcon className="w-32 h-32 text-primary-200" />}
+                        icon={ScaleIcon}
                         title={"Mitigations"}
                         text={"Manage mitigations"}
                     />
                 </a>
                 <a href="">
                     <NavigationCard
-                        icon={<ScaleIcon className="w-32 h-32 text-primary-200" />}
+                        icon={ScaleIcon}
                         title={"Sources"}
                         text={"Manage sources"}
                     />

@@ -11,7 +11,7 @@ export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log("links:", users.links);
+    console.log("links:", users);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
@@ -152,9 +152,14 @@ export default function Index() {
         });
     };
 
+    const handleSearch = (search) => {
+        router.get(route("human-resources.index"), { search }, { preserveState: true, replace: true });
+    }
+
     return (
-        <div className="p-4 bg-primary-300 rounded-lg">
-            <h1 className="text-green-500">Human Resources</h1>
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+            <h1>Human Resources</h1>
+            <p>Manage employee information and records.</p>
             <div className="flex justify-between items-center mb-4">
                 <button
                     onClick={openCreateModal}
@@ -170,7 +175,12 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
+                filterable={true}
+                handleSearch={handleSearch}
                 data={users.data}
+                from={users.from}
+                to={users.to}
+                totalResults={users.total}
                 emptyText="No employees found"
                 links={users.links}
                 onPageChange={handlePageChange}

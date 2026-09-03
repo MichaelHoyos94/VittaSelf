@@ -10,9 +10,9 @@ class QualityChecklistService
 
     public function __construct(protected QualityChecklistRepository $repository) {}
 
-    public function getAll()
+    public function getAll($costCenterId)
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($costCenterId);
     }
 
     public function getById($id) {}

@@ -23,14 +23,8 @@ export default function Create() {
         ],
     });
 
-    console.log(costCenter);
-    if (errors) {
-        console.log(errors);
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route("audits.product-counts.store"));
     };
 
@@ -59,7 +53,7 @@ export default function Create() {
     };
 
     return (
-        <div className="rounded bg-white p-4">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
                 <h2>New product count</h2>
                 <p>Introduce the products and quantity in the cost center</p>
@@ -83,7 +77,7 @@ export default function Create() {
                                         )
                                     }
                                     value={item.product_id}
-                                    options={products.map((product) => ({
+                                    options={products.data.map((product) => ({
                                         value: product.id,
                                         label: product.name,
                                     }))}

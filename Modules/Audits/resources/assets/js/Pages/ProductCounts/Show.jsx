@@ -67,7 +67,7 @@ export default function Show() {
     };
 
     return (
-        <div className="rounded bg-white p-4">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <div>
                 <h2>Product count</h2>
                 <p>details</p>

@@ -4,12 +4,17 @@ namespace App\Services;
 
 use App\Repositories\OrderRepository;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Modules\Sanctions\Services\SanctionEnforcementService;
 
 class OrderService
 {
     public function __construct(private OrderRepository $repository, private CartService $cartService, private SanctionEnforcementService $sanctionEnforcementService, private PlanService $planService) {}
+
+    public function getAll($search)
+    {
+        return $this->repository->getAll($search);
+    }
+
     public function create($data, $user)
     {
         $sanctions = $this->sanctionEnforcementService->getUserSanctions($data['user_id']);
@@ -33,37 +38,45 @@ class OrderService
         $data['total'] = $data['subtotal'] + $data['shipping_price'];
         $data['points'] = $freezePoints ? 0 : $this->calculatePoints($data['products']);
         $user->load('plan.benefits');
-        if ($user->plan && !$freezePlan) {
+        if ($user->plan && ! $freezePlan) {
             $data = $this->planService->applyBenefits($data, $user->plan);
         }
         $order = $this->repository->create($data);
         if ($order) {
+            $this->planService->applyOrderPoints($data['user_id'], (float) $data['points'], $freezePoints, $freezePlan);
             $this->cartService->emptyCart($data['user_id']);
         }
+
         return $order;
     }
+
     public function getByUserId($userId)
     {
         return $this->repository->getByUserId($userId);
     }
+
     private function calculateSubtotal($products)
     {
         $subtotal = 0;
         foreach ($products as $product) {
             $subtotal += $product['pivot']['quantity'] * $product['price'];
         }
+
         return $subtotal;
     }
+
     private function calculateShipping()
     {
         return 29500;
     }
+
     private function calculatePoints($products)
     {
         $points = 0;
         foreach ($products as $product) {
             $points += $product['pivot']['quantity'] * $product['points'];
         }
+
         return $points;
     }
 }
