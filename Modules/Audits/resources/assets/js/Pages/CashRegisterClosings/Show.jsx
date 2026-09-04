@@ -67,6 +67,7 @@ export default function Show() {
                                     label={"Counted Cash"}
                                     value={data.counted_cash}
                                     onChange={(e) => setData('counted_cash', e.target.value)}
+                                    error={errors.counted_cash}
                                 />
                             </div>
                             <div>
@@ -81,6 +82,7 @@ export default function Show() {
                                     label={"Counted Bank Transfer"}
                                     value={data.counted_bank_transfer}
                                     onChange={(e) => setData('counted_bank_transfer', e.target.value)}
+                                    error={errors.counted_bank_transfer}
                                 />
                             </div>
                             <div className="col-span-2">
@@ -88,6 +90,7 @@ export default function Show() {
                                     label={"Observations"}
                                     value={data.observations}
                                     onChange={(e) => setData('observations', e.target.value)}
+                                    error={errors.observations}
                                 />
                             </div>
                             <div className="col-span-2">
@@ -95,6 +98,7 @@ export default function Show() {
                                     label={"Report"}
                                     value={data.report}
                                     onChange={(e) => setData('report', e.target.value)}
+                                    error={errors.report}
                                 />
                             </div>
                             <div className="col-span-2">

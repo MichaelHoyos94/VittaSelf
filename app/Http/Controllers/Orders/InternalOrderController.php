@@ -30,7 +30,7 @@ class InternalOrderController extends Controller
         try {
             $order = $this->service->create($data);
             if ($order) {
-                $this->cashRegisterService->addCash(auth()->user()->id, $order->total, $order->payment_method);
+                $this->cashRegisterService->addCash(auth()->user()->id, $order->total, $order->payment_method->name);
             }
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to create order: ' . $e->getMessage());
