@@ -233,14 +233,14 @@ export default function Show() {
                                     }
                                     error={errors.status}
                                     options={[
-                                        { label: "Correct", value: "CORRECT" },
+                                        { label: "Correct", value: "correct" },
                                         {
                                             label: "Incorrect",
-                                            value: "INCORRECT",
+                                            value: "incorrect",
                                         },
                                         {
                                             label: "Correct with issues",
-                                            value: "CORRECT_WITH_ISSUES",
+                                            value: "correct with issues",
                                         },
                                     ]}
                                 />
