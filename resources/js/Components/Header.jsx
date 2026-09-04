@@ -87,7 +87,8 @@ export default function Header() {
                                 {displayName}
                             </span>
                             <span className="max-w-36 truncate text-xs text-slate-500">
-                                Administrador
+                                {/* Current role */}
+                                {user?.roles?.[0]?.name || "User"}
                             </span>
                         </span>
                         <ChevronDownIcon
