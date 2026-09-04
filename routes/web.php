@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    $user = auth()->user();
+    if ($user && $user->hasRole(['administrator', 'super-admin'])) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('products.products.index');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
