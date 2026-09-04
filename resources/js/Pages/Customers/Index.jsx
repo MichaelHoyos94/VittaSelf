@@ -228,6 +228,7 @@ export default function Index() {
                                         setData("name", e.target.value)
                                     }
                                     placeholder={"John doe..."}
+                                    error={errors.name}
                                 />
                                 <Input
                                     name={"last_name"}
@@ -238,6 +239,7 @@ export default function Index() {
                                         setData("last_name", e.target.value)
                                     }
                                     placeholder={"Smith..."}
+                                    error={errors.last_name}
                                 />
                                 <Input
                                     name={"document_number"}
@@ -251,6 +253,7 @@ export default function Index() {
                                         )
                                     }
                                     placeholder={"97584948"}
+                                    error={errors.document_number}
                                 />
                                 <Input
                                     name={"email"}
@@ -261,6 +264,7 @@ export default function Index() {
                                         setData("email", e.target.value)
                                     }
                                     placeholder={"johnsmith@example.com"}
+                                    error={errors.email}
                                 />
                                 <Input
                                     name={"phone"}
@@ -271,6 +275,7 @@ export default function Index() {
                                         setData("phone", e.target.value)
                                     }
                                     placeholder={"3117289848"}
+                                    error={errors.phone}
                                 />
                                 <Input
                                     name={"address"}
@@ -281,6 +286,7 @@ export default function Index() {
                                         setData("address", e.target.value)
                                     }
                                     placeholder={"Street..."}
+                                    error={errors.address}
                                 />
                                 <div className="grid grid-cols-8 gap-4">
                                     <div className="col-span-7">
@@ -297,6 +303,7 @@ export default function Index() {
                                                 )
                                             }
                                             placeholder={"col00001"}
+                                            error={errors.representative_eui_code}
                                         />
                                     </div>
                                     <div className="col-span-1 flex content-center">
@@ -368,6 +375,7 @@ export default function Index() {
                                     onChange={(e) =>
                                         setData("password", e.target.value)
                                     }
+                                    error={errors.password}
                                 />
                                 <Input
                                     label="Confirm Password"
