@@ -23,6 +23,7 @@ fi
 
 if [ "${RUN_SEEDERS:-false}" = "true" ]; then
     php artisan db:seed --force
+    php artisan module:seed --force Sanctions
 fi
 
 envsubst '${PORT}' < /etc/nginx/templates/default.conf.template > /etc/nginx/sites-enabled/default
