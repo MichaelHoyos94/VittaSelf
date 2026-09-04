@@ -181,7 +181,7 @@ export default function Checkout() {
                                             label: "Cash",
                                         },
                                         {
-                                            value: "bank_transfer",
+                                            value: "bank transfer",
                                             label: "Bank Transfer",
                                         },
                                     ]}

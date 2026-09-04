@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -30,6 +32,8 @@ class InternalOrder extends Model
         'total' => 'decimal:2',
         'created_at' => 'datetime', // Format to Y-m-d H:i:s
         'updated_at' => 'datetime',
+        'payment_method' => PaymentMethod::class,
+        'status' => OrderStatus::class,
     ];
     public function products(): BelongsToMany
     {

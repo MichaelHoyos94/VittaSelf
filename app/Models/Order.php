@@ -25,7 +25,7 @@ class Order extends Model
     protected $casts = [
         'subtotal' => 'decimal:2', 
         'total' => 'decimal:2',
-        'created_at' => 'datetime', // Format to Y-m-d H:i:s
+        'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
     public function products(): BelongsToMany
