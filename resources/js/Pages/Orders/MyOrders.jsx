@@ -1,7 +1,7 @@
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 
@@ -10,12 +10,16 @@ export default function MyOrders() {
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const columns = [
         {
-            header: "id",
-            accessor: "id",
+            header: "order number",
+            accessor: "order_number",
         },
         {
             header: "date",
-            accessor: "created_at",
+            render: (row) => new Date(row.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            }),
         },
         {
             header: "shipping info",
@@ -82,6 +86,15 @@ export default function MyOrders() {
 
     }, [flash.success]);
 
+    const handleSearch = (search) => {
+        router.get(route('my-orders'), { search }, { preserveState: true, replace: true });
+    }
+
+    const handlePageChange = (url) => {
+        if (!url) return;
+        router.get(url, { preserveState: true, replace: true });
+    }
+
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>My Orders</h2>
@@ -103,8 +116,15 @@ export default function MyOrders() {
             <div>
                 <Table
                     columns={columns}
-                    data={orders}
+                    data={orders.data}
+                    filterable
+                    handleSearch={handleSearch}
                     emptyText="No orders found."
+                    from={orders.from}
+                    to={orders.to}
+                    total={orders.total}
+                    links={orders.links}
+                    handlePageChange={handlePageChange}
                 />
             </div>
         </div>

@@ -76,6 +76,15 @@ class OrderProcessingService
         );
     }
 
+    public function generateOrderNumber(int $orderId): string
+    {
+        return sprintf(
+            '%s-%05d',
+            now()->format('YmdHis'),
+            $orderId,
+        );
+    }
+
     private function calculateSubtotal(array $products): float|int
     {
         return array_reduce(

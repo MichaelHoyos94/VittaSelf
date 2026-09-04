@@ -47,13 +47,14 @@ class OrderController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
         }
         return redirect()->route('my-orders')->with([
-            'success' => 'Order created successfully with ID: ',
+            'success' => 'Order created successfully with number: ' . $order->order_number,
         ]);
     }
-    public function myOrders()
+    public function myOrders(Request $request)
     {
         $userId = auth()->user()->id;
-        $orders = $this->service->getByUserId($userId);
+        $search = $request->input('search');
+        $orders = $this->service->getByUserId($userId, $search);
         return Inertia::render('Orders/MyOrders')->with([
             'orders' => $orders,
         ]);

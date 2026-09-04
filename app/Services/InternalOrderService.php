@@ -25,6 +25,8 @@ class InternalOrderService
         $order = $this->internalOrderRepository->create($data);
 
         if ($order) {
+            $order->order_number = $this->orderProcessingService->generateOrderNumber($order->id);
+            $order->save();
             $this->orderProcessingService->applyOrderPoints($data, $restrictions);
         }
 

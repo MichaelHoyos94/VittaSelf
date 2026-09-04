@@ -11,8 +11,8 @@ export default function InternalOrders() {
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const columns = [
         {
-            header: "#",
-            accessor: "id",
+            header: "order number",
+            accessor: "order_number",
         },
         {
             header: "eui",
@@ -97,11 +97,17 @@ export default function InternalOrders() {
     }, [flash.success]);
 
     const handleSearch = (search) => {
+        if (!search) return;
         router.get(
             route("orders.internal-orders.index"),
             { search: search },
             { preserveState: true, replace: true },
         );
+    };
+
+    const handlePageChange = (url) => {
+        if (!url) return;
+        router.get(url, { preserveState: true, replace: true });
     };
 
     return (

@@ -26,6 +26,8 @@ class OrderService
         $order = $this->repository->create($data);
 
         if ($order) {
+            $order->order_number = $this->orderProcessingService->generateOrderNumber($order->id);
+            $order->save();
             $this->cartService->emptyCart($data['user_id']);
             $this->orderProcessingService->applyOrderPoints($data, $restrictions);
         }
@@ -33,9 +35,9 @@ class OrderService
         return $order;
     }
 
-    public function getByUserId($userId)
+    public function getByUserId($userId, $search)
     {
-        return $this->repository->getByUserId($userId);
+        return $this->repository->getByUserId($userId, $search);
     }
 
     private function normalizeProducts(array $products): array

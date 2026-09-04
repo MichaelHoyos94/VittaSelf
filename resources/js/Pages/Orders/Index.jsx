@@ -10,14 +10,18 @@ export default function Index() {
 
     const columns = [
         {
-            header: "#",
-            accessor: "id",
+            header: "order number",
+            accessor: "order_number",
         },
         {
             header: "eui",
             render: (row) => (
-                <div className="flex gap-4">
-                    <div>circle</div>
+                <div className="flex gap-4 items-center">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.customer.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
                     <div className="flex flex-col">
                         <strong>{row.customer.name}</strong>
                         <span className="text-gray-500">
