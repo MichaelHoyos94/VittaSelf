@@ -5,6 +5,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
 const tabs = [
     { id: "quality", label: "Quality" },
@@ -148,7 +149,12 @@ export default function Index() {
         },
         {
             header: "status",
-            accessor: "status",
+            render: (row) => (
+                <Badge 
+                    type={row.status === "approved" ? "success" : row.status === "rejected" ? "error" : "warning"}
+                    text={row.status}
+                />
+            )
         },
         {
             header: "cash",
