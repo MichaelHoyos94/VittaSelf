@@ -38,23 +38,12 @@ class UserSeeder extends Seeder
                 'remember_token' => Str::random(10),
             ],
             [
-                'name' => 'Michael',
-                'last_name' => 'Hoyos',
+                'name' => 'Carlos Andres',
+                'last_name' => 'Garcia',
                 'document_number' => '1094944787',
                 'email' => 'asesor-armenia@vittaself.com',
                 'phone' => '3212884211',
                 'address' => 'Cll 21 # 23 - 55',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'),
-                'remember_token' => Str::random(10),
-            ],
-            [
-                'name' => 'Laura',
-                'last_name' => 'Perez',
-                'document_number' => '1094934937',
-                'email' => 'laurape@gmail.com',
-                'phone' => '3112828990',
-                'address' => 'Av Bolivar # 23 n - 1, Armenia',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'remember_token' => Str::random(10),
@@ -92,7 +81,5 @@ class UserSeeder extends Seeder
         $user?->assignRole('administrator');
         $user = User::where('email', 'asesor-armenia@vittaself.com')->first();
         $user?->assignRole('commercial-agent');
-        $user = User::where('email', 'laurape@gmail.com')->first();
-        $user?->assignRole('eui');
     }
 }
