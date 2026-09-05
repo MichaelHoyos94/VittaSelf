@@ -10,8 +10,8 @@ class ProductCountService
 {
     public function __construct(private ProductCountRepository $repository, private RepositoriesProductQuantityRepository $productQuantityRepository) {}
 
-    public function getAll() {
-        return $this->repository->getAll();
+    public function getAll($search) {
+        return $this->repository->getAll($search);
     }
 
     public function create(array $data)
@@ -26,7 +26,7 @@ class ProductCountService
         });
     }
 
-    public function getById($id){
+    public function getById($id) {
         return $this->repository->getById($id);
     }
 }

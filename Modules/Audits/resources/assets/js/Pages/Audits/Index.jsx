@@ -23,15 +23,47 @@ export default function Index() {
 
     const productCountAuditsColumns = [
         {
-            header: "Status",
-            accessor: "status",
+            header: "Audited By",
+            render: (row) => (
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-700">
+                            {row.auditor.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span>{row.auditor.full_name}</span>
+                        <span className="text-sm text-gray-500">{row.auditor.email}</span>
+                        <span className="text-sm text-gray-500">{row.auditor.phone}</span>
+                    </div>
+                </div>
+            ),
         },
         {
-            header: "Total Expected Products",
+            header: "Audited at",
+            render: (row) => <span>{new Date(row.audited_at).toLocaleString('en-US', {
+                'year': 'numeric',
+                'month': 'long',
+                'day': 'numeric',
+            })}</span>
+        },
+        {
+            header: "Status",
+            render: (row) => <Badge
+                type={
+                    row.status === 'correct' ? 'success'
+                        : row.status === 'incorrect' ? 'error'
+                            : 'warning'
+                }
+                text={row.status}
+            />,
+        },
+        {
+            header: "Expected Products",
             accessor: "total_expected_products",
         },
         {
-            header: "Total Counted Products",
+            header: "Counted Products",
             accessor: "total_counted_products",
         },
         {
@@ -62,6 +94,9 @@ export default function Index() {
                 </div>
             ),
         },
+    ];
+
+    const qualityChecklistAuditsColumns = [
         {
             header: "Audited By",
             render: (row) => (
@@ -71,20 +106,36 @@ export default function Index() {
                             {row.auditor.name.charAt(0).toUpperCase()}
                         </span>
                     </div>
-                    <span>{row.auditor.full_name}</span>
+                    <div className="flex flex-col">
+                        <span>{row.auditor.full_name}</span>
+                        <span className="text-sm text-gray-500">{row.auditor.email}</span>
+                        <span className="text-sm text-gray-500">{row.auditor.phone}</span>
+                    </div>
                 </div>
             ),
         },
-    ];
-
-    const qualityChecklistAuditsColumns = [
+        {
+            header: "Audited at",
+            render: (row) => <span>{new Date(row.created_at).toLocaleString('en-US', {
+                'year': 'numeric',
+                'month': 'long',
+                'day': 'numeric',
+            })}</span>
+        },
         {
             header: "Status",
-            accessor: "status",
+            render: (row) => <Badge
+                type={
+                    row.status === 'excellent' ? 'success'
+                        : row.status === 'good' ? 'secondary'
+                            : row.status === 'bad' ? 'warning' : 'critical'
+                }
+                text={row.status}
+            />,
         },
         {
             header: "Requires Actions",
-            render: (row) => <div>{row.requires_actions}</div>,
+            render: (row) => <div>{row.requires_actions ? 'Yes' : 'No'}</div>,
         },
         {
             header: "Corrective Actions",
@@ -110,26 +161,9 @@ export default function Index() {
                 </div>
             ),
         },
-        {
-            header: "Audited By",
-            render: (row) => (
-                <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                        <span className="text-sm font-medium text-gray-700">
-                            {row.auditor.name.charAt(0).toUpperCase()}
-                        </span>
-                    </div>
-                    <span>{row.auditor.full_name}</span>
-                </div>
-            ),
-        },
     ];
 
     const cashRegisterClosuresAuditsColumns = [
-        {
-            header: "#",
-            accessor: "id",
-        },
         {
             header: "audited by",
             render: (row) => (
@@ -150,7 +184,7 @@ export default function Index() {
         {
             header: "status",
             render: (row) => (
-                <Badge 
+                <Badge
                     type={row.status === "approved" ? "success" : row.status === "rejected" ? "error" : "warning"}
                     text={row.status}
                 />

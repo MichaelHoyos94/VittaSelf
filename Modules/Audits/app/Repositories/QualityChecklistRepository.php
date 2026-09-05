@@ -8,11 +8,12 @@ class QualityChecklistRepository
 {
     public function getAll($costCenterId = null, $perPage = 10, $sortField = "created_at", $sortDirection = "desc")
     {
-        return QualityChecklist::query()->when($costCenterId, function ($query, $costCenterId) {
-            $query->where('cost_center_id', $costCenterId);
-        })
-        ->orderBy($sortField, $sortDirection)
-        ->paginate($perPage);
+        return QualityChecklist::with(['costCenter', 'audit'])
+            ->when($costCenterId, function ($query, $costCenterId) {
+                $query->where('cost_center_id', $costCenterId);
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage);
     }
 
     public function getById($id)

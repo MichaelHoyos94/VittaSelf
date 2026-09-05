@@ -16,9 +16,10 @@ class CashRegisterClosureController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cashRegisterClosures = $this->service->getAll();
+        $search = $request->input('search');
+        $cashRegisterClosures = $this->service->getAll($search);
         return Inertia::render('Audits/CashRegisterClosings/Index')->with([
             'cashRegisterClosures' => $cashRegisterClosures,
         ]);

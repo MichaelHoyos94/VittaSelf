@@ -4,9 +4,11 @@ import MainLayout from "@/Layouts/MainLayout";
 import { Link, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
 export default function Index() {
     const { cashRegisterClosures, flash } = usePage().props;
+    console.log(cashRegisterClosures.data);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -24,14 +26,6 @@ export default function Index() {
 
     const columns = [
         {
-            header: "#",
-            accessor: "id",
-        },
-        {
-            header: "date",
-            accessor: "date",
-        },
-        {
             header: "Commercial Agent",
             render: (row) => (
                 <div className="flex items-center space-x-2">
@@ -40,9 +34,21 @@ export default function Index() {
                             {row.commercial_agent.name.charAt(0).toUpperCase()}
                         </span>
                     </div>
-                    <span>{row.commercial_agent.name}</span>
+                    <div className="flex flex-col">
+                        <span>{row.commercial_agent.name}</span>
+                        <span className="text-sm text-gray-500">{row.commercial_agent.email}</span>
+                        <span className="text-sm text-gray-500">{row.commercial_agent.phone}</span>
+                    </div>
                 </div>
             ),
+        },
+        {
+            header: "date",
+            render: (row) => <span>{new Date(row.created_at).toLocaleString('en-US', {
+                'year': 'numeric',
+                'month': 'long',
+                'day': 'numeric',
+            })}</span>
         },
         {
             header: "cash register",
@@ -67,6 +73,18 @@ export default function Index() {
             render: (row) => <div>{formatCurrency(row.bank_transfer)}</div>,
         },
         {
+            header: "audited",
+            render: (row) => (
+                <Badge
+                    type={row.audit ? (
+                        row.audit.status === 'approved' ? 'success'
+                            : 'error'
+                    ) : 'info'}
+                    text={row.audit ? row.audit.status : 'pending'}
+                />
+            ),
+        },
+        {
             header: "actions",
             render: (row) => (
                 <div>
@@ -86,7 +104,15 @@ export default function Index() {
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <h2>Cash Register Closures</h2>
             <p>Check the cash registers closings and make audits.</p>
-            <Table columns={columns} data={cashRegisterClosures} />
+            <Table
+                columns={columns}
+                filterable
+                from={cashRegisterClosures.from}
+                to={cashRegisterClosures.to}
+                total={cashRegisterClosures.total}
+                links={cashRegisterClosures.links}
+                data={cashRegisterClosures.data}
+            />
         </div>
     );
 }

@@ -6,9 +6,19 @@ use Modules\Audits\Models\ProductCount;
 
 class ProductCountRepository
 {
-    public function getAll()
+    public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
     {
-        return ProductCount::all();
+        return ProductCount::with(['audit', 'user', 'costCenter'])
+            ->when($search, function($query, $search){
+                $query->whereHas('user', function($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('costCenter', function($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage);
     }
 
     public function create(array $data)
