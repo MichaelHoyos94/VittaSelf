@@ -208,7 +208,7 @@ export default function Dashboard({ data }) {
                             description="Product count audits by status."
                         >
                             <PieChartComponent
-                                data={data.productCountAuditsByStatus}
+                                data={data.productCountsAuditsByStatus}
                             />
                         </ChartCard>
                         <ChartCard

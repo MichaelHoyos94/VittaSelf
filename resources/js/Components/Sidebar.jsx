@@ -63,7 +63,7 @@ export default function Sidebar() {
             id: "sanctions",
             label: "Sanctions",
             icon: ScaleIcon,
-            permission: 'sanctions.sanctions-view',
+            permission: 'sanctions.view',
             active:
                 isCurrent("sanctions.*") ||
                 isCurrent("sanctions.disciplinary-cases.index") ||

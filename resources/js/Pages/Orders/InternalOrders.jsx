@@ -4,6 +4,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
 export default function InternalOrders() {
     const { internalOrders, flash } = usePage().props;
@@ -13,6 +14,18 @@ export default function InternalOrders() {
         {
             header: "order number",
             accessor: "order_number",
+        },
+        {
+            header: "order date",
+            render: (row) => (
+                <span>
+                    {new Date(row.created_at).toLocaleDateString('en-US', {
+                        'year': 'numeric',
+                        'month': 'long',
+                        'day': 'numeric',
+                    })}
+                </span>
+            )
         },
         {
             header: "eui",
@@ -77,8 +90,22 @@ export default function InternalOrders() {
             accessor: "points",
         },
         {
+            header: "payment method",
+            render: (row) => (
+                <Badge
+                    type={row.payment_method === 'bank transfer' ? 'secondary' : 'success'}
+                    text={row.payment_method}
+                />
+            ),
+        },
+        {
             header: "status",
-            accessor: "status",
+            render: (row) => (
+                <Badge
+                    type="info"
+                    text={row.status}
+                />
+            ),
         },
         {
             header: "actions",

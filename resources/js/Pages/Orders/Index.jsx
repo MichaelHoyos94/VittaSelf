@@ -4,6 +4,7 @@ import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
 import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
 export default function Index() {
     const { orders } = usePage().props;
@@ -12,6 +13,18 @@ export default function Index() {
         {
             header: "order number",
             accessor: "order_number",
+        },
+        {
+            header: "order date",
+            render: (row) => (
+                <span>
+                    {new Date(row.created_at).toLocaleDateString('en-US', {
+                        'year': 'numeric',
+                        'month': 'long',
+                        'day': 'numeric',
+                    })}
+                </span>
+            )
         },
         {
             header: "eui",
@@ -61,8 +74,22 @@ export default function Index() {
             accessor: "points",
         },
         {
+            header: "payment method",
+            render: (row) => (
+                <Badge 
+                    type={row.payment_method === 'bank transfer' ? 'secondary' : 'success'}
+                    text={row.payment_method}
+                />
+            ),
+        },
+        {
             header: "status",
-            accessor: "status",
+            render: (row) => (
+                <Badge
+                    type="info"
+                    text={row.status}
+                />
+            ),
         },
         {
             header: "actions",

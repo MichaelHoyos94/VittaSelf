@@ -16,6 +16,7 @@ import {
 } from "@heroicons/react/16/solid";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import Badge from "@/Components/Badge";
 
 export default function Index() {
     const { policies, complianceSources, disciplinaryCases, userToSanction, flash } =
@@ -122,9 +123,8 @@ export default function Index() {
         reset();
         setSelectedCaseId(null);
     };
-
+    console.log("disciplinaryCases", disciplinaryCases);
     const columns = [
-        { header: "ID", accessor: "id" },
         {
             header: "EUI",
             render: (row) => (
@@ -139,15 +139,46 @@ export default function Index() {
                     {/* Información textual */}
                     <div className="flex flex-col">
                         <strong className="font-medium">
-                            {row.user?.name}
+                            {row.user?.full_name}
                         </strong>
                         <span className="text-sm text-gray-500">
                             {row.user?.email}
                         </span>
                         <span className="text-sm text-gray-500">
-                            {row.user?.document_number}
+                            {row.user?.phone}
                         </span>
                     </div>
+                </div>
+            ),
+        },
+        {
+            header: "ADMINISTRATOR",
+            render: (row) => (
+                <div>
+                    {row.admin ? (
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                <span className="text-sm font-medium text-gray-700">
+                                    {row.admin.name?.charAt(0).toUpperCase()}
+                                </span>
+                            </div>
+                            <div className="flex flex-col">
+                                <strong className="font-medium">
+                                    {row.admin.full_name}
+                                </strong>
+                                <span className="text-sm text-gray-500">
+                                    {row.admin.email}
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                    {row.admin.phone}
+                                </span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <span className="text-sm text-gray-500">No administrator assigned</span>
+                        </div>
+                    )}
                 </div>
             ),
         },
@@ -156,23 +187,24 @@ export default function Index() {
             render: (row) => <div>{row.policy.policy}</div>,
         },
         {
-            header: "ADMINISTRATOR",
-            render: (row) => (
-                <div>{row.admin?.name || "Sin administrador asignado"}</div>
-            ),
-        },
-        {
             header: "STATUS",
             render: (row) => (
-                <div className="p-2 rounded-full bg-primary-200 text-center">
-                    {row.case_status?.case_status}
-                </div>
+                <Badge
+                    type={row.case_status?.code === 'CLOSED' ? 'success'
+                        : row.case_status?.code === 'UNASSIGNED' ? 'secondary'
+                            : row.case_status?.code === 'AWAITING_EVIDENCES' ? 'warning'
+                                : (row.case_status?.code === 'UNDER_INVESTIGATION' || row.case_status?.code === 'OPEN') ? 'info'
+                                    : 'default'
+                    }
+                    text={row.case_status?.case_status || 'Unknown'
+                    }
+                />
             ),
         },
         {
             header: "ACTIONS",
             render: (row) => (
-                <div className="flex justify-center">
+                <div className="flex justify-start items-center">
                     <Dropdown>
                         <Dropdown.Trigger>
                             <button
@@ -391,7 +423,7 @@ export default function Index() {
                                                         e.target.value || "",
                                                     )
                                                 }
-                                                error={errors.eui_code}
+                                                error={errors.user_id}
                                                 type="text"
                                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
                                                 placeholder="COL-51578"
@@ -459,7 +491,7 @@ export default function Index() {
                                                     </div>
                                                     <div className="col-span-2">
                                                         <p className="text-xs font-medium uppercase text-gray-400">
-                                                            Position
+                                                            Plan
                                                         </p>
                                                         <p className="font-medium text-gray-700">
                                                             {userToSanction.plan?.name || "N/A"}
@@ -542,7 +574,7 @@ export default function Index() {
                                 </div>
                                 <div className="flex flex-row items-center justify-end gap-2 mt-4">
                                     <SecondaryButton
-                                        onClick={() => setModalOpen(false)}
+                                        onClick={closeModal}
                                     >
                                         Cancel
                                     </SecondaryButton>

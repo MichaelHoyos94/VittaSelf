@@ -1,3 +1,4 @@
+import Badge from "@/Components/Badge";
 import DangerButton from "@/Components/DangerButton";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
@@ -180,7 +181,6 @@ export default function ManageProducts() {
     };
 
     const columns = [
-        { header: "#", accessor: "id" },
         {
             header: "Product",
             render: (row) => (
@@ -202,8 +202,18 @@ export default function ManageProducts() {
             render: (row) => <div>{formatCurrency(row.price)}</div>,
         },
         { header: "Points", accessor: "points" },
-        { header: "Presentation", accessor: "presentation" },
-        { header: "Category", accessor: "category" },
+        { header: "Presentation", render: (row) => (
+            <Badge 
+                type='info'
+                text={row.presentation}
+            />
+        )},
+        { header: "Category", render: (row) => (
+            <Badge 
+                type='warning'
+                text={row.category}
+            />
+        )},
         {
             header: "Cover",
             render: (row) => (

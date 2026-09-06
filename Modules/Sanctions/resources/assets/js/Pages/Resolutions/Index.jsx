@@ -1,3 +1,4 @@
+import Badge from "@/Components/Badge";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
@@ -56,7 +57,12 @@ export default function Index() {
                 </div>
             ),
         },
-        { header: "RESOLUTION TYPE", accessor: "resolution_type" },
+        { header: "RESOLUTION TYPE", render: (row) => (
+            <Badge 
+                type={row.resolution_type === 'procede' ? 'secondary' : 'success'}
+                text={row.resolution_type}
+            />
+        )},
         { header: "RESOLUTION TEXT", render: (row) => (
             <div>
                 {/* Truncate the resolution text to 32 characters */}

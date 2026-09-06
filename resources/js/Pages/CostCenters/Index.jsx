@@ -140,7 +140,6 @@ export default function Index() {
     };
 
     const columns = [
-        { header: "ID", accessor: "id" },
         {
             header: "Cost Center",
             render: (row) => (

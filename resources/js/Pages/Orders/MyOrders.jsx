@@ -4,6 +4,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import { router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
 export default function MyOrders() {
     const { orders, flash } = usePage().props;
@@ -64,11 +65,21 @@ export default function MyOrders() {
         },
         {
             header: "Payment Method",
-            accessor: "payment_method",
+            render: (row) => (
+                <Badge 
+                    type={row.payment_method === 'credit_card' ? 'secondary' : 'success'}
+                    text={row.payment_method}
+                />
+            ),
         },
         {
             header: "status",
-            accessor: "status",
+            render: (row) => (
+                <Badge 
+                    type="info"
+                    text={row.status}
+                />
+            ),
         },
     ];
 
