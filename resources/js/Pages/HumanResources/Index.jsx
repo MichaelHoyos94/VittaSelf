@@ -11,7 +11,6 @@ export default function Index() {
     const { users, flash } = usePage().props;
     const [message, setMessage] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log("links:", users);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
