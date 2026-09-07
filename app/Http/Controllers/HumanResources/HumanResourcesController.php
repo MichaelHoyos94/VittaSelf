@@ -3,74 +3,50 @@
 namespace App\Http\Controllers\HumanResources;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmployeePutRequest;
+use App\Http\Requests\EmployeeRequest;
 use App\Models\User;
+use App\Services\CostCenterService;
 use App\Services\HumanResourcesService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class HumanResourcesController extends Controller
 {
 
-    public function __construct(private HumanResourcesService $service) {}
+    public function __construct(
+        private HumanResourcesService $service,
+        private CostCenterService $costCenterService,
+        ) {}
 
     public function index(Request $request)
     {
         $search = $request->input('search');
         $users = $this->service->getAll($search);
+        $costCenters = $this->costCenterService->getAll();
+        $roles = Role::where('name', '!=', 'super-admin')->where('name', '!=', 'eui')->get();
         return Inertia::render('HumanResources/Index', [
-            'users' => $users
+            'users' => $users,
+            'costCenters' => $costCenters,
+            'roles' => $roles,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
-        $data_user = $request->validate(
-            [
-                'name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|confirmed',
-                'phone' => 'required',
-                'document_number' => 'required|unique:users,document_number'
-            ]
-        );
-
-        User::create([
-            'name' => $data_user['name'],
-            'last_name' => $data_user['last_name'],
-            'email' => $data_user['email'],
-            'password' => bcrypt($data_user['password']),
-            'phone' => $data_user['phone'],
-            'document_number' => $data_user['document_number']
-        ]);
-        return redirect()->route('human-resources.index')->with('success', 'User created successfully.');
+        $data = $request->validated();
+        $user = $this->service->create($data);
+        $user->refresh();
+        return redirect()->route('human-resources.index')->with('success', "User {$user->full_name} created successfully.");
     }
 
-    public function update(Request $request, $id)
+    public function update(EmployeePutRequest $request, int $employeeId)
     {
-        $user = User::findOrFail($id);
-
-        $data_user = $request->validate(
-            [
-                'name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email|unique:users,email,' . $user->id,
-                'password' => 'nullable|confirmed',
-                'phone' => 'required',
-                'document_number' => 'required|unique:users,document_number,' . $user->id
-            ]
-        );
-
-        $user->update([
-            'name' => $data_user['name'],
-            'last_name' => $data_user['last_name'],
-            'email' => $data_user['email'],
-            'password' => isset($data_user['password']) ? bcrypt($data_user['password']) : $user->password,
-            'phone' => $data_user['phone'],
-            'document_number' => $data_user['document_number']
-        ]);
-
-        return redirect()->route('human-resources.index')->with('success', 'User updated successfully.');
+        $data = $request->validated();
+        $user = $this->service->update($data, $employeeId);
+        $user->refresh();
+        return redirect()->route('human-resources.index')->with('success', "User {$user->full_name} updated successfully.");
     }
 
     public function destroy($id)

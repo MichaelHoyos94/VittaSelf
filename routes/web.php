@@ -134,4 +134,4 @@ Route::prefix('products')->middleware(['auth', 'verified'])->as('products.')->gr
     Route::delete('/manage-products/{id}', [ProductController::class, 'destroy'])->name('destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
