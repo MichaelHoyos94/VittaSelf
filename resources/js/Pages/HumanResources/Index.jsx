@@ -40,6 +40,10 @@ export default function Index() {
                     </div>
                     <div className="flex flex-col">
                         <span>{row.full_name}</span>
+                        <Badge
+                            type="info"
+                            text={row.roles[0].name}
+                        />
                     </div>
                     <button
                         onClick={() => {
