@@ -33,12 +33,12 @@ Orden de las features.
 29. **029 . Despliegue de rama develop**: Configuracion para el despliegue de este proyecto en **render** para CI/CD.
 30. **030 . Refactor para el procesamiento de las ordenes**: Se reorganiza codigo y se centraliza el procesamiento de las ordenes internas y web.
 31. **031 . Dashboard**: Vista del dashboard para consultar metricas.
+32. **032 . Modificacion de colores en dashboard**: Paleta monocromatica `primary` aplicada a graficos, tarjetas y controles. Build cliente/SSR validado; revision visual manual pendiente en tasks.md.
 
 ## Siguiente 🏗️
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al `stock` de un `cost_center` y queda registrado como un `inventory-entry` para posteriores consultas.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
-32. **032 . Modificacion de colores en dashboard**: Mejorar el estilo visual del dashboard para que tenga una paleta de colores monocromatica acorde a la identidad de la marca `primary`
 
 ## Backlog / ideas 💡
 

@@ -14,11 +14,11 @@ export default function EmployeesByRoleChart({ data }) {
             <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data} accessibilityLayer>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="role" />
-                        <YAxis allowDecimals={false} />
-                        <Tooltip />
-                        <Bar dataKey="count" name="Employees" fill="#2563eb" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--primary-100)" />
+                        <XAxis dataKey="role" stroke="var(--primary-900)" />
+                        <YAxis allowDecimals={false} stroke="var(--primary-900)" />
+                        <Tooltip wrapperClassName="dashboard-tooltip" cursor={{ fill: 'var(--primary-50)' }} />
+                        <Bar dataKey="count" name="Employees" fill="var(--primary-700)" />
                     </BarChart>
                 </ResponsiveContainer>
             </div>
