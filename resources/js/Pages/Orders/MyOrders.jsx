@@ -1,7 +1,7 @@
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, usePage } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 import Badge from "@/Components/Badge";
@@ -108,7 +108,8 @@ export default function MyOrders() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h2>My Orders</h2>
+            <Head title="My Orders" />
+            <h2 className="text-2xl font-bold">My Orders</h2>
             <div>
                 {successMessage && (
                     <div

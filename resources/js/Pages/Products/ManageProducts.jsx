@@ -9,7 +9,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import formatCurrency from "@/Utils/formatCurrency";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 const emptyForm = {
@@ -239,10 +239,11 @@ export default function ManageProducts() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Manage Products" />
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                    <h2>Manage Products</h2>
-                    <p>Create, edit and delete catalog products.</p>
+                    <h2 className="text-2xl font-bold">Manage Products</h2>
+                    <p className="text-sm text-gray-500">Create, edit and delete catalog products.</p>
                 </div>
                 <PrimaryButton type="button" onClick={openCreateModal}>
                     Create Product

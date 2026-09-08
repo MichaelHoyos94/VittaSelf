@@ -1,7 +1,7 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import Modal from "@/Components/Modal";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
@@ -33,6 +33,7 @@ export default function Index() {
             header: "Name",
             render: (row) => (
                 <div className="flex items-center space-x-2">
+                    <Head title="Employees" />
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                         <span className="text-sm font-medium text-gray-700">
                             {row.name.charAt(0).toUpperCase()}
@@ -198,8 +199,10 @@ export default function Index() {
 
     return (
         <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
-            <h1>Human Resources</h1>
-            <p>Manage employee information and records.</p>
+            <div>
+                <h1 className="text-2xl font-bold">Human Resources</h1>
+                <p className="text-sm text-gray-500">Manage employee information and records.</p>
+            </div>
             <div className="flex justify-between items-center mb-4">
                 <button
                     onClick={openCreateModal}

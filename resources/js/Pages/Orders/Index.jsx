@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, usePage } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import formatCurrency from "@/Utils/formatCurrency";
 import Badge from "@/Components/Badge";
 
@@ -76,7 +76,7 @@ export default function Index() {
         {
             header: "payment method",
             render: (row) => (
-                <Badge 
+                <Badge
                     type={row.payment_method === 'bank transfer' ? 'secondary' : 'success'}
                     text={row.payment_method}
                 />
@@ -116,8 +116,11 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h2>Orders</h2>
-            <p>Orders History</p>
+            <Head title="Orders" />
+            <div>
+                <h2 className="text-2xl font-bold">Orders</h2>
+                <p className="text-sm text-gray-500"> Web orders history.</p>
+            </div>
             <div className="flex justify-between items-center">
                 <SecondaryButton>export</SecondaryButton>
             </div>

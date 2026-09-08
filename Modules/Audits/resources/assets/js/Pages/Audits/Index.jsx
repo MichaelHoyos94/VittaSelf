@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, usePage } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 import Badge from "@/Components/Badge";
@@ -287,9 +287,10 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Audits" />
             <div>
                 <h1 className="text-2xl font-bold">Audits History</h1>
-                <p>Manage and review audit activities.</p>
+                <p className="text-gray-500 text-sm">Manage and review audit activities.</p>
             </div>
             {/* Three navigation tabs: Quality, Products, Cash with <SecondaryButtons> */}
             <div className="flex space-x-4 mt-4">

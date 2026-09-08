@@ -13,7 +13,7 @@ import {
     ChevronRightIcon,
     DocumentIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function ManageCase() {
@@ -189,16 +189,20 @@ export default function ManageCase() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Manage Case" />
             <div>
-                <h1>Manage Case</h1>
-                <p>Managing case {disciplinaryCase.id}</p>
+                <div>
+                    <h2 className="text-2xl font-bold">Manage Case</h2>
+                    <p className="text-sm text-gray-500">Managing case {disciplinaryCase.id}</p>
+                </div>
+            </div>
+            <div>
                 {flash.success && (
                     <div className="mt-4 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
                         {flash.success}
                     </div>
                 )}
             </div>
-
             {/* Steps texts */}
             <div className="mt-6">
                 <div

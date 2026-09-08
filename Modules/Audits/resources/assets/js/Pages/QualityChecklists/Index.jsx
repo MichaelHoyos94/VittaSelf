@@ -9,7 +9,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ClipboardDocumentCheckIcon, EyeIcon } from "@heroicons/react/16/solid";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const statusOptions = [
@@ -172,9 +172,10 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Quality" />
             <div>
-                <h1>Quality Checklists</h1>
-                <p>Daily quality checklist records by cost center</p>
+                <h1 className="text-2xl font-bold">Quality Checklists</h1>
+                <p className="text-sm text-gray-500">Daily quality checklist records by cost center</p>
             </div>
             <div className="mb-4 flex flex-row items-center justify-start gap-2">
                 <PrimaryButton onClick={handleOpenCreateModal}>

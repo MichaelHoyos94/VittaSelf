@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import useAuthorization from "@/Hooks/useAuthorization";
 import MainLayout from "@/Layouts/MainLayout";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { CheckIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 
@@ -88,8 +88,9 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2 sm:p-6">
+            <Head title="Permissions" />
             <div className="mb-6">
-                <h2 className="text-xl font-semibold text-slate-900">
+                <h2 className="text-2xl font-bold">
                     Role permissions
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">

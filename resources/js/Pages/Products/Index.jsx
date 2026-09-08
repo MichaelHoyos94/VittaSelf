@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import formatCurrency from "@/Utils/formatCurrency";
-import { router, usePage } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
@@ -31,8 +31,12 @@ export default function Index() {
     }, [flash])
 
     return (
-        <div className="bg-white/70 p-4 rounded-xl shadow-xl backdrop-blur-lg">
-            <h2>Products</h2>
+        <div className="bg-white/70 p-6 rounded-xl shadow-xl backdrop-blur-lg">
+            <Head title="Catalog" />
+            <div>
+                <h2 className="text-2xl font-bold">Products</h2>
+                <p className="text-sm text-gray-500">Products catalog.</p>
+            </div>
             <div>
                 {successMessage && (
                     <div

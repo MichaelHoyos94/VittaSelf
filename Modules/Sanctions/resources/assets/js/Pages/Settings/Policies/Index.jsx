@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Index() {
@@ -76,8 +76,11 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-xl backdrop-blur-lg min-h-full space-y-4">
-            <h2>Policies</h2>
-            <p>Manage the policies in the system.</p>
+            <Head title="Policies" />
+            <div>
+                <h2 className="text-2xl font-bold">Policies</h2>
+                <p className="text-sm text-gray-500">Manage the policies in the system.</p>
+            </div>
             {/* Flash message section */}
             <div>
                 {successMessage && (

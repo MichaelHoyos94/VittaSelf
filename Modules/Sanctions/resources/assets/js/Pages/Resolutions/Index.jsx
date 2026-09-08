@@ -1,7 +1,7 @@
 import Badge from "@/Components/Badge";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, usePage } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 
 export default function Index() {
     const { resolutions } = usePage().props;
@@ -103,9 +103,10 @@ export default function Index() {
 
     return (
         <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-md">
+            <Head title="Resolutions" />
             <div>
-                <h2>Resolutions history</h2>
-                <p>Review the history of resolutions for disciplinary cases.</p>
+                <h2 className="text-2xl font-bold">Resolutions history</h2>
+                <p className="text-sm text-gray-500">Review the history of resolutions for disciplinary cases.</p>
             </div>
             <Table
                 columns={columns}

@@ -2,7 +2,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
-import { Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 export default function Cart() {
@@ -62,7 +62,8 @@ export default function Cart() {
     }
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg">
-            <h2>Products in my cart</h2>
+            <Head title="Cart" />
+            <h2 className="text-2xl font-bold">Products in my cart</h2>
             {successMessage && (
                 <div
                     className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"

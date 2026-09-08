@@ -1,7 +1,7 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 import Badge from "@/Components/Badge";
@@ -139,7 +139,11 @@ export default function InternalOrders() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h1>Internal Orders</h1>
+            <Head title="Internal Orders" />
+            <div>
+                <h1 className="text-2xl font-bold">Internal Orders</h1>
+                <p>Internal orders history.</p>
+            </div>
             {/* Flash messages */}
             <div>
                 {successMessage && (

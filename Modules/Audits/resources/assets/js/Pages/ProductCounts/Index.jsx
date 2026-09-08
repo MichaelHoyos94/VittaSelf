@@ -3,7 +3,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 
 export default function Index() {
     const { productCounts } = usePage().props;
@@ -63,9 +63,10 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Product Counts" />
             <div>
-                <h2>Product counts</h2>
-                <p>Daily product counts by cost center</p>
+                <h2 className="text-2xl font-bold">Product counts</h2>
+                <p className="text-sm text-gray-500">Daily product counts by cost center</p>
             </div>
             <div className="mb-4 flex flex-row gap-2 items-center justify-start">
                 <Link href={route("audits.product-counts.create")}>

@@ -10,7 +10,7 @@ import {
     ArchiveBoxIcon,
     ClipboardDocumentCheckIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
@@ -144,7 +144,8 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full">
-            <h2>Cash Registers</h2>
+            <Head title="Cash Registers" />
+            <h1 className="text-2xl font-bold">Cash Registers</h1>
             <p>Manage and assign cash registers.</p>
             {/* Flash Messages */}
             {successMessage && (

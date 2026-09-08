@@ -1,7 +1,7 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { useEffect, useState } from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import Dropdown from "@/Components/Dropdown";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
@@ -275,8 +275,11 @@ export default function MyCases() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-xl backdrop-blur-lg min-h-full">
-            <h2>My Cases</h2>
-            <p>You have {cases.data?.length} disciplinary cases.</p>
+            <Head title="My Cases" />
+            <div>
+                <h2 className="text-2xl font-bold">My Cases</h2>
+                <p className="text-sm text-gray-500">You have {cases.data?.length} disciplinary cases.</p>
+            </div>
             <div>
                 {successMessage && (
                     <div
@@ -298,10 +301,10 @@ export default function MyCases() {
                 )}
             </div>
             <Table
-                columns={columns} 
-                data={cases.data} 
-                from={cases.from} 
-                to={cases.to} 
+                columns={columns}
+                data={cases.data}
+                from={cases.from}
+                to={cases.to}
                 totalResults={cases.total}
                 links={cases.links}
             />

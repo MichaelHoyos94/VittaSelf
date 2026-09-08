@@ -1,7 +1,7 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 import Badge from "@/Components/Badge";
@@ -102,8 +102,9 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h2>Cash Register Closures</h2>
-            <p>Check the cash registers closings and make audits.</p>
+            <Head title="Cash Register Closings" />
+            <h2 className="text-2xl font-bold">Cash Register Closures</h2>
+            <p className="text-sm text-gray-500">Check the cash registers closings and make audits.</p>
             <Table
                 columns={columns}
                 filterable

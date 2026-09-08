@@ -14,7 +14,7 @@ import {
     MagnifyingGlassIcon,
     XMarkIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import Badge from "@/Components/Badge";
 
@@ -353,9 +353,10 @@ export default function Index() {
 
     return (
         <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-md">
+            <Head title="Disciplinary Cases" />
             <div>
-                <h1>Disciplinary cases</h1>
-                <p>Investigations on going.</p>
+                <h1 className="text-2xl font-bold">Disciplinary cases</h1>
+                <p className="text-sm text-gray-500">Investigations on going.</p>
             </div>
             {/* Messages */}
             <div>

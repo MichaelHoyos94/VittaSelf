@@ -6,7 +6,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
@@ -168,8 +168,11 @@ export default function Index() {
 
     return (
         <div className="bg-white/70 p-8 shadow-lg rounded-xl min-h-full space-y-4 backdrop-blur-lg">
-            <h2>Customers</h2>
-            <p>Manage customers.</p>
+            <Head title="Customers" />
+            <div>
+                <h2 className="text-2xl font-bold">Customers</h2>
+                <p>Manage customers.</p>
+            </div>
             {successMessage && (
                 <div
                     className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
