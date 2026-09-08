@@ -59,7 +59,7 @@ export default function Header() {
                     aria-label="Notifications"
                 >
                     <BellIcon className="h-5 w-5" />
-                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
+                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-700 px-1 text-[10px] font-bold leading-none text-white">
                         3
                     </span>
                 </button>
