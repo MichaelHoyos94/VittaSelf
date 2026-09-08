@@ -48,9 +48,9 @@ class CashRegisterService
     public function addCash($commercialAgentId, $amount, $paymentMethod)
     {
         $cashRegister = $this->repository->getByCommercialAgentId($commercialAgentId);
-        if ($paymentMethod === 'cash') {
+        if ($paymentMethod === 'CASH') {
             $cashRegister->cash += $amount;
-        } else if ($paymentMethod === 'bank_transfer') {
+        } else if ($paymentMethod === 'BANK_TRANSFER') {
             $cashRegister->bank_transfer += $amount;
         }
         return $this->repository->update($cashRegister);

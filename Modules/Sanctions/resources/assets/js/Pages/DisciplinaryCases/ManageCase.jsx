@@ -13,7 +13,7 @@ import {
     ChevronRightIcon,
     DocumentIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function ManageCase() {
@@ -189,16 +189,20 @@ export default function ManageCase() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Manage Case" />
             <div>
-                <h1>Manage Case</h1>
-                <p>Managing case {disciplinaryCase.id}</p>
+                <div>
+                    <h2 className="text-2xl font-bold">Manage Case</h2>
+                    <p className="text-sm text-gray-500">Managing case {disciplinaryCase.id}</p>
+                </div>
+            </div>
+            <div>
                 {flash.success && (
                     <div className="mt-4 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
                         {flash.success}
                     </div>
                 )}
             </div>
-
             {/* Steps texts */}
             <div className="mt-6">
                 <div
@@ -215,8 +219,8 @@ export default function ManageCase() {
                             <div key={step} className="text-center">
                                 <h3
                                     className={`text-sm font-semibold ${isActive
-                                            ? "text-primary-600"
-                                            : "text-gray-400"
+                                        ? "text-primary-600"
+                                        : "text-gray-400"
                                         }`}
                                 >
                                     {step}
@@ -259,11 +263,10 @@ export default function ManageCase() {
                                 className="flex justify-center"
                             >
                                 <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${
-                                        isActive
-                                            ? "border-primary-500 bg-primary-500 text-white"
-                                            : "border-gray-300 bg-white text-gray-400"
-                                    }`}
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${isActive
+                                        ? "border-primary-500 bg-primary-500 text-white"
+                                        : "border-gray-300 bg-white text-gray-400"
+                                        }`}
                                 >
                                     {stepNumber}
                                 </span>
@@ -376,7 +379,7 @@ export default function ManageCase() {
                                 <p>Admin in charge</p>
                             </div>
                             <div>
-                                <p>{disciplinaryCase.admin?.name}</p>
+                                <p>{disciplinaryCase.admin?.full_name}</p>
                             </div>
                             <div>
                                 <p>Policy</p>
@@ -435,7 +438,7 @@ export default function ManageCase() {
                         <div className="grid grid-cols-2 gap-4">
 
                             <div className="col-span-1">
-                                <PrimaryButton 
+                                <PrimaryButton
                                     type="button"
                                     onClick={handleOpenEvidences}
                                 >
@@ -480,9 +483,12 @@ export default function ManageCase() {
                                     }
                                     error={errors.resolution_type}
                                     options={[
-                                        { value: "PROCEDE", label: "Procede" },
                                         {
-                                            value: "NOT_PROCEDE",
+                                            value: "procede",
+                                            label: "Procede"
+                                        },
+                                        {
+                                            value: "not procede",
                                             label: "Not Procede",
                                         },
                                     ]}
@@ -597,7 +603,7 @@ export default function ManageCase() {
                                 </div>
                             </div>
                             <div>
-                                <Input type="date" 
+                                <Input type="date"
                                     label="Applied At"
                                     name="applied_at"
                                     value={data.applied_at}
@@ -605,7 +611,7 @@ export default function ManageCase() {
                                 />
                             </div>
                             <div>
-                                <Input type="date" 
+                                <Input type="date"
                                     label="Lifted At"
                                     name="lifted_at"
                                     value={data.lifted_at}
@@ -851,11 +857,10 @@ export default function ManageCase() {
                                                             ? setActiveRebuttalIndex(index)
                                                             : setActiveEvidenceIndex(index)
                                                     }
-                                                    className={`h-2.5 rounded-full transition-all ${
-                                                        index === activePreviewIndex
-                                                            ? "w-8 bg-primary-700"
-                                                            : "w-2.5 bg-gray-300 hover:bg-gray-400"
-                                                    }`}
+                                                    className={`h-2.5 rounded-full transition-all ${index === activePreviewIndex
+                                                        ? "w-8 bg-primary-700"
+                                                        : "w-2.5 bg-gray-300 hover:bg-gray-400"
+                                                        }`}
                                                     aria-label={`Show evidence ${index + 1}`}
                                                 />
                                             ))}

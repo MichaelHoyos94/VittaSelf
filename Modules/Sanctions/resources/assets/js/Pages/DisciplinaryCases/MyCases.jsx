@@ -1,7 +1,7 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { useEffect, useState } from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import Dropdown from "@/Components/Dropdown";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
@@ -12,6 +12,7 @@ import {
     EllipsisHorizontalIcon,
     XMarkIcon,
 } from "@heroicons/react/16/solid";
+import Badge from "@/Components/Badge";
 
 export default function MyCases() {
     const { cases = [], flash } = usePage().props;
@@ -157,7 +158,6 @@ export default function MyCases() {
     }, [flash.error, flash.success])
 
     const columns = [
-        { header: "ID", accessor: "id" },
         {
             header: "EUI",
             render: (row) => (
@@ -172,40 +172,72 @@ export default function MyCases() {
                     {/* Información textual */}
                     <div className="flex flex-col">
                         <strong className="font-medium">
-                            {row.user?.name}
+                            {row.user?.full_name}
                         </strong>
                         <span className="text-sm text-gray-500">
                             {row.user?.email}
                         </span>
                         <span className="text-sm text-gray-500">
-                            {row.user?.document_number}
+                            {row.user?.phone}
                         </span>
                     </div>
                 </div>
             ),
         },
         {
+            header: "ADMINISTRATOR",
+            render: (row) => (
+                <div>
+                    {row.admin ? (
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                <span className="text-sm font-medium text-gray-700">
+                                    {row.admin.name?.charAt(0).toUpperCase()}
+                                </span>
+                            </div>
+                            <div className="flex flex-col">
+                                <strong className="font-medium">
+                                    {row.admin.full_name}
+                                </strong>
+                                <span className="text-sm text-gray-500">
+                                    {row.admin.email}
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                    {row.admin.phone}
+                                </span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <span className="text-sm text-gray-500">No administrator assigned</span>
+                        </div>
+                    )}
+                </div>
+            )
+        },
+        {
             header: "POLICY",
             render: (row) => <div>{row.policy.policy}</div>,
         },
         {
-            header: "ADMINISTRATOR",
-            render: (row) => (
-                <div>{row.admin?.name || "Sin administrador asignado"}</div>
-            ),
-        },
-        {
             header: "STATUS",
             render: (row) => (
-                <div className="p-2 rounded-full bg-primary-200 text-center">
-                    {row.case_status?.case_status}
-                </div>
+                <Badge
+                    type={row.case_status?.code === 'CLOSED' ? 'success'
+                        : row.case_status?.code === 'UNASSIGNED' ? 'secondary'
+                            : row.case_status?.code === 'AWAITING_EVIDENCES' ? 'warning'
+                                : (row.case_status?.code === 'UNDER_INVESTIGATION' || row.case_status?.code === 'OPEN') ? 'info'
+                                    : 'default'
+                    }
+                    text={row.case_status?.case_status || 'Unknown'
+                    }
+                />
             ),
         },
         {
             header: "ACTIONS",
             render: (row) => (
-                <div className="flex justify-center">
+                <div className="flex justify-start items-center">
                     <Dropdown>
                         <Dropdown.Trigger>
                             <button
@@ -243,8 +275,11 @@ export default function MyCases() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-xl backdrop-blur-lg min-h-full">
-            <h2>My Cases</h2>
-            <p>You have {cases.data?.length} disciplinary cases.</p>
+            <Head title="My Cases" />
+            <div>
+                <h2 className="text-2xl font-bold">My Cases</h2>
+                <p className="text-sm text-gray-500">You have {cases.data?.length} disciplinary cases.</p>
+            </div>
             <div>
                 {successMessage && (
                     <div
@@ -265,7 +300,14 @@ export default function MyCases() {
                     </div>
                 )}
             </div>
-            <Table columns={columns} data={cases.data} from={cases.from} to={cases.to} totalResults={cases.total} />
+            <Table
+                columns={columns}
+                data={cases.data}
+                from={cases.from}
+                to={cases.to}
+                totalResults={cases.total}
+                links={cases.links}
+            />
             <Modal show={modalOpen} onClose={closeModal} maxWidth="xl">
                 {modalMode === "view" && selectedCase && (
                     <div>

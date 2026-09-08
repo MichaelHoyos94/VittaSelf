@@ -10,7 +10,7 @@ import {
     ArchiveBoxIcon,
     ClipboardDocumentCheckIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function MyCashRegister() {
@@ -75,7 +75,8 @@ export default function MyCashRegister() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full">
-            <h2>My Cash Register</h2>
+            <Head title="My Cash Register" />
+            <h2 className="text-2xl font-bold">My Cash Register</h2>
             <p>Manage your cash register settings and operations.</p>
             {/* Flash Messages */}
             {successMessage && (

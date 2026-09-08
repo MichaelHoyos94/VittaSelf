@@ -15,9 +15,10 @@ class ProductCountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $productCounts = $this->service->getAll();
+        $search = $request->input('search');
+        $productCounts = $this->service->getAll($search);
         return Inertia::render('Audits/ProductCounts/Index')->with([
             'productCounts' => $productCounts
         ]);

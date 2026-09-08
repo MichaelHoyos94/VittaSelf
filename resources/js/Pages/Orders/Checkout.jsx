@@ -4,7 +4,7 @@ import Select from "@/Components/Form/Select";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 
@@ -58,8 +58,9 @@ export default function Checkout() {
     }, [flash.success, flash.error]);
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h2>Checkout</h2>
-            <p>Confirm the data.</p>
+            <Head title="Checkout" />
+            <h2 className="text-2xl font-bold">Checkout</h2>
+            <p className="text-sm text-gray-500">Confirm the data.</p>
             <div>
                 {successMessage && (
                     <div
@@ -181,7 +182,7 @@ export default function Checkout() {
                                             label: "Cash",
                                         },
                                         {
-                                            value: "bank_transfer",
+                                            value: "bank transfer",
                                             label: "Bank Transfer",
                                         },
                                     ]}

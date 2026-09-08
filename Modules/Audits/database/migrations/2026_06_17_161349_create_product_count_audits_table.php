@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_count_audits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_count_id')->constrained('product_counts')->onDelete('cascade');
-            $table->enum('status', ['CORRECT', 'CORRECT_WITH_ISSUES', 'INCORRECT']);
+            $table->enum('status', ['correct', 'correct with issues', 'incorrect']);
             $table->foreignId('audited_by')->constrained('users')->onDelete('cascade');
             $table->dateTime('audited_at');
             $table->integer('total_expected_products');

@@ -8,18 +8,18 @@ export default function MetricCard({
     const isPositiveTrend = trend >= 0;
 
     return (
-        <article className="rounded-xl border border-gray-200 bg-white p-5 shadow-lg">
+        <article className="min-w-0 rounded-xl border border-primary-200 bg-white p-5 shadow-lg">
             <div>
                 <div className="flex items-center gap-4 justify-between">
                     <div className="flex flex-col items-start justify-between">
-                        <p className="text-sm font-medium text-gray-500">
+                        <p className="text-sm font-medium text-gray-600">
                             {title}
                         </p>
-                        <p className="mt-2 text-3xl font-bold text-gray-900">
+                        <p className="mt-2 text-3xl font-bold text-primary-900">
                             {value}
                         </p>
                         {description && (
-                            <p className="mt-3 text-sm text-gray-500">
+                            <p className="mt-3 text-sm text-gray-600">
                                 {description}
                             </p>
                         )}

@@ -63,7 +63,7 @@ export default function Sidebar() {
             id: "sanctions",
             label: "Sanctions",
             icon: ScaleIcon,
-            permission: 'sanctions.sanctions-view',
+            permission: 'sanctions.view',
             active:
                 isCurrent("sanctions.*") ||
                 isCurrent("sanctions.disciplinary-cases.index") ||
@@ -412,13 +412,6 @@ export default function Sidebar() {
             </nav>
 
             <div className="mt-4 border-t border-slate-200 pt-4">
-                <Link
-                    href="/sanctions/settings"
-                    className="group flex items-center gap-3 border-l-4 border-transparent px-5 py-3 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-slate-100 hover:text-primary-700"
-                >
-                    <Cog6ToothIcon className="h-5 w-5 text-slate-500 group-hover:text-primary-700" />
-                    <span>Settings</span>
-                </Link>
                 <Link
                     href={typeof route === "function" ? route("logout") : "/logout"}
                     method="post"

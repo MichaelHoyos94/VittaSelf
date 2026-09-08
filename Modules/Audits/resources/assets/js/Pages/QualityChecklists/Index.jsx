@@ -1,3 +1,4 @@
+import Badge from "@/Components/Badge";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 import Select from "@/Components/Form/Select";
@@ -8,7 +9,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ClipboardDocumentCheckIcon, EyeIcon } from "@heroicons/react/16/solid";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const statusOptions = [
@@ -19,7 +20,8 @@ const statusOptions = [
 ];
 
 export default function Index() {
-    const { qualityChecklists, costCenter, flash, auth } = usePage().props;
+    const { qualityChecklists = [], costCenter, flash, auth } = usePage().props;
+    console.log("Quality checklists:", qualityChecklists);
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("create");
@@ -97,7 +99,6 @@ export default function Index() {
     };
 
     const columns = [
-        { header: "ID", accessor: "id" },
         {
             header: "COST CENTER",
             render: (row) => (
@@ -105,12 +106,21 @@ export default function Index() {
                     <strong className="font-medium">
                         {row.cost_center?.name || "Sin centro de costo"}
                     </strong>
+                    <span className="text-sm text-gray-500">
+                        {row.cost_center?.address}
+                    </span>
                 </div>
             ),
         },
         {
             header: "DATE",
-            render: (row) => <span>{row.checklist_date}</span>,
+            render: (row) => <span>{new Date(row.checklist_date).toLocaleDateString(
+                'en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            }
+            )}</span>,
         },
         {
             header: "TEMPERATURE",
@@ -127,23 +137,19 @@ export default function Index() {
         {
             header: "SMOKE DETECTOR",
             render: (row) => (
-                <span
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                        row.smoke_detector
-                            ? "bg-primary-100 text-primary-800"
-                            : "bg-red-100 text-red-700"
-                    }`}
-                >
-                    {row.smoke_detector ? "Working" : "Not Working"}
-                </span>
+                <Badge
+                    type={row.smoke_detector ? "success" : "error"}
+                    text={row.smoke_detector ? "Working" : "Not working"}
+                />
             ),
         },
         {
-            header: "AUDIT",
+            header: "AUDITED",
             render: (row) => (
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                    {row.audit?.status || "Pending"}
-                </span>
+                <Badge
+                    type={row.audit ? (row.audit.status === "excellent" ? "success" : row.audit.status === "good" ? "secondary" : row.audit.status === "bad" ? "warning" : row.audit.status === "critical" ? "error" : "info") : "info"}
+                    text={row.audit ? row.audit.status : "Pending"}
+                />
             ),
         },
         {
@@ -166,9 +172,10 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Quality" />
             <div>
-                <h1>Quality Checklists</h1>
-                <p>Daily quality checklist records by cost center</p>
+                <h1 className="text-2xl font-bold">Quality Checklists</h1>
+                <p className="text-sm text-gray-500">Daily quality checklist records by cost center</p>
             </div>
             <div className="mb-4 flex flex-row items-center justify-start gap-2">
                 <PrimaryButton onClick={handleOpenCreateModal}>
@@ -208,7 +215,11 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
-                data={qualityChecklists}
+                data={qualityChecklists.data}
+                from={qualityChecklists.from}
+                to={qualityChecklists.to}
+                links={qualityChecklists.links}
+                total={qualityChecklists.total}
                 emptyText="No quality checklists found"
             />
             <Modal show={modalOpen} onClose={closeModal} maxWidth="2xl">

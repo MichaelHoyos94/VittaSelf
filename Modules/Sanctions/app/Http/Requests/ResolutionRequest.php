@@ -22,7 +22,7 @@ class ResolutionRequest extends FormRequest
     {
         return [
             'resolution_text' => 'required|min:10',
-            'resolution_type' => 'required|in:PROCEDE,NOT_PROCEDE',
+            'resolution_type' => 'required|in:procede,not procede',
             'disciplinary_case_id' => 'required|exists:disciplinary_cases,id|unique:resolution,disciplinary_case_id',
             'sanction_level_id' => 'required|exists:cat_sanctions_level,id',
             'sanctions' => 'array',
@@ -40,7 +40,7 @@ class ResolutionRequest extends FormRequest
             'resolution_text.required' => 'Resolution details are required.',
             'resolution_text.min' => 'Resolution details must be at least 10 characters.',
             'resolution_type.required' => 'Resolution type is required.',
-            'resolution_type.in' => 'Resolution type must be either "PROCEDE" or "NOT_PROCEDE".',
+            'resolution_type.in' => 'Resolution type must be either "procede" or "not procede".',
             'disciplinary_case_id.required' => 'Disciplinary case is required.',
             'disciplinary_case_id.exists' => 'Selected disciplinary case does not exist.',
             'disciplinary_case_id.unique' => 'This disciplinary case already has a resolution.',

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 // use Modules\Audits\Database\Factories\CashRegisterClosureFactory;
 
@@ -47,5 +48,10 @@ class CashRegisterClosure extends Model
     public function commercialAgent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'commercial_agent_id');
+    }
+
+    public function audit(): HasOne
+    {
+        return $this->hasOne(CashRegisterClosureAudit::class, 'cash_register_closure_id');
     }
 }

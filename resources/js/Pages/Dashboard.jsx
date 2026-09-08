@@ -4,7 +4,7 @@ import HorBarChartComponent from "@/Components/Dashboard/HorBarChartComponent";
 import LineChartComponent from "@/Components/Dashboard/LineChartComponent";
 import MetricCard from "@/Components/Dashboard/MetricCard";
 import PieChartComponent from "@/Components/Dashboard/PieChartComponent";
-import SecondaryButton from "@/Components/SecondaryButton";
+import '@/Components/Dashboard/dashboard.css';
 import MainLayout from "@/Layouts/MainLayout";
 import {
     ShoppingBagIcon,
@@ -208,14 +208,14 @@ export default function Dashboard({ data }) {
                             description="Product count audits by status."
                         >
                             <PieChartComponent
-                                data={data.productCountAuditsByStatus}
+                                data={data.productCountsAuditsByStatus}
                             />
                         </ChartCard>
                         <ChartCard
                             title="Cash Register Closure Audits"
                             description="Cash register closure audits by status."
                         >
-                            <PieChartComponent 
+                            <PieChartComponent
                                 data={data.cashRegisterClosureAuditsByStatus}
                             />
                         </ChartCard>
@@ -235,19 +235,27 @@ export default function Dashboard({ data }) {
     const [activeTab, setActiveTab] = useState(tabs[0].id);
     const activeTabContent = tabs.find((tab) => tab.id === activeTab);
     return (
-        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-8 shadow-xl backdrop-blur-lg space-y-4">
+        <div className="dashboard min-h-full rounded-xl border border-primary-200 bg-white/80 p-4 sm:p-8 shadow-xl backdrop-blur-lg space-y-4">
             <Head title="Dashboard" />
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p>Overview of key metrics and analytics.</p>
+            <div>
+                <h2 className="text-2xl font-bold">Dashboard</h2>
+                <p className="text-sm text-gray-500">Overview of key metrics and analytics.</p>
+            </div>
             {/* Buttons */}
             <div className="my-4 flex flex-wrap gap-4">
                 {tabs.map((tab) => (
-                    <SecondaryButton
+                    <button
                         key={tab.id}
+                        type="button"
+                        aria-pressed={activeTab === tab.id}
+                        className={`rounded-lg border px-4 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-800 ${activeTab === tab.id
+                            ? 'border-primary-800 bg-primary-800 text-white hover:bg-primary-900'
+                            : 'border-primary-200 bg-white text-primary-900 hover:bg-primary-100'
+                            }`}
                         onClick={() => setActiveTab(tab.id)}
                     >
                         {tab.label}
-                    </SecondaryButton>
+                    </button>
                 ))}
             </div>
             {/* Transition */}

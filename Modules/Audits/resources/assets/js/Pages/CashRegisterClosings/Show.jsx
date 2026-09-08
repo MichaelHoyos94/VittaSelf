@@ -4,7 +4,7 @@ import Select from "@/Components/Form/Select";
 import TextArea from "@/Components/Form/TextArea";
 import PrimaryButton from "@/Components/PrimaryButton";
 import MainLayout from "@/Layouts/MainLayout"
-import { useForm, usePage } from "@inertiajs/react"
+import { Head, useForm, usePage } from "@inertiajs/react"
 import formatCurrency from "@/Utils/formatCurrency";
 
 export default function Show() {
@@ -34,7 +34,9 @@ export default function Show() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h2>Cash Register Closure Details</h2>
+            <Head title="Cash Register Closure Details" />
+            <h2 className="text-2xl font-bold">Cash Register Closure Details</h2>
+            <p className="text-sm text-gray-500">Detailed cash register closure info for audit.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 space-y-4">
                 <div>
                     <p>Cash Register Closure</p>
@@ -67,6 +69,7 @@ export default function Show() {
                                     label={"Counted Cash"}
                                     value={data.counted_cash}
                                     onChange={(e) => setData('counted_cash', e.target.value)}
+                                    error={errors.counted_cash}
                                 />
                             </div>
                             <div>
@@ -81,6 +84,7 @@ export default function Show() {
                                     label={"Counted Bank Transfer"}
                                     value={data.counted_bank_transfer}
                                     onChange={(e) => setData('counted_bank_transfer', e.target.value)}
+                                    error={errors.counted_bank_transfer}
                                 />
                             </div>
                             <div className="col-span-2">
@@ -88,6 +92,7 @@ export default function Show() {
                                     label={"Observations"}
                                     value={data.observations}
                                     onChange={(e) => setData('observations', e.target.value)}
+                                    error={errors.observations}
                                 />
                             </div>
                             <div className="col-span-2">
@@ -95,6 +100,7 @@ export default function Show() {
                                     label={"Report"}
                                     value={data.report}
                                     onChange={(e) => setData('report', e.target.value)}
+                                    error={errors.report}
                                 />
                             </div>
                             <div className="col-span-2">

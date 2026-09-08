@@ -11,7 +11,7 @@ import {
     TrashIcon,
     XMarkIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
 
@@ -166,7 +166,8 @@ export default function Create() {
     };
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h2>Create Internal Order</h2>
+            <Head title="Create Internal Order" />
+            <h2 className="text-2xl font-bold">Create Internal Order</h2>
             <p>Complete the steps and create de order.</p>
             <div className="space-y-4 my-4">
                 {successMessage && (
@@ -586,7 +587,7 @@ export default function Create() {
                                                     label: "Cash",
                                                 },
                                                 {
-                                                    value: "bank_transfer",
+                                                    value: "bank transfer",
                                                     label: "Bank Transfer",
                                                 },
                                             ]}

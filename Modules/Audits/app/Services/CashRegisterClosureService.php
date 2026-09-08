@@ -17,9 +17,9 @@ class CashRegisterClosureService
 
     }
 
-    public function getAll()
+    public function getAll($search)
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($search);
     }
 
     public function getById($cashRegisterClosureId)

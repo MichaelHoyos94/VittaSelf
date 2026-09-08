@@ -8,12 +8,12 @@ import {
 } from "recharts";
 
 const COLORS = [
-    "#2563eb",
-    "#16a34a",
-    "#f59e0b",
-    "#dc2626",
-    "#7c3aed",
-    "#0891b2",
+    'var(--primary-800)',
+    'var(--primary-400)',
+    'var(--primary-600)',
+    'var(--primary-200)',
+    'var(--primary-900)',
+    'var(--primary-500)',
 ];
 
 const LABEL_KEYS = ["name", "label", "plan", "role", "category"];
@@ -69,8 +69,10 @@ export default function PieChartComponent({ data = [] }) {
                         nameKey="name"
                         cx="50%"
                         cy="45%"
-                        innerRadius={70}
-                        outerRadius={105}
+                        innerRadius="55%"
+                        outerRadius="85%"
+                        stroke="white"
+                        strokeWidth={2}
                         paddingAngle={3}
                     >
                         {chartData.map((item, index) => (
@@ -81,14 +83,14 @@ export default function PieChartComponent({ data = [] }) {
                         ))}
                     </Pie>
 
-                    <Tooltip />
-                    <Legend />
+                    <Tooltip wrapperClassName="dashboard-tooltip" />
+                    <Legend formatter={(value) => <span className="text-sm text-primary-900">{value}</span>} />
                 </PieChart>
             </ResponsiveContainer>
 
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center pb-10">
                 <div className="text-center">
-                    <p className="text-3xl font-bold text-gray-900">{total}</p>
+                    <p className="text-3xl font-bold text-primary-900">{total}</p>
 
                     <p className="text-sm text-gray-500">Total</p>
                 </div>

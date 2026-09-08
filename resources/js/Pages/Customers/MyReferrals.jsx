@@ -1,6 +1,6 @@
 import Table from '@/Components/Table';
 import MainLayout from '@/Layouts/MainLayout';
-import { router, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 
 export default function MyReferrals() {
     const { representedUsers } = usePage().props;
@@ -41,9 +41,10 @@ export default function MyReferrals() {
 
     return (
         <div className="min-h-full space-y-4 rounded-xl bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+            <Head title="My Referrals" />
             <div>
-                <h2 className="text-2xl font-bold text-slate-800">My Referrals</h2>
-                <p className="text-sm text-slate-500">
+                <h2 className="text-2xl font-bold">My Referrals</h2>
+                <p className="text-sm text-gray-500">
                     Direct entrepreneurs represented by your EUI network.
                 </p>
             </div>

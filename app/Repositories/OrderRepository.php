@@ -41,8 +41,17 @@ class OrderRepository
         });
     }
     public function getById($id) {}
-    public function getByUserId($userId)
+    public function getByUserId($userId, $search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
     {
-        return Order::where('user_id', $userId)->get();
+        return Order::with('customer')
+            ->where('user_id', $userId)
+            ->when($search, function ($query, $search) {
+                $query->where('shipping_address', 'like', "%{$search}%");
+                $query->orWhere('email', 'like', "%{$search}%");
+                $query->orWhere('order_number', 'like', "%{$search}%");
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
     }
 }

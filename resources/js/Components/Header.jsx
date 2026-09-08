@@ -59,7 +59,7 @@ export default function Header() {
                     aria-label="Notifications"
                 >
                     <BellIcon className="h-5 w-5" />
-                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
+                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-700 px-1 text-[10px] font-bold leading-none text-white">
                         3
                     </span>
                 </button>
@@ -87,7 +87,8 @@ export default function Header() {
                                 {displayName}
                             </span>
                             <span className="max-w-36 truncate text-xs text-slate-500">
-                                Administrador
+                                {/* Current role */}
+                                {user?.roles?.[0]?.name || "User"}
                             </span>
                         </span>
                         <ChevronDownIcon
@@ -119,13 +120,6 @@ export default function Header() {
                                 >
                                     <UserCircleIcon className="h-5 w-5" />
                                     <span>Editar perfil</span>
-                                </Link>
-                                <Link
-                                    href="/sanctions/settings"
-                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 transition duration-200 hover:bg-slate-50 hover:text-primary-700"
-                                >
-                                    <Cog6ToothIcon className="h-5 w-5" />
-                                    <span>Configuracion</span>
                                 </Link>
                             </div>
                             <div className="border-t border-slate-200 py-2">

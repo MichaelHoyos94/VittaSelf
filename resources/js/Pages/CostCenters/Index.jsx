@@ -6,7 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 const emptyForm = {
@@ -140,7 +140,6 @@ export default function Index() {
     };
 
     const columns = [
-        { header: "ID", accessor: "id" },
         {
             header: "Cost Center",
             render: (row) => (
@@ -186,9 +185,10 @@ export default function Index() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full">
+            <Head title="Cost Centers" />
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">
+                    <h1 className="text-2xl font-bold">
                         Cost Centers
                     </h1>
                     <p className="text-sm text-gray-500">

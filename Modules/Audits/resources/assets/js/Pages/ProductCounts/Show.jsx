@@ -68,9 +68,10 @@ export default function Show() {
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Product Count Details" />
             <div>
-                <h2>Product count</h2>
-                <p>details</p>
+                <h2 className="text-2xl font-bold">Product Count Details</h2>
+                <p className="text-sm text-gray-500">Details</p>
             </div>
             <div className="grid grid-cols-2 gap-4 space-y-4">
                 <div>
@@ -233,14 +234,14 @@ export default function Show() {
                                     }
                                     error={errors.status}
                                     options={[
-                                        { label: "Correct", value: "CORRECT" },
+                                        { label: "Correct", value: "correct" },
                                         {
                                             label: "Incorrect",
-                                            value: "INCORRECT",
+                                            value: "incorrect",
                                         },
                                         {
                                             label: "Correct with issues",
-                                            value: "CORRECT_WITH_ISSUES",
+                                            value: "correct with issues",
                                         },
                                     ]}
                                 />

@@ -13,19 +13,19 @@ export default function LineChartComponent({ data }) {
         <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--primary-100)" />
 
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey="month" stroke="var(--primary-900)" />
 
-                    <YAxis allowDecimals={false} />
+                    <YAxis allowDecimals={false} stroke="var(--primary-900)" />
 
-                    <Tooltip />
+                    <Tooltip wrapperClassName="dashboard-tooltip" cursor={{ stroke: 'var(--primary-300)' }} />
 
                     <Line
                         type="monotone"
                         dataKey="count"
                         name="Texto"
-                        stroke="#2563eb"
+                        stroke="var(--primary-700)"
                         strokeWidth={3}
                         activeDot={{ r: 6 }}
                     />

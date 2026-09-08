@@ -1,9 +1,10 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
 export default function InternalOrders() {
     const { internalOrders, flash } = usePage().props;
@@ -11,8 +12,20 @@ export default function InternalOrders() {
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const columns = [
         {
-            header: "#",
-            accessor: "id",
+            header: "order number",
+            accessor: "order_number",
+        },
+        {
+            header: "order date",
+            render: (row) => (
+                <span>
+                    {new Date(row.created_at).toLocaleDateString('en-US', {
+                        'year': 'numeric',
+                        'month': 'long',
+                        'day': 'numeric',
+                    })}
+                </span>
+            )
         },
         {
             header: "eui",
@@ -77,8 +90,22 @@ export default function InternalOrders() {
             accessor: "points",
         },
         {
+            header: "payment method",
+            render: (row) => (
+                <Badge
+                    type={row.payment_method === 'bank transfer' ? 'secondary' : 'success'}
+                    text={row.payment_method}
+                />
+            ),
+        },
+        {
             header: "status",
-            accessor: "status",
+            render: (row) => (
+                <Badge
+                    type="info"
+                    text={row.status}
+                />
+            ),
         },
         {
             header: "actions",
@@ -97,6 +124,7 @@ export default function InternalOrders() {
     }, [flash.success]);
 
     const handleSearch = (search) => {
+        if (!search) return;
         router.get(
             route("orders.internal-orders.index"),
             { search: search },
@@ -104,9 +132,18 @@ export default function InternalOrders() {
         );
     };
 
+    const handlePageChange = (url) => {
+        if (!url) return;
+        router.get(url, { preserveState: true, replace: true });
+    };
+
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
-            <h1>Internal Orders</h1>
+            <Head title="Internal Orders" />
+            <div>
+                <h1 className="text-2xl font-bold">Internal Orders</h1>
+                <p>Internal orders history.</p>
+            </div>
             {/* Flash messages */}
             <div>
                 {successMessage && (
