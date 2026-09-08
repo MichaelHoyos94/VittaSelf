@@ -121,13 +121,6 @@ export default function Header() {
                                     <UserCircleIcon className="h-5 w-5" />
                                     <span>Editar perfil</span>
                                 </Link>
-                                <Link
-                                    href="/sanctions/settings"
-                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 transition duration-200 hover:bg-slate-50 hover:text-primary-700"
-                                >
-                                    <Cog6ToothIcon className="h-5 w-5" />
-                                    <span>Configuracion</span>
-                                </Link>
                             </div>
                             <div className="border-t border-slate-200 py-2">
                                 <Link
