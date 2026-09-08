@@ -18,7 +18,7 @@ php artisan config:cache
 php artisan view:cache
 
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
-    php artisan migrate --force
+    php artisan migrate:fresh --force
 fi
 
 if [ "${RUN_SEEDERS:-false}" = "true" ]; then
