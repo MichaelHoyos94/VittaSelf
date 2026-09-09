@@ -4,6 +4,7 @@ namespace Modules\Audits\Services;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Modules\Audits\Models\CashRegisterClosureAudit;
 use Modules\Audits\Models\ProductCountAudit;
 use Modules\Audits\Models\QualityChecklistAudit;
 
@@ -33,6 +34,22 @@ class PdfService
         ])->setPaper('letter');
 
         $fileName = 'audit-reports/product-count-' . $audit->id . '.pdf';
+
+        Storage::disk('local')->put($fileName, $pdf->output());
+
+        return $fileName;
+    }
+
+    public function generateCashRegisterClosureAuditPdf(CashRegisterClosureAudit $audit): string
+    {
+        $audit->load('auditor');
+        $audit->load('cashRegisterClosure.cashRegister');
+
+        $pdf = Pdf::loadView('audits::pdfs.cash-register-closure-audit-report', [
+            'audit' => $audit,
+        ])->setPaper('letter');
+
+        $fileName = 'audit-reports/cash-register-closure-' . $audit->id . '.pdf';
 
         Storage::disk('local')->put($fileName, $pdf->output());
 

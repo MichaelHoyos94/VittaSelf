@@ -33,7 +33,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        {/* If user is admin redirect dashboard, else redirect catalog */}
+        $user = auth()->user();
+        if ($user->hasRole(['administrator', 'super-admin'])) {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+        else {
+            return redirect()->intended(route('products.products.index', absolute: false));
+        }
     }
 
     /**

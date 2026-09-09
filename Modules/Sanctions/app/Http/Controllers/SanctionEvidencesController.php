@@ -9,6 +9,7 @@ use Modules\Sanctions\Services\SanctionEvidenceService;
 class SanctionEvidencesController extends Controller
 {
     public function __construct(protected SanctionEvidenceService $service) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -20,7 +21,8 @@ class SanctionEvidencesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $disciplinaryCaseId) {
+    public function store(Request $request, $disciplinaryCaseId)
+    {
         $request->validate([
             'evidence_description' => 'required|string|max:255',
             'evidences.*' => 'required|file|max:10240', // Max 10MB per file
@@ -32,7 +34,26 @@ class SanctionEvidencesController extends Controller
         $this->service->storeEvidences($disciplinaryCaseId, $evidences, $description);
 
         return redirect()->route('sanctions.manage-case', ['id' => $disciplinaryCaseId])
-                         ->with('success', 'Evidences uploaded successfully.');
+            ->with('success', 'Evidences uploaded successfully.');
+    }
+
+    public function storeRebuttals(Request $request, $disciplinaryCaseId)
+    {
+        $request->validate([
+            'rebuttal_description' => 'required|string|max:128',
+            'rebuttals' => 'required|array|min:1',
+            'rebuttals.*' => 'required|file|max:10240',
+        ]);
+
+        $this->service->storeRebuttals(
+            $disciplinaryCaseId,
+            $request->user()->id,
+            $request->file('rebuttals'),
+            $request->input('rebuttal_description'),
+        );
+
+        return redirect()->route('sanctions.disciplinary-cases.my-cases')
+            ->with('success', 'Rebuttals uploaded successfully.');
     }
 
     /**

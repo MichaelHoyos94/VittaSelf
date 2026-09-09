@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Sanctions\Repositories;
+
 use Modules\Sanctions\Models\SanctionEvidence;
 
 class SanctionEvidenceRepository
@@ -8,8 +10,9 @@ class SanctionEvidenceRepository
     {
         return SanctionEvidence::create($data);
     }
+
     public function getByCaseId($caseId)
     {
-        return SanctionEvidence::where('case_id', $caseId)->get();
+        return SanctionEvidence::where('disciplinary_case_id', $caseId)->get();
     }
 }

@@ -13,7 +13,7 @@ import {
     ChevronRightIcon,
     DocumentIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function ManageCase() {
@@ -40,6 +40,7 @@ export default function ManageCase() {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("progress");
     const [activeEvidenceIndex, setActiveEvidenceIndex] = useState(0);
+    const [activeRebuttalIndex, setActiveRebuttalIndex] = useState(0);
     const currentStep = disciplinaryCase.case_status_id;
     const steps = caseStatuses.map((status) => status.case_status);
     const totalSteps = steps.length;
@@ -55,7 +56,15 @@ export default function ManageCase() {
         disciplinaryCase.sanction_evidences ||
         disciplinaryCase.sanctionEvidences ||
         [];
-    const activeEvidence = evidences[activeEvidenceIndex];
+    const rebuttals =
+        disciplinaryCase.rebuttals ||
+        disciplinaryCase.user_evidences ||
+        disciplinaryCase.userEvidences ||
+        [];
+    const previewItems = modalMode === "rebuttals" ? rebuttals : evidences;
+    const activePreviewIndex =
+        modalMode === "rebuttals" ? activeRebuttalIndex : activeEvidenceIndex;
+    const activeEvidence = previewItems[activePreviewIndex];
 
     const getEvidenceUrl = (evidence) => {
         if (!evidence?.file) {
@@ -105,13 +114,33 @@ export default function ManageCase() {
         setModalOpen(true);
     };
 
+    const handleOpenRebuttals = () => {
+        setModalMode("rebuttals");
+        setActiveRebuttalIndex(0);
+        setModalOpen(true);
+    };
+
     const handlePreviousEvidence = () => {
+        if (modalMode === "rebuttals") {
+            setActiveRebuttalIndex((currentIndex) =>
+                currentIndex === 0 ? rebuttals.length - 1 : currentIndex - 1,
+            );
+            return;
+        }
+
         setActiveEvidenceIndex((currentIndex) =>
             currentIndex === 0 ? evidences.length - 1 : currentIndex - 1,
         );
     };
 
     const handleNextEvidence = () => {
+        if (modalMode === "rebuttals") {
+            setActiveRebuttalIndex((currentIndex) =>
+                currentIndex === rebuttals.length - 1 ? 0 : currentIndex + 1,
+            );
+            return;
+        }
+
         setActiveEvidenceIndex((currentIndex) =>
             currentIndex === evidences.length - 1 ? 0 : currentIndex + 1,
         );
@@ -159,17 +188,21 @@ export default function ManageCase() {
     };
 
     return (
-        <div className="p-4 bg-white shadow-md rounded">
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="Manage Case" />
             <div>
-                <h1>Manage Case</h1>
-                <p>Managing case {disciplinaryCase.id}</p>
+                <div>
+                    <h2 className="text-2xl font-bold">Manage Case</h2>
+                    <p className="text-sm text-gray-500">Managing case {disciplinaryCase.id}</p>
+                </div>
+            </div>
+            <div>
                 {flash.success && (
                     <div className="mt-4 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
                         {flash.success}
                     </div>
                 )}
             </div>
-
             {/* Steps texts */}
             <div className="mt-6">
                 <div
@@ -186,8 +219,8 @@ export default function ManageCase() {
                             <div key={step} className="text-center">
                                 <h3
                                     className={`text-sm font-semibold ${isActive
-                                            ? "text-primary-600"
-                                            : "text-gray-400"
+                                        ? "text-primary-600"
+                                        : "text-gray-400"
                                         }`}
                                 >
                                     {step}
@@ -230,11 +263,10 @@ export default function ManageCase() {
                                 className="flex justify-center"
                             >
                                 <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${
-                                        isActive
-                                            ? "border-primary-500 bg-primary-500 text-white"
-                                            : "border-gray-300 bg-white text-gray-400"
-                                    }`}
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${isActive
+                                        ? "border-primary-500 bg-primary-500 text-white"
+                                        : "border-gray-300 bg-white text-gray-400"
+                                        }`}
                                 >
                                     {stepNumber}
                                 </span>
@@ -347,7 +379,7 @@ export default function ManageCase() {
                                 <p>Admin in charge</p>
                             </div>
                             <div>
-                                <p>ADMIN</p>
+                                <p>{disciplinaryCase.admin?.full_name}</p>
                             </div>
                             <div>
                                 <p>Policy</p>
@@ -406,7 +438,7 @@ export default function ManageCase() {
                         <div className="grid grid-cols-2 gap-4">
 
                             <div className="col-span-1">
-                                <PrimaryButton 
+                                <PrimaryButton
                                     type="button"
                                     onClick={handleOpenEvidences}
                                 >
@@ -414,7 +446,12 @@ export default function ManageCase() {
                                 </PrimaryButton>
                             </div>
                             <div className="col-span-1">
-                                TEXT
+                                <SecondaryButton
+                                    type="button"
+                                    onClick={handleOpenRebuttals}
+                                >
+                                    Rebuttals
+                                </SecondaryButton>
                             </div>
 
                             <div className="col-span-2">
@@ -446,9 +483,12 @@ export default function ManageCase() {
                                     }
                                     error={errors.resolution_type}
                                     options={[
-                                        { value: "PROCEDE", label: "Procede" },
                                         {
-                                            value: "NOT_PROCEDE",
+                                            value: "procede",
+                                            label: "Procede"
+                                        },
+                                        {
+                                            value: "not procede",
                                             label: "Not Procede",
                                         },
                                     ]}
@@ -563,7 +603,7 @@ export default function ManageCase() {
                                 </div>
                             </div>
                             <div>
-                                <Input type="date" 
+                                <Input type="date"
                                     label="Applied At"
                                     name="applied_at"
                                     value={data.applied_at}
@@ -571,7 +611,7 @@ export default function ManageCase() {
                                 />
                             </div>
                             <div>
-                                <Input type="date" 
+                                <Input type="date"
                                     label="Lifted At"
                                     name="lifted_at"
                                     value={data.lifted_at}
@@ -677,17 +717,19 @@ export default function ManageCase() {
                         </div>
                     </div>
                 )}
-                {modalMode === "evidences" && (
+                {(modalMode === "evidences" || modalMode === "rebuttals") && (
                     <div>
                         <div className="flex items-center justify-between border-b px-6 py-4">
                             <div>
                                 <h2 className="text-lg font-semibold text-gray-800">
-                                    Case evidences
+                                    {modalMode === "rebuttals"
+                                        ? "Case rebuttals"
+                                        : "Case evidences"}
                                 </h2>
                                 <p className="text-sm text-gray-500">
-                                    {evidences.length
-                                        ? `${activeEvidenceIndex + 1} of ${evidences.length}`
-                                        : "No evidences uploaded yet"}
+                                    {previewItems.length
+                                        ? `${activePreviewIndex + 1} of ${previewItems.length}`
+                                        : `No ${modalMode} uploaded yet`}
                                 </p>
                             </div>
                             <SecondaryButton
@@ -699,11 +741,11 @@ export default function ManageCase() {
                         </div>
 
                         <div className="px-6 py-5">
-                            {!evidences.length && (
+                            {!previewItems.length && (
                                 <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-10 text-center">
                                     <DocumentIcon className="mx-auto h-12 w-12 text-gray-400" />
                                     <p className="mt-3 text-sm font-medium text-gray-700">
-                                        This case has no evidences to preview.
+                                        This case has no {modalMode} to preview.
                                     </p>
                                 </div>
                             )}
@@ -711,7 +753,7 @@ export default function ManageCase() {
                             {activeEvidence && (
                                 <div className="space-y-4">
                                     <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-                                        {evidences.length > 1 && (
+                                        {previewItems.length > 1 && (
                                             <>
                                                 <button
                                                     type="button"
@@ -804,20 +846,21 @@ export default function ManageCase() {
                                         </a>
                                     </div>
 
-                                    {evidences.length > 1 && (
+                                    {previewItems.length > 1 && (
                                         <div className="flex justify-center gap-2">
-                                            {evidences.map((evidence, index) => (
+                                            {previewItems.map((evidence, index) => (
                                                 <button
                                                     key={evidence.id || evidence.file}
                                                     type="button"
                                                     onClick={() =>
-                                                        setActiveEvidenceIndex(index)
+                                                        modalMode === "rebuttals"
+                                                            ? setActiveRebuttalIndex(index)
+                                                            : setActiveEvidenceIndex(index)
                                                     }
-                                                    className={`h-2.5 rounded-full transition-all ${
-                                                        index === activeEvidenceIndex
-                                                            ? "w-8 bg-primary-700"
-                                                            : "w-2.5 bg-gray-300 hover:bg-gray-400"
-                                                    }`}
+                                                    className={`h-2.5 rounded-full transition-all ${index === activePreviewIndex
+                                                        ? "w-8 bg-primary-700"
+                                                        : "w-2.5 bg-gray-300 hover:bg-gray-400"
+                                                        }`}
                                                     aria-label={`Show evidence ${index + 1}`}
                                                 />
                                             ))}

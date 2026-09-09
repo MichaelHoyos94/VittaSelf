@@ -5,9 +5,9 @@ class CatMitigationRepository
 {
     public function getAll()
     {
-        return CatMitigation::where('active', true)->get();
+        return CatMitigation::query()->orderBy('created_at', 'desc')->get();
     }
-    public function store(array $data)
+    public function create(array $data)
     {
         return CatMitigation::create($data);
     }

@@ -1,7 +1,8 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { router, usePage } from "@inertiajs/react";
+import formatCurrency from "@/Utils/formatCurrency";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Index() {
@@ -30,8 +31,12 @@ export default function Index() {
     }, [flash])
 
     return (
-        <div className="bg-white p-4 rounded">
-            <h2>Products</h2>
+        <div className="bg-white/70 p-6 rounded-xl shadow-xl backdrop-blur-lg">
+            <Head title="Catalog" />
+            <div>
+                <h2 className="text-2xl font-bold">Products</h2>
+                <p className="text-sm text-gray-500">Products catalog.</p>
+            </div>
             <div>
                 {successMessage && (
                     <div
@@ -52,18 +57,20 @@ export default function Index() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4 gap-8">
                 {/* Card per product */}
-                {products.map((product) => (
+                {products.data.map((product) => (
                     <div
-                        className="border rounded-xl border-2 p-4 transform transition duration-100 hover:scale-110"
+                        className="border rounded-xl border-2 p-4 transform transition duration-100 hover:scale-105"
                         key={product.id}
                     >
                         <div>
-                            <img alt="Product image" />
+                            {/* Sure shows all image */}
+                            <img src={`storage/${product.cover}`} alt={product.name} className="w-full h-48 object-contain rounded-t-xl" />
+
                             <h3>{product.name}</h3>
                             <p>
                                 {product.description}
                             </p>
-                            <span>${product.price}</span><br />
+                            <span>{formatCurrency(product.price)}</span><br />
                             <strong>{product.points} points</strong>
                             <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:flex-wrap">
                                 <PrimaryButton

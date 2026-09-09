@@ -18,9 +18,17 @@ export default function ForgotPassword({ status }) {
     return (
         <GuestLayout>
             <Head title="Forgot Password" />
+            <div className="mb-8 flex flex-col items-center text-center">
 
+                <img
+                    src="/images/logo/logo2.png"
+                    alt="VittaSelf"
+                    className="h-16 w-16 rounded-lg object-contain shadow-sm"
+                />
+                <p className="text-sm text-slate-600">Forget your password?</p>
+            </div>
             <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
+                No problem. Just let us know your email address and we will email you a password
                 reset link that will allow you to choose a new one.
             </div>
 

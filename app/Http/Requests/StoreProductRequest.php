@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Category;
+use App\Enums\Presentation;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreProductRequest extends FormRequest
 {
@@ -11,18 +15,24 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'cover' => 'nullable|file|mimes:jpg,png|max:500',
+            'price' => 'required|numeric|min:0',
+            'points' => 'required|integer|min:0',
+            'presentation' => ['required', new Enum(Presentation::class)],
+            'category' => ['required', new Enum(Category::class)],
         ];
     }
 }

@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('internal_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->nullable()->unique();
             $table->decimal('subtotal', 13, 2);
             $table->decimal('total', 13, 2);
             $table->enum('status', ['pending', 'paid', 'sended', 'delivered'])->default('pending');
-            $table->enum('payment_method', ['cash', 'bank_transfer']);
+            $table->enum('payment_method', ['cash', 'bank transfer']);
             $table->string('shipping_address');
             $table->string('phone', 10);
             $table->string('email');

@@ -14,11 +14,12 @@ import {
     MagnifyingGlassIcon,
     XMarkIcon,
 } from "@heroicons/react/16/solid";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import Badge from "@/Components/Badge";
 
 export default function Index() {
-    const { policies, complianceSources, disciplinaryCases, userToSanction } =
+    const { policies, complianceSources, disciplinaryCases, userToSanction, flash } =
         usePage().props;
     const { data, setData, post, errors, reset } = useForm({
         facts_description: "",
@@ -42,6 +43,9 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isDraggingFiles, setIsDraggingFiles] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [selectedCaseId, setSelectedCaseId] = useState(null);
     const user = usePage().props.auth.user;
 
     const formatFileSize = (bytes) => {
@@ -115,10 +119,12 @@ export default function Index() {
     const closeModal = () => {
         setModalOpen(false);
         setIsDraggingFiles(false);
+        setSelectedFiles([]);
+        reset();
+        setSelectedCaseId(null);
     };
-
+    console.log("disciplinaryCases", disciplinaryCases);
     const columns = [
-        { header: "ID", accessor: "id" },
         {
             header: "EUI",
             render: (row) => (
@@ -133,15 +139,46 @@ export default function Index() {
                     {/* Información textual */}
                     <div className="flex flex-col">
                         <strong className="font-medium">
-                            {row.user?.name}
+                            {row.user?.full_name}
                         </strong>
                         <span className="text-sm text-gray-500">
                             {row.user?.email}
                         </span>
                         <span className="text-sm text-gray-500">
-                            {row.user?.document_number}
+                            {row.user?.phone}
                         </span>
                     </div>
+                </div>
+            ),
+        },
+        {
+            header: "ADMINISTRATOR",
+            render: (row) => (
+                <div>
+                    {row.admin ? (
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                <span className="text-sm font-medium text-gray-700">
+                                    {row.admin.name?.charAt(0).toUpperCase()}
+                                </span>
+                            </div>
+                            <div className="flex flex-col">
+                                <strong className="font-medium">
+                                    {row.admin.full_name}
+                                </strong>
+                                <span className="text-sm text-gray-500">
+                                    {row.admin.email}
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                    {row.admin.phone}
+                                </span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <span className="text-sm text-gray-500">No administrator assigned</span>
+                        </div>
+                    )}
                 </div>
             ),
         },
@@ -150,23 +187,24 @@ export default function Index() {
             render: (row) => <div>{row.policy.policy}</div>,
         },
         {
-            header: "ADMINISTRATOR",
-            render: (row) => (
-                <div>{row.admin?.name || "Sin administrador asignado"}</div>
-            ),
-        },
-        {
             header: "STATUS",
             render: (row) => (
-                <div className="p-2 rounded-full bg-primary-200 text-center">
-                    {row.case_status?.case_status}
-                </div>
+                <Badge
+                    type={row.case_status?.code === 'CLOSED' ? 'success'
+                        : row.case_status?.code === 'UNASSIGNED' ? 'secondary'
+                            : row.case_status?.code === 'AWAITING_EVIDENCES' ? 'warning'
+                                : (row.case_status?.code === 'UNDER_INVESTIGATION' || row.case_status?.code === 'OPEN') ? 'info'
+                                    : 'default'
+                    }
+                    text={row.case_status?.case_status || 'Unknown'
+                    }
+                />
             ),
         },
         {
             header: "ACTIONS",
             render: (row) => (
-                <div className="flex justify-center">
+                <div className="flex justify-start items-center">
                     <Dropdown>
                         <Dropdown.Trigger>
                             <button
@@ -197,7 +235,7 @@ export default function Index() {
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        handleOpenUploadEvidences(row)
+                                        handleOpenUploadEvidences(row.id)
                                     }
                                     className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
                                 >
@@ -248,7 +286,8 @@ export default function Index() {
             },
         );
     };
-    const handleOpenUploadEvidences = (row) => {
+    const handleOpenUploadEvidences = (caseId) => {
+        setSelectedCaseId(caseId);
         setModalMode("upload");
         setSelectedFiles([]);
         setModalOpen(true);
@@ -256,11 +295,9 @@ export default function Index() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Submitting disciplinary case:", data);
         post(route("sanctions.disciplinary-cases.store"), {
             onSuccess: () => {
-                setModalOpen(false);
-                reset();
+                closeModal();
             },
         });
     };
@@ -270,7 +307,7 @@ export default function Index() {
         setEvidenceData("evidences", selectedFiles);
         console.log("Submitting evidences:", evidenceData);
         postEvidence(
-            route("sanctions.evidences.store", { disciplinaryCaseId: 1 }),
+            route("sanctions.evidences.store", { disciplinaryCaseId: selectedCaseId }),
             {
                 onSuccess: () => {
                     setModalOpen(false);
@@ -281,17 +318,66 @@ export default function Index() {
         );
     };
 
+    const handleSearch = (search) => {
+        router.get(
+            route("sanctions.disciplinary-cases.index"),
+            { search },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ["disciplinaryCases"],
+            },
+        );
+    }
+
+    const handlePageChange = (url) => {
+        if (url) router.visit(url);
+    };
+
     useEffect(() => {
         setData("user_id", userToSanction ? userToSanction.id : "");
     }, [userToSanction]);
 
+    useEffect(() => {
+        setErrorMessage(flash.error);
+        setSuccessMessage(flash.success);
+        if (!flash.success && !flash.error) return;
+        const timer = setTimeout(() => {
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.error, flash.success])
+
     return (
-        <div className="p-4 rounded bg-white shadow">
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-md">
+            <Head title="Disciplinary Cases" />
             <div>
-                <h1>Disciplinary cases</h1>
-                <p>Investigations on going</p>
+                <h1 className="text-2xl font-bold">Disciplinary cases</h1>
+                <p className="text-sm text-gray-500">Investigations on going.</p>
             </div>
-            <div className="flex flex-row items-center mb-4 justify-start gap-2">
+            {/* Messages */}
+            <div>
+                {successMessage && (
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{successMessage}</span>
+                    </div>
+                )}
+                {errorMessage && (
+                    <div
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{errorMessage}</span>
+                    </div>
+                )}
+            </div>
+            <div className="flex flex-row items-center my-4 justify-start gap-2">
                 <PrimaryButton onClick={handleOpenCreateModal}>
                     Create Case
                 </PrimaryButton>
@@ -299,9 +385,16 @@ export default function Index() {
             </div>
             <Table
                 columns={columns}
-                data={disciplinaryCases}
+                data={disciplinaryCases.data}
+                filterable={true}
+                handleSearch={handleSearch}
+                onPageChange={handlePageChange}
+                from={disciplinaryCases.from}
+                to={disciplinaryCases.to}
+                total={disciplinaryCases.total}
+                links={disciplinaryCases.links}
                 emptyText="No disciplinary cases found"
-            ></Table>
+            />
             <Modal show={modalOpen} onClose={closeModal} maxWidth="xl">
                 {modalMode === "create" && (
                     <div>
@@ -331,7 +424,7 @@ export default function Index() {
                                                         e.target.value || "",
                                                     )
                                                 }
-                                                error={errors.eui_code}
+                                                error={errors.user_id}
                                                 type="text"
                                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
                                                 placeholder="COL-51578"
@@ -368,7 +461,7 @@ export default function Index() {
                                                     <div className="min-w-0">
                                                         <p className="truncate text-sm font-semibold text-gray-900">
                                                             {
-                                                                userToSanction.name
+                                                                userToSanction.full_name
                                                             }
                                                         </p>
                                                         <p className="truncate text-sm text-gray-500">
@@ -384,7 +477,7 @@ export default function Index() {
                                                             EUI Code
                                                         </p>
                                                         <p className="font-medium text-gray-700">
-                                                            {userToSanction.id}
+                                                            {userToSanction.eui_code}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -399,10 +492,10 @@ export default function Index() {
                                                     </div>
                                                     <div className="col-span-2">
                                                         <p className="text-xs font-medium uppercase text-gray-400">
-                                                            Position
+                                                            Plan
                                                         </p>
                                                         <p className="font-medium text-gray-700">
-                                                            position
+                                                            {userToSanction.plan?.name || "N/A"}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -482,7 +575,7 @@ export default function Index() {
                                 </div>
                                 <div className="flex flex-row items-center justify-end gap-2 mt-4">
                                     <SecondaryButton
-                                        onClick={() => setModalOpen(false)}
+                                        onClick={closeModal}
                                     >
                                         Cancel
                                     </SecondaryButton>
@@ -531,11 +624,10 @@ export default function Index() {
                                         setIsDraggingFiles(false);
                                     }}
                                     onDrop={handleDropFiles}
-                                    className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition ${
-                                        isDraggingFiles
-                                            ? "border-primary-600 bg-primary-50"
-                                            : "border-primary-300 bg-gray-50 hover:border-primary-500 hover:bg-primary-50/50"
-                                    }`}
+                                    className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition ${isDraggingFiles
+                                        ? "border-primary-600 bg-primary-50"
+                                        : "border-primary-300 bg-gray-50 hover:border-primary-500 hover:bg-primary-50/50"
+                                        }`}
                                 >
                                     <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-primary-100">
                                         <ArrowUpOnSquareIcon className="h-7 w-7 text-primary-700" />

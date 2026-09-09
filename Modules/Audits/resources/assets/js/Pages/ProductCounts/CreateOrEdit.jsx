@@ -4,7 +4,7 @@ import Select from "@/Components/Form/Select";
 import TextArea from "@/Components/Form/TextArea";
 import PrimaryButton from "@/Components/PrimaryButton";
 import MainLayout from "@/Layouts/MainLayout";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 
 export default function Create() {
     const { products, auth, costCenter } = usePage().props;
@@ -23,14 +23,8 @@ export default function Create() {
         ],
     });
 
-    console.log(costCenter);
-    if (errors) {
-        console.log(errors);
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route("audits.product-counts.store"));
     };
 
@@ -59,10 +53,13 @@ export default function Create() {
     };
 
     return (
-        <div className="rounded bg-white p-4">
-            <div>
-                <h2>New product count</h2>
-                <p>Introduce the products and quantity in the cost center</p>
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="New Product Count" />
+            <div className="flex justify-between">
+                <div>
+                    <h2 className="text-2xl font-bold">New product count</h2>
+                    <p className="text-sm text-gray-500">Introduce the products and quantity in the cost center</p>
+                </div>
             </div>
             <div>
                 <Form onSubmit={handleSubmit}>
@@ -70,7 +67,7 @@ export default function Create() {
                         {data.products.map((item, index) => (
                             <div
                                 key={index}
-                                className="grid grid-cols-4 gap-4 items-end"
+                                className="grid grid-cols-4 gap-4 items-center"
                             >
                                 <Select
                                     label="product"
@@ -83,7 +80,7 @@ export default function Create() {
                                         )
                                     }
                                     value={item.product_id}
-                                    options={products.map((product) => ({
+                                    options={products.data.map((product) => ({
                                         value: product.id,
                                         label: product.name,
                                     }))}

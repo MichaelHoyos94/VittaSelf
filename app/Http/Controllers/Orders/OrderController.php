@@ -7,6 +7,7 @@ use App\Http\Requests\OrderRequest;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Exception;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Sanctions\Services\SanctionEnforcementService;
 
@@ -17,6 +18,14 @@ class OrderController extends Controller
         private CartService $cartService,
         private SanctionEnforcementService $sanctionEnforcementService
     ) {}
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        $orders = $this->service->getAll($search);
+        return Inertia::render('Orders/Index')->with([
+            'orders' => $orders,
+        ]);
+    }
     public function checkout()
     {
         $cart = $this->cartService->getByUserId(auth()->user()->id);
@@ -37,14 +46,15 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to create order: ' . $e->getMessage()]);
         }
-        return redirect()->route('orders.my-orders')->with([
-            'success' => 'Order created successfully with ID: ',
+        return redirect()->route('my-orders')->with([
+            'success' => 'Order created successfully with number: ' . $order->order_number,
         ]);
     }
-    public function myOrders()
+    public function myOrders(Request $request)
     {
         $userId = auth()->user()->id;
-        $orders = $this->service->getByUserId($userId);
+        $search = $request->input('search');
+        $orders = $this->service->getByUserId($userId, $search);
         return Inertia::render('Orders/MyOrders')->with([
             'orders' => $orders,
         ]);

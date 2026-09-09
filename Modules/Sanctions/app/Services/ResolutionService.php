@@ -11,9 +11,9 @@ class ResolutionService
         protected SanctionEnforcementService $sanctionEnforcementService,
         protected DisciplinaryCaseService $disciplinaryCaseService
     ) {}
-    public function getAll()
+    public function getAll($search)
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($search);
     }
     public function create($data)
     {

@@ -1,66 +1,262 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# VittaSelf
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+VittaSelf es un ERP ligero para una plataforma de ventas multinivel. Permite gestionar empresarios, productos, ordenes, carrito de compras, sanciones, auditorias, cajas registradoras, centros de costo, planes, beneficios y metricas de negocio.
 
-## About Laravel
+El sistema esta pensado para dos tipos de usuarios:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Empleados de VittaSelf que operan procesos internos.
+- Empresarios o EUIs que compran productos y hacen parte de una red multinivel.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Usuarios De Prueba
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Estos usuarios se crean en develop `https://vittaself-develop.onrender.com/` para interactuar con el sitio.
 
-## Learning Laravel
+| Rol | Email | Password |
+| --- | --- | --- |
+| Administrador | `sistemasaux@vittaself.com` | `Vitta$elf` |
+| Asesor comercial | `asesor-armenia@vittaself.com` | `Vitta$elf` |
+| EUI | `empresario@vittaself.com` | `Vitta$elf` |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Manual De Uso Basico 📖
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Dashboard
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+El dashboard muestra indicadores por secciones. Permite revisar empresarios, ordenes, sanciones y auditorias mediante tarjetas de metricas y graficos.
 
-## Laravel Sponsors
+### Empresarios
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+La gestion de empresarios permite consultar, crear, editar y eliminar EUIs. Los empresarios pueden tener representante, representados, puntos y plan asociado.
 
-### Premium Partners
+### Catalogo Y Productos
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+El catalogo permite ver productos disponibles y agregarlos al carrito. La administracion de productos permite crear, editar y eliminar productos del sistema.
 
-## Contributing
+### Carrito Y Ordenes Web
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+El empresario puede agregar productos al carrito, modificar cantidades, eliminar items y finalizar la compra como orden web.
 
-## Code of Conduct
+### Ordenes Internas
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Los asesores comerciales pueden registrar ordenes internas para empresarios. El procesamiento comparte reglas de descuentos, beneficios, puntos y sanciones con las ordenes web.
 
-## Security Vulnerabilities
+### Planes, Beneficios Y Puntos
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Los empresarios acumulan puntos por ordenes validas. Al alcanzar las condiciones de un plan, el sistema puede escalar el plan y aplicar beneficios configurados.
 
-## License
+### Cajas Registradoras
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Los asesores pueden abrir y cerrar su caja registradora. El cierre de caja queda disponible para auditoria.
+
+### Centros De Costo
+
+Los centros de costo representan sedes o puntos operativos. El sistema permite gestionarlos y asociarlos a procesos internos.
+
+### Sanciones
+
+El modulo de sanciones permite crear casos disciplinarios, asignarlos, gestionar estados, recibir descargos y registrar resoluciones. Algunas sanciones pueden bloquear ordenes, congelar puntos o congelar el plan del empresario.
+
+### Auditorias
+
+El modulo de auditorias permite revisar procesos auditables como conteos de productos, listas de calidad y cierres de caja. Al crear auditorias se pueden generar informes PDF.
+
+## Stack Tecnico
+
+- Backend: Laravel 11 sobre PHP 8.2 o superior.
+- Frontend: React 18.2 con Inertia.js.
+- Bundler: Vite 5.
+- Base de datos: MySQL 8.
+- Permisos: Spatie Laravel Permission.
+- Modulos: nwidart/laravel-modules.
+- PDF: barryvdh/laravel-dompdf.
+- Graficos: Recharts.
+- Tests: Pest y PHPUnit.
+- Formato PHP: Laravel Pint.
+
+## Modulos Documentados
+
+- `Audits`: auditorias de procesos como conteo de productos, cierre de caja y listas de calidad.
+- `Sanctions`: casos disciplinarios, descargos, resoluciones, catalogos y sanciones aplicables.
+
+## Funcionalidades Principales
+
+- Dashboard con metricas de empresarios, ordenes, sanciones y auditorias.
+- Gestion de empresarios y red multinivel.
+- Catalogo de productos y administracion de productos.
+- Carrito de compras y ordenes web.
+- Ordenes internas realizadas por asesores.
+- Planes, beneficios, puntos y escalamiento de planes.
+- Cajas registradoras para asesores comerciales.
+- Gestion de centros de costo.
+- Casos disciplinarios, manejo de estados y resoluciones.
+- Auditorias e informes en PDF.
+
+## Arquitectura
+
+El proyecto sigue una arquitectura por capas:
+
+- Controller: recibe solicitudes HTTP, valida entrada, llama servicios y responde con Inertia o redirecciones.
+- Service: contiene reglas de negocio y orquesta operaciones del dominio.
+- Repository: ejecuta consultas y persistencia sobre modelos o entidades.
+
+La aplicacion usa Laravel + Inertia React. Las paginas principales viven en `resources/js/Pages`. Las paginas de modulos se resuelven desde `Modules/<Module>/resources/assets/js/Pages`.
+
+Las rutas principales estan en `routes/web.php`. Los modulos cargan sus rutas desde sus propios `RouteServiceProvider`.
+
+## Requisitos Locales
+
+- PHP 8.2 o superior.
+- Composer 2.
+- Node.js 20 o compatible con Vite 5.
+- npm.
+- MySQL 8.
+- Extensiones PHP habituales para Laravel, incluyendo `pdo_mysql`, `bcmath`, `gd`, `intl`, `mbstring`, `zip` y `opcache`.
+
+## Instalacion Local
+
+1. Instalar dependencias PHP:
+
+```bash
+composer install
+```
+
+2. Instalar dependencias frontend:
+
+```bash
+npm install
+```
+
+3. Crear archivo de entorno:
+
+```bash
+cp .env.example .env
+```
+
+En Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+4. Generar llave de aplicacion:
+
+```bash
+php artisan key:generate
+```
+
+5. Configurar la conexion MySQL en `.env`:
+
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=vittaself
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+6. Ejecutar migraciones:
+
+```bash
+php artisan migrate
+```
+
+7. Ejecutar seeders base:
+
+```bash
+php artisan db:seed
+```
+
+8. Levantar servidor Laravel:
+
+```bash
+php artisan serve
+```
+
+9. Levantar Vite en otra terminal:
+
+```bash
+npm run dev
+```
+
+## Usuarios De Prueba
+
+Estos usuarios se crean en develop `https://vittaself-develop.onrender.com/` para interactuar con el sitio.
+
+| Rol | Email | Password |
+| --- | --- | --- |
+| Administrador | `sistemasaux@vittaself.com` | `Vitta$elf` |
+| Asesor comercial | `asesor-armenia@vittaself.com` | `Vitta$elf` |
+| EUI | `empresario@vittaself.com` | `Vitta$elf` |
+
+## Comandos Utiles
+
+Servidor local:
+
+```bash
+php artisan serve
+```
+
+Frontend en desarrollo:
+
+```bash
+npm run dev
+```
+
+Build de produccion, cliente y SSR:
+
+```bash
+npm run build
+```
+
+Pruebas:
+
+```bash
+php artisan test
+```
+
+Prueba enfocada:
+
+```bash
+php artisan test --filter "nombre de la prueba"
+```
+
+Formato PHP:
+
+```bash
+vendor/bin/pint
+```
+
+En Windows PowerShell:
+
+```powershell
+vendor\bin\pint
+```
+
+## Migraciones Y Seeders
+
+Las migraciones crean el esquema principal de usuarios, productos, ordenes, planes, beneficios, sanciones, auditorias, cajas y centros de costo.
+
+Los seeders base cargan productos, centros de costo, roles, permisos, planes, beneficios y usuarios de prueba.
+
+```bash
+php artisan migrate --seed
+```
+
+Para produccion se recomienda ejecutar migraciones y seeders de forma controlada, revisando primero que el entorno apunte a la base correcta.
+
+## Tests
+
+El proyecto usa Pest y PHPUnit. Los tests de `tests/Feature` aplican `RefreshDatabase` desde `tests/Pest.php`.
+
+El archivo `phpunit.xml` no fuerza SQLite; por defecto los tests usan la base configurada para el entorno. Antes de ejecutar la suite completa, confirmar que la base de pruebas sea segura.
+
+```bash
+php artisan test
+```
+
+## Notas De Seguridad
+
+- No subir `.env` ni credenciales reales al repositorio.
+- No usar usuarios de prueba en produccion.
+- Confirmar la base de datos antes de ejecutar migraciones, seeders o tests destructivos.
+- El almacenamiento local de Render no debe usarse como persistencia definitiva para archivos subidos o PDFs.

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Models;
 
@@ -6,12 +6,12 @@ use App\Enums\Category;
 use App\Enums\Presentation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'products';
 
@@ -27,7 +27,6 @@ class Product extends Model
         'category',
     ];
 
-
     protected function casts()
     {
         return [
@@ -35,16 +34,19 @@ class Product extends Model
             'presentation' => Presentation::class,
         ];
     }
+
     public function carts(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity');
     }
+
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
     }
-    public function internalOrders(): BelongsTo
+
+    public function internalOrders(): BelongsToMany
     {
-        return $this->belongsTo(InternalOrder::class);
+        return $this->belongsToMany(InternalOrder::class);
     }
 }

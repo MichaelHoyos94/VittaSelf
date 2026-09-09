@@ -1,23 +1,27 @@
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import Modal from "@/Components/Modal";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 import { EyeIcon, MinusIcon, PencilIcon } from "@heroicons/react/24/outline";
+import Select from "@/Components/Form/Select";
+import Badge from "@/Components/Badge";
 
 export default function Index() {
-    const { users, flash } = usePage().props;
-    const [message, setMessage] = useState(null);
+    const { users = [], costCenters = [], roles = [], flash = {} } = usePage().props;
+    const [successMessage, setSuccessMessage] = useState(flash.success ?? "");
+    const [errorMessage, setErrorMessage] = useState(flash.error ?? "");
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log("links:", users.links);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         last_name: "",
         document_number: "",
         email: "",
         phone: "",
+        role: "",
+        cost_center_id: "",
         password: "",
         password_confirmation: "",
     });
@@ -29,12 +33,19 @@ export default function Index() {
             header: "Name",
             render: (row) => (
                 <div className="flex items-center space-x-2">
+                    <Head title="Employees" />
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                         <span className="text-sm font-medium text-gray-700">
                             {row.name.charAt(0).toUpperCase()}
                         </span>
                     </div>
-                    <span>{row.name}</span>
+                    <div className="flex flex-col">
+                        <span>{row.full_name}</span>
+                        <Badge
+                            type="info"
+                            text={row.roles[0].name}
+                        />
+                    </div>
                     <button
                         onClick={() => {
                             setSelectedUser(row);
@@ -48,10 +59,34 @@ export default function Index() {
                 </div>
             ),
         },
-        { header: "Last Name", accessor: "last_name" },
         { header: "Document", accessor: "document_number" },
-        { header: "Phone", accessor: "phone" },
-        { header: "Email", accessor: "email" },
+        {
+            header: "contact",
+            render: (row) => (
+                <div className="flex flex-col">
+                    <span className="font-semibold">{row.email}</span>
+                    <span className="text-gray-500 text-sm">{row.email}</span>
+                    <span className="text-gray-500 text-sm">{row.phone}</span>
+                </div>
+            )
+        },
+        {
+            header: "cost center",
+            render: (row) => (
+                <div>
+                    {row.cost_center ? (
+                        <div className="flex flex-col">
+
+                            <span className="font-semibold">{row.cost_center?.name ?? 'N/A'}</span>
+                            <span className="text-gray-500 text-sm">{row.cost_center?.contact_email ?? 'N/A'}</span>
+                            <span className="text-gray-500 text-sm">{row.cost_center?.address ?? 'N/A'}</span>
+                        </div>
+                    ) : (
+                        <span className="text-gray-500 text-sm">No cost center assigned</span>
+                    )}
+                </div>
+            )
+        },
         {
             header: "Actions",
             render: (row) => (
@@ -78,14 +113,18 @@ export default function Index() {
     ];
 
     useEffect(() => {
-        if (flash.success) {
-            setMessage(flash.success);
-            const time = setTimeout(() => {
-                setMessage(null);
-            }, 3000);
-            return () => clearTimeout(time);
-        }
-    }, [flash.success]);
+        setSuccessMessage(flash.success ?? "");
+        setErrorMessage(flash.error ?? "");
+
+        if (!flash.success && !flash.error) return;
+
+        const timer = setTimeout(() => {
+            setSuccessMessage("");
+            setErrorMessage("");
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [flash.error, flash.success]);
 
     const handlePageChange = (url) => {
         if (url) router.visit(url);
@@ -115,6 +154,8 @@ export default function Index() {
             document_number: user.document_number,
             email: user.email,
             phone: user.phone,
+            role: user.roles[0]?.name || "",
+            cost_center_id: user.cost_center_id || "",
         });
 
         setModalOpen(true);
@@ -152,9 +193,16 @@ export default function Index() {
         });
     };
 
+    const handleSearch = (search) => {
+        router.get(route("human-resources.index"), { search }, { preserveState: true, replace: true });
+    }
+
     return (
-        <div className="p-4 bg-primary-300 rounded-lg">
-            <h1 className="text-green-500">Human Resources</h1>
+        <div className="min-h-full rounded-xl border border-white/50 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+            <div>
+                <h1 className="text-2xl font-bold">Human Resources</h1>
+                <p className="text-sm text-gray-500">Manage employee information and records.</p>
+            </div>
             <div className="flex justify-between items-center mb-4">
                 <button
                     onClick={openCreateModal}
@@ -162,15 +210,34 @@ export default function Index() {
                 >
                     Create User
                 </button>
-                {message && (
-                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg">
-                        {message}
+            </div>
+            {/* Messages */}
+            <div className="my-4">
+                {successMessage && (
+                    <div
+                        className="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{successMessage}</span>
+                    </div>
+                )}
+                {errorMessage && (
+                    <div
+                        className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">{errorMessage}</span>
                     </div>
                 )}
             </div>
             <Table
                 columns={columns}
+                filterable={true}
+                handleSearch={handleSearch}
                 data={users.data}
+                from={users.from}
+                to={users.to}
+                totalResults={users.total}
                 emptyText="No employees found"
                 links={users.links}
                 onPageChange={handlePageChange}
@@ -207,6 +274,7 @@ export default function Index() {
                                     onChange={(e) =>
                                         setData("last_name", e.target.value)
                                     }
+                                    error={errors.last_name}
                                 />
                                 <Input
                                     label="Document Number"
@@ -220,6 +288,7 @@ export default function Index() {
                                             e.target.value,
                                         )
                                     }
+                                    error={errors.document_number}
                                 />
                                 <Input
                                     label="Email"
@@ -230,6 +299,7 @@ export default function Index() {
                                     onChange={(e) =>
                                         setData("email", e.target.value)
                                     }
+                                    error={errors.email}
                                 />
                                 <Input
                                     label="Phone"
@@ -240,6 +310,29 @@ export default function Index() {
                                     onChange={(e) =>
                                         setData("phone", e.target.value)
                                     }
+                                    error={errors.phone}
+                                />
+                                <Select
+                                    label="Role"
+                                    name="role"
+                                    value={data.role}
+                                    options={roles.map((role) => ({
+                                        label: role.name,
+                                        value: role.name,
+                                    }))}
+                                    error={errors.role}
+                                    onChange={(e) => setData("role", e.target.value)}
+                                />
+                                <Select
+                                    label="Cost Center"
+                                    name="cost_center_id"
+                                    value={data.cost_center_id}
+                                    options={costCenters.map((costCenter) => ({
+                                        value: costCenter.id,
+                                        label: costCenter.name,
+                                    }))}
+                                    error={errors.cost_center_id}
+                                    onChange={(e) => setData("cost_center_id", e.target.value)}
                                 />
                                 <Input
                                     label="Password"
@@ -249,6 +342,7 @@ export default function Index() {
                                     onChange={(e) =>
                                         setData("password", e.target.value)
                                     }
+                                    error={errors.password}
                                 />
                                 <Input
                                     label="Confirm Password"

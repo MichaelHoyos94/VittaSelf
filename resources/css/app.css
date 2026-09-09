@@ -22,3 +22,32 @@
         --primary-foreground: #10341f;
     }
 }
+
+@layer utilities {
+    .bg-soft-aurora {
+        background:
+            radial-gradient(
+                900px 600px at -5% -10%,
+                rgb(104 219 169 / 18%),
+                transparent 70%
+            ),
+            radial-gradient(
+                850px 650px at 105% 100%,
+                rgb(0 105 72 / 11%),
+                transparent 70%
+            ),
+            radial-gradient(
+                700px 500px at 55% 20%,
+                rgb(200 247 213 / 10%),
+                transparent 70%
+            ),
+            #f7f9f8;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-800);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: x-large;
+}

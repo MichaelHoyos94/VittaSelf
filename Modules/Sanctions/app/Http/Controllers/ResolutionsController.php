@@ -15,9 +15,10 @@ class ResolutionsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $resolutions = $this->service->getAll();
+        $search = $request->input('search');
+        $resolutions = $this->service->getAll($search);
         return Inertia::render('Sanctions/Resolutions/Index')->with([
             'resolutions' => $resolutions,
         ]);

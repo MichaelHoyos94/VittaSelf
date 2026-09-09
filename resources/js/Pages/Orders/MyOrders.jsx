@@ -1,37 +1,85 @@
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { usePage } from "@inertiajs/react"
+import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import formatCurrency from "@/Utils/formatCurrency";
+import Badge from "@/Components/Badge";
 
-export default function MyOrders() 
-{
+export default function MyOrders() {
     const { orders, flash } = usePage().props;
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const columns = [
         {
-            header: 'date',
-            accessor: 'created_at',
+            header: "order number",
+            accessor: "order_number",
         },
         {
-            header: 'shipping info',
+            header: "date",
+            render: (row) => new Date(row.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            }),
+        },
+        {
+            header: "shipping info",
             render: (row) => (
                 <div className="flex flex-col">
                     <span>{row.shipping_address}</span>
+                    <span>{row.email}</span>
+                    <span>{row.phone}</span>
                 </div>
-            )
+            ),
         },
         {
-            header: 'total',
-            accessor: 'total',
+            header: "pricing info",
+            render: (row) => (
+                <div className="flex flex-col">
+                    <div>
+                        <strong>Subtotal: </strong>
+                        <span className="text-gray-500">
+                            {formatCurrency(row.subtotal)}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Shipping: </strong>
+                        <span className="text-gray-500">
+                            {formatCurrency(row.shipping_price)}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Discount: </strong>
+                        <span className="text-gray-500">
+                            {formatCurrency(row.discount)}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Total: </strong>
+                        <span className="text-gray-500">
+                            {formatCurrency(row.total)}
+                        </span>
+                    </div>
+                </div>
+            ),
         },
         {
-            header: 'Payment Method',
-            accessor: 'payment_method',
+            header: "Payment Method",
+            render: (row) => (
+                <Badge 
+                    type={row.payment_method === 'credit_card' ? 'secondary' : 'success'}
+                    text={row.payment_method}
+                />
+            ),
         },
         {
-            header: 'status',
-            accessor: 'status',
+            header: "status",
+            render: (row) => (
+                <Badge 
+                    type="info"
+                    text={row.status}
+                />
+            ),
         },
     ];
 
@@ -45,15 +93,32 @@ export default function MyOrders()
         }, 5000);
 
         return () => clearTimeout(timer);
+
+
     }, [flash.success]);
 
+    const handleSearch = (search) => {
+        router.get(route('my-orders'), { search }, { preserveState: true, replace: true });
+    }
+
+    const handlePageChange = (url) => {
+        if (!url) return;
+        router.get(url, { preserveState: true, replace: true });
+    }
+
     return (
-        <div className="bg-white p-4 rounded space-y-2">
-            <h2>My Orders</h2>
+        <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
+            <Head title="My Orders" />
+            <h2 className="text-2xl font-bold">My Orders</h2>
             <div>
                 {successMessage && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                        <span className="block sm:inline">{successMessage}</span>
+                    <div
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert"
+                    >
+                        <span className="block sm:inline">
+                            {successMessage}
+                        </span>
                     </div>
                 )}
             </div>
@@ -61,14 +126,21 @@ export default function MyOrders()
                 <SecondaryButton>Export</SecondaryButton>
             </div>
             <div>
-                <Table 
+                <Table
                     columns={columns}
-                    data={orders}
+                    data={orders.data}
+                    filterable
+                    handleSearch={handleSearch}
                     emptyText="No orders found."
+                    from={orders.from}
+                    to={orders.to}
+                    total={orders.total}
+                    links={orders.links}
+                    handlePageChange={handlePageChange}
                 />
             </div>
         </div>
-    )
+    );
 }
 
-MyOrders.layout = (page) => <MainLayout children={page}/>
+MyOrders.layout = (page) => <MainLayout children={page} />;

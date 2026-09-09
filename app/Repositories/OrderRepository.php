@@ -8,8 +8,20 @@ use Illuminate\Support\Facades\DB;
 class OrderRepository
 {
     public function __construct() {}
-    public function getAll() {}
-    public function create($data) {
+    public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'asc')
+    {
+        return Order::with('customer')
+            ->when($search, function ($query, $search) {
+                $query->whereHas('customer', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+    public function create($data)
+    {
         return DB::transaction(function () use ($data) {
             $products = $data['products'];
             unset($data['products']);
@@ -29,8 +41,17 @@ class OrderRepository
         });
     }
     public function getById($id) {}
-    public function getByUserId($userId)
+    public function getByUserId($userId, $search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
     {
-        return Order::where('user_id', $userId)->get();
+        return Order::with('customer')
+            ->where('user_id', $userId)
+            ->when($search, function ($query, $search) {
+                $query->where('shipping_address', 'like', "%{$search}%");
+                $query->orWhere('email', 'like', "%{$search}%");
+                $query->orWhere('order_number', 'like', "%{$search}%");
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
     }
 }

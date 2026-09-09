@@ -7,16 +7,26 @@ use Modules\Sanctions\Models\Resolution;
 
 class ResolutionRepository
 {
-    public function getAll($filters = [], $sort = null, $perPage = null)
+    public function getAll($search, $perPage = 10, $sortBy = 'created_at', $sortDirection = 'desc')
     {
-        $query = Resolution::query()->with([
-            'sanctions',
-            'mitigations',
-            'disciplinaryCase.user',
-            'disciplinaryCase.admin',
-            'sanctionEnforcements'
-        ]);
-        return $query->get();
+        return Resolution::query()
+            ->with([
+                'sanctions',
+                'mitigations',
+                'disciplinaryCase.user',
+                'disciplinaryCase.admin',
+                'sanctionEnforcements'
+            ])
+            ->when($search, function ($query, $search) {
+                $query->whereHas('disciplinaryCase', function ($q) use ($search) {
+                    $q->whereHas('user', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%")
+                            ->orWhere('eui_code', 'like', "%{$search}%");
+                    });
+                });
+            })
+            ->orderBy($sortBy, $sortDirection)
+            ->paginate($perPage);
     }
     public function create(array $data)
     {

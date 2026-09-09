@@ -4,15 +4,27 @@ namespace Modules\Audits\Repositories;
 
 use Modules\Audits\Models\ProductCountAudit;
 
-class ProductCountAuditRepository{
+class ProductCountAuditRepository
+{
     public function __construct() {}
-    public function getAll(){
-        return ProductCountAudit::with(["auditor"])->get();
+    public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'asc')
+    {
+        return ProductCountAudit::with(["auditor"])
+            ->when($search, function ($query, $search) {
+                $query->whereHas('auditor', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString();
     }
-    public function create($data){
+    public function create($data)
+    {
         return ProductCountAudit::create($data);
     }
-    public function getById($id){
+    public function getById($id)
+    {
         return ProductCountAudit::findOrFail($id);
     }
 }
