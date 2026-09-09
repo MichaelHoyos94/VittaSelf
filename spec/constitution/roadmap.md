@@ -34,12 +34,12 @@ Orden de las features.
 30. **030 . Refactor para el procesamiento de las ordenes**: Se reorganiza codigo y se centraliza el procesamiento de las ordenes internas y web.
 31. **031 . Dashboard**: Vista del dashboard para consultar metricas.
 32. **032 . Modificacion de colores en dashboard**: Paleta monocromatica `primary` aplicada a graficos, tarjetas y controles. Build cliente/SSR validado; revision visual manual pendiente en tasks.md.
+33. **033 . Documentacion y manual de uso**: README actualizado con contexto tecnico, instalacion, comandos, despliegue y guia funcional.
 
 ## Siguiente 🏗️
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al `stock` de un `cost_center` y queda registrado como un `inventory-entry` para posteriores consultas.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
-33. **033 . Documentacion y manual de uso**: Modificacion del archivo readme para incluir el contexto actual del proyecto.
 
 ## Backlog / ideas 💡
 
