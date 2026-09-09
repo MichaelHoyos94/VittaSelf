@@ -55,9 +55,11 @@ export default function Create() {
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <Head title="New Product Count" />
-            <div>
-                <h2 className="text-2xl font-bold">New product count</h2>
-                <p className="text-sm text-gray-500">Introduce the products and quantity in the cost center</p>
+            <div className="flex justify-between">
+                <div>
+                    <h2 className="text-2xl font-bold">New product count</h2>
+                    <p className="text-sm text-gray-500">Introduce the products and quantity in the cost center</p>
+                </div>
             </div>
             <div>
                 <Form onSubmit={handleSubmit}>
@@ -65,7 +67,7 @@ export default function Create() {
                         {data.products.map((item, index) => (
                             <div
                                 key={index}
-                                className="grid grid-cols-4 gap-4 items-end"
+                                className="grid grid-cols-4 gap-4 items-center"
                             >
                                 <Select
                                     label="product"
