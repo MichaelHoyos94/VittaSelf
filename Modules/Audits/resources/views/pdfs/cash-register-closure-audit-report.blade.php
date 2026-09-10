@@ -34,14 +34,29 @@
             line-height: 1.6;
         }
 
+        .meta table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .meta td {
+            padding: 2px 0;
+            vertical-align: middle;
+        }
+
+        .meta td:first-child {
+            width: 200px;
+            font-weight: bold;
+        }
+
         .badge {
-            display: inline-block;
-            padding: 4px 4px;
+            display: inline;
+            padding: 3px 7px;
             border-radius: 4px;
             color: #fff;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 10px;
         }
 
         .approved {
@@ -79,17 +94,44 @@
         <p class="title">Informe de Auditoría</p>
 
         <div class="meta">
-            <strong>Auditado por:</strong> {{ $audit->auditor->full_name ?? 'No registrado' }} <br>
-            <strong>Fecha:</strong> {{ $audit->created_at->format('d/m/Y H:i') }} <br>
-            <strong>Caja:</strong> {{ $audit->cashRegisterClosure->cashRegister->name ?? 'No registrada' }} <br>
-            <strong>Efectivo esperado:</strong> {{ number_format($audit->expected_cash, 2) }} <br>
-            <strong>Efectivo contado:</strong> {{ number_format($audit->counted_cash, 2) }} <br>
-            <strong>Transferencias esperadas:</strong> {{ number_format($audit->expected_transfers, 2) }} <br>
-            <strong>Transferencias contadas:</strong> {{ number_format($audit->counted_transfers, 2) }} <br>
-            <strong>Estado:</strong>
-            <span class="badge {{ strtolower($audit->status) }}">
-                {{ ucfirst($audit->status) }}
-            </span>
+            <table>
+                <tr>
+                    <td>Auditado por:</td>
+                    <td>{{ $audit->auditor->full_name ?? 'No registrado' }}</td>
+                </tr>
+                <tr>
+                    <td>Fecha:</td>
+                    <td>{{ $audit->created_at->format('d/m/Y H:i') }}</td>
+                </tr>
+                <tr>
+                    <td>Caja:</td>
+                    <td>{{ $audit->cashRegisterClosure->cashRegister->name ?? 'No registrada' }}</td>
+                </tr>
+                <tr>
+                    <td>Efectivo esperado:</td>
+                    <td>{{ number_format($audit->expected_cash, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Efectivo contado:</td>
+                    <td>{{ number_format($audit->counted_cash, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Transferencias esperadas:</td>
+                    <td>{{ number_format($audit->expected_transfers, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Transferencias contadas:</td>
+                    <td>{{ number_format($audit->counted_transfers, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Estado:</td>
+                    <td>
+                        <span class="badge {{ strtolower($audit->status) }}">
+                            {{ ucfirst($audit->status) }}
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 

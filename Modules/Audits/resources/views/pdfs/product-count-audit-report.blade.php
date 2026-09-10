@@ -34,14 +34,29 @@
             line-height: 1.6;
         }
 
+        .meta table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .meta td {
+            padding: 2px 0;
+            vertical-align: middle;
+        }
+
+        .meta td:first-child {
+            width: 200px;
+            font-weight: bold;
+        }
+
         .badge {
-            display: inline-block;
-            padding: 4px 4px;
+            display: inline;
+            padding: 3px 7px;
             border-radius: 4px;
             color: #fff;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 10px;
         }
 
         .correct {
@@ -83,16 +98,40 @@
         <p class="title">Informe de Auditoría</p>
 
         <div class="meta">
-            <strong>Auditado por:</strong> {{ $audit->auditor->name ?? 'No registrado' }} <br>
-            <strong>Fecha:</strong> {{ $audit->created_at->format('d/m/Y H:i') }} <br>
-            <strong>Productos esperados:</strong> {{ $audit->total_expected_products }} <br>
-            <strong>Total productos:</strong> {{ $audit->total_counted_products }} <br>
-            <strong>Diferencia:</strong> {{ $audit->total_difference }} <br>
-            <strong>Productos con observaciones:</strong> {{ $audit->products_with_observations }} <br>
-            <strong>Estado:</strong>
-            <span class="badge {{ strtolower($audit->status) }}">
-                {{ ucfirst($audit->status) }}
-            </span>
+            <table>
+                <tr>
+                    <td>Auditado por:</td>
+                    <td>{{ $audit->auditor->full_name ?? 'No registrado' }}</td>
+                </tr>
+                <tr>
+                    <td>Fecha:</td>
+                    <td>{{ $audit->created_at->format('d/m/Y H:i') }}</td>
+                </tr>
+                <tr>
+                    <td>Productos esperados:</td>
+                    <td>{{ $audit->total_expected_products }}</td>
+                </tr>
+                <tr>
+                    <td>Total productos:</td>
+                    <td>{{ $audit->total_counted_products }}</td>
+                </tr>
+                <tr>
+                    <td>Diferencia:</td>
+                    <td>{{ $audit->total_difference }}</td>
+                </tr>
+                <tr>
+                    <td>Prods. con observaciones:</td>
+                    <td>{{ $audit->products_with_observations }}</td>
+                </tr>
+                <tr>
+                    <td>Estado:</td>
+                    <td>
+                        <span class="badge {{ strtolower($audit->status) }}">
+                            {{ ucfirst($audit->status) }}
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
