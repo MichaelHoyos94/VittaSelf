@@ -8,14 +8,17 @@ use Exception;
 class CartService
 {
     public function __construct(private CartRepository $repository) {}
+
     public function create($userId)
     {
         return $this->repository->create($userId);
     }
+
     public function getByUserId($userId)
     {
         return $this->repository->getByUserId($userId);
     }
+
     public function addProduct($userId, $productId)
     {
         $cart = $this->repository->getByUserId($userId);
@@ -25,6 +28,7 @@ class CartService
             $cart->products()->attach($productId, ['quantity' => 1]);
         }
     }
+
     public function increseQuantity($userId, $productId)
     {
         $cart = $this->repository->getByUserId($userId);
@@ -36,6 +40,7 @@ class CartService
             throw new Exception('Product not found in cart');
         }
     }
+
     public function decreseQuantity($userId, $productId)
     {
         $cart = $this->repository->getByUserId($userId);
@@ -47,7 +52,9 @@ class CartService
             throw new Exception('Product not found in cart');
         }
     }
-    public function removeProduct($userId, $productId) {
+
+    public function removeProduct($userId, $productId)
+    {
         $cart = $this->repository->getByUserId($userId);
         if ($cart->products->contains('id', $productId)) {
             $cart->products()->detach($productId);
@@ -55,6 +62,7 @@ class CartService
             throw new Exception('Product not found in cart');
         }
     }
+
     public function emptyCart($userId)
     {
         $cart = $this->repository->getByUserId($userId);

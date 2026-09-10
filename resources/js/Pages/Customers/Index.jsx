@@ -1,3 +1,4 @@
+import Badge from "@/Components/Badge";
 import Form from "@/Components/Form/Form";
 import Input from "@/Components/Form/Input";
 import Modal from "@/Components/Modal";
@@ -5,7 +6,12 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import {
+    MagnifyingGlassIcon,
+    MinusIcon,
+    PencilIcon,
+    XMarkIcon,
+} from "@heroicons/react/16/solid";
 import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
@@ -28,13 +34,10 @@ export default function Index() {
     const [modalMode, setModalMode] = useState("create");
     const [successMessage, setSuccessMessage] = useState(flash.success);
     const [errorMessage, setErrorMessage] = useState(flash.error);
-    const representativeBlocked = representativeCandidate?.is_available === false;
+    const representativeBlocked =
+        representativeCandidate?.is_available === false;
 
     const columns = [
-        {
-            header: "#",
-            accessor: "id",
-        },
         {
             header: "name",
             render: (row) => (
@@ -44,7 +47,22 @@ export default function Index() {
                             {row.name.charAt(0).toUpperCase()}
                         </span>
                     </div>
-                    <span>{row.full_name}</span>
+                    <div className="flex flex-col">
+                        <span>{row.full_name}</span>
+                        <div>
+                            <Badge type="warning" text={row.plan.name} />
+                        </div>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            header: "contact",
+            render: (row) => (
+                <div className="flex flex-col">
+                    <strong>{row.email}</strong>
+                    <span className="text-gray-400">{row.phone}</span>
+                    <span className="text-gray-400">{row.address}</span>
                 </div>
             ),
         },
@@ -62,7 +80,8 @@ export default function Index() {
                 row.representative ? (
                     <div className="flex flex-col">
                         <strong>
-                            {row.representative.name} {row.representative.last_name}
+                            {row.representative.name}{" "}
+                            {row.representative.last_name}
                         </strong>
                         <span className="text-gray-400">
                             {row.representative.eui_code}
@@ -77,18 +96,20 @@ export default function Index() {
             accessor: "represented_users_count",
         },
         {
-            header: "contact",
+            header: "Actions",
             render: (row) => (
-                <div className="flex flex-col">
-                    <strong>{row.email}</strong>
-                    <span className="text-gray-400">{row.phone}</span>
-                    <span className="text-gray-400">{row.address}</span>
+                <div className="flex space-x-2">
+                    <button
+                        onClick={() => openEditModal(row)}
+                        className="px-2 py-2 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transform transition-transform duration-300 hover:scale-110"
+                    >
+                        <PencilIcon className="h-5 w-5" />
+                    </button>
+                    <button className="px-2 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transform transition-transform duration-300 hover:scale-110">
+                        <MinusIcon className="h-5 w-5" />
+                    </button>
                 </div>
             ),
-        },
-        {
-            header: "actions",
-            render: (row) => <div></div>,
         },
     ];
 
@@ -125,7 +146,11 @@ export default function Index() {
     };
 
     const handleSearch = (search) => {
-        router.get(route("customers.index"), { search }, { preserveState: true });
+        router.get(
+            route("customers.index"),
+            { search },
+            { preserveState: true },
+        );
     };
 
     const handlePageChange = (url) => {
@@ -306,7 +331,9 @@ export default function Index() {
                                                 )
                                             }
                                             placeholder={"col00001"}
-                                            error={errors.representative_eui_code}
+                                            error={
+                                                errors.representative_eui_code
+                                            }
                                         />
                                     </div>
                                     <div className="col-span-1 flex content-center">
@@ -335,10 +362,11 @@ export default function Index() {
                                 )}
                                 {representativeCandidate && (
                                     <div
-                                        className={`rounded-lg border p-4 ${representativeCandidate.is_available
-                                            ? "border-primary-100 bg-primary-50/60"
-                                            : "border-yellow-300 bg-yellow-50"
-                                            }`}
+                                        className={`rounded-lg border p-4 ${
+                                            representativeCandidate.is_available
+                                                ? "border-primary-100 bg-primary-50/60"
+                                                : "border-yellow-300 bg-yellow-50"
+                                        }`}
                                     >
                                         {representativeCandidate.user ? (
                                             <div className="flex items-center gap-3">
@@ -349,22 +377,39 @@ export default function Index() {
                                                 </div>
                                                 <div className="min-w-0">
                                                     <p className="truncate text-sm font-semibold text-gray-900">
-                                                        {representativeCandidate.user.full_name}
+                                                        {
+                                                            representativeCandidate
+                                                                .user.full_name
+                                                        }
                                                     </p>
                                                     <p className="truncate text-sm text-gray-500">
-                                                        {representativeCandidate.user.eui_code} · {representativeCandidate.user.email}
+                                                        {
+                                                            representativeCandidate
+                                                                .user.eui_code
+                                                        }{" "}
+                                                        ·{" "}
+                                                        {
+                                                            representativeCandidate
+                                                                .user.email
+                                                        }
                                                     </p>
                                                     <p className="truncate text-sm text-gray-500">
-                                                        Document: {representativeCandidate.user.document_number}
+                                                        Document:{" "}
+                                                        {
+                                                            representativeCandidate
+                                                                .user
+                                                                .document_number
+                                                        }
                                                     </p>
                                                 </div>
                                             </div>
                                         ) : null}
                                         <p
-                                            className={`mt-3 text-sm ${representativeCandidate.is_available
-                                                ? "text-primary-700"
-                                                : "text-yellow-700"
-                                                }`}
+                                            className={`mt-3 text-sm ${
+                                                representativeCandidate.is_available
+                                                    ? "text-primary-700"
+                                                    : "text-yellow-700"
+                                            }`}
                                         >
                                             {representativeCandidate.message}
                                         </p>
@@ -395,7 +440,9 @@ export default function Index() {
                                 <div className="flex flex-wrap gap-4 justify-end">
                                     <PrimaryButton
                                         type="submit"
-                                        disabled={processing || representativeBlocked}
+                                        disabled={
+                                            processing || representativeBlocked
+                                        }
                                     >
                                         {processing ? "sending..." : "send"}
                                     </PrimaryButton>
