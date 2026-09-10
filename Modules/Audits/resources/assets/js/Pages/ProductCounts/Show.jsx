@@ -6,7 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import Table from "@/Components/Table";
 import MainLayout from "@/Layouts/MainLayout";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/16/solid";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { useMemo } from "react";
 
 export default function Show() {
@@ -38,7 +38,7 @@ export default function Show() {
         return productCount.product_quantities.map((quantity) => ({
             ...quantity,
             expected: expectedByProductId[quantity.product_id] ?? 0,
-        }))
+        }));
     });
 
     const columns = [
@@ -86,7 +86,7 @@ export default function Show() {
                         <div>
                             <p>
                                 <strong>Counted by: </strong>
-                                <span>{productCount.user?.name}</span>
+                                <span>{productCount.user?.full_name}</span>
                             </p>
                         </div>
                         <div className="col-span-2">
@@ -128,6 +128,9 @@ export default function Show() {
                     </div>
                     <Table
                         columns={columns}
+                        from={1}
+                        totalResults={productQuantities.length}
+                        to={productQuantities.length}
                         data={productQuantities}
                     />
                 </div>
@@ -147,13 +150,16 @@ export default function Show() {
                                 />
                             </div>
                             <div>
-                                <Input 
+                                <Input
                                     label={"Total Expected Products"}
                                     name={"total_expected_products"}
                                     type="number"
                                     value={data.total_expected_products}
-                                    onChange={(e) => 
-                                        setData("total_expected_products", e.target.value)
+                                    onChange={(e) =>
+                                        setData(
+                                            "total_expected_products",
+                                            e.target.value,
+                                        )
                                     }
                                     error={errors.total_expected_products}
                                 />
