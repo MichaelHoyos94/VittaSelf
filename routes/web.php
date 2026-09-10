@@ -16,11 +16,17 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     $user = auth()->user();
-    if ($user && $user->hasRole(['administrator', 'super-admin'])) {
+
+    if ($user->hasRole(['administrator', 'super-admin'])) {
         return redirect()->route('dashboard');
     }
+
+    if ($user->hasRole('commercial-agent')) {
+        return redirect()->route('my-cash-register.index');
+    }
+
     return redirect()->route('products.products.index');
-});
+})->middleware('auth');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
