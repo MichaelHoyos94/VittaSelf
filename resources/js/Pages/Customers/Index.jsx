@@ -50,7 +50,10 @@ export default function Index() {
                     <div className="flex flex-col">
                         <span>{row.full_name}</span>
                         <div>
-                            <Badge type="warning" text={row.plan.name} />
+                            <Badge
+                                type="warning"
+                                text={row.plan.name ?? "No Plan"}
+                            />
                         </div>
                     </div>
                 </div>
