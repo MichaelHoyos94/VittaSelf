@@ -36,12 +36,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (BusinessException $e, $request) {
             return back()->with('error', $e->getMessage());
         });
-
-        /*$exceptions->respond(function (Response $response) {
-            if (app()->environment('production') && $response->getStatusCode() === 500) {
-                return back()->with('error', 'An unexpected error occurred. Please try again later.');
+        /* Uncontrolable exceptions */
+        $exceptions->respond(function (Response $response) {
+            if (
+                app()->environment('production') &&
+                $response->getStatusCode() === 500
+            ) {
+                return back()->with(
+                    'error',
+                    'Something went wrong!'
+                );
             }
 
             return $response;
-        });*/
+        });
     })->create();

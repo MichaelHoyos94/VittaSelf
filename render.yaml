@@ -63,6 +63,8 @@ services:
         value: log
       - key: VITE_APP_NAME
         value: VittaSelf
+      - key: VITE_APP_ENV
+        value: production
       - key: RUN_MIGRATIONS
         value: 'false'
       - key: RUN_SEEDERS
