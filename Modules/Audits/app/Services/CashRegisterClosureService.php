@@ -2,19 +2,23 @@
 
 namespace Modules\Audits\Services;
 
+use App\Exceptions\PendingCashRegisterClosureAuditException;
 use Modules\Audits\Repositories\CashRegisterClosureRepository;
 
 class CashRegisterClosureService
 {
     public function __construct(private CashRegisterClosureRepository $repository) {}
-    public function create($data)
+
+    public function create(array $data)
     {
         $data = $this->calculateCash($data);
-        return $this->repository->create($data);
-    }
-    public function show($cashRegisterClosureId)
-    {
+        $cashRegisterId = $data['cash_register_id'];
 
+        if ($this->repository->hasPendingAudit($cashRegisterId)) {
+            throw new PendingCashRegisterClosureAuditException;
+        }
+
+        return $this->repository->create($data);
     }
 
     public function getAll($search)
@@ -22,18 +26,20 @@ class CashRegisterClosureService
         return $this->repository->getAll($search);
     }
 
-    public function getById($cashRegisterClosureId)
+    public function getById(int $cashRegisterClosureId)
     {
         return $this->repository->getById($cashRegisterClosureId);
     }
 
-    // Calculates cash = bills_100000 + bills_5000 etc set $data['cash' => total]
-    private function calculateCash($data)
+    /**
+     * Calculates cash = bills_100000 + bills_5000 etc set $data['cash' => total]
+     */
+    private function calculateCash(array $data)
     {
         $cash = 0;
         $cash += $data['bills_50000'] * 50000;
-        $cash += $data['bills_100000']* 100000;
-        $cash += $data['bills_20000']* 20000;
+        $cash += $data['bills_100000'] * 100000;
+        $cash += $data['bills_20000'] * 20000;
         $cash += $data['bills_10000'] * 10000;
         $cash += $data['bills_5000'] * 5000;
         $cash += $data['bills_2000'] * 2000;
@@ -43,6 +49,7 @@ class CashRegisterClosureService
         $cash += $data['coins_100'] * 100;
         $cash += $data['coins_50'] * 50;
         $data['cash'] = $cash;
+
         return $data;
     }
 }
