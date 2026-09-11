@@ -52,7 +52,7 @@ export default function Index() {
                         <div>
                             <Badge
                                 type="warning"
-                                text={row.plan.name ?? "No Plan"}
+                                text={row.plan?.name ?? "No Plan"}
                             />
                         </div>
                     </div>

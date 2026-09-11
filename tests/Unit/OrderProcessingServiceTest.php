@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\OrderRestrictedBySanctionException;
 use App\Services\OrderProcessingService;
 use App\Services\PlanService;
 use App\Services\UserService;
@@ -80,7 +81,10 @@ it('blocks an order when an active sanction blocks orders', function () {
     $service = createOrderProcessingService($sanctionService);
 
     expect(fn () => $service->checkRestrictions(10))
-        ->toThrow(Exception::class, 'This user is restricted from placing orders due to sanctions.');
+        ->toThrow(
+            OrderRestrictedBySanctionException::class,
+            'The order cannot be placed because the customer is subject to a sanction.',
+        );
 });
 
 it('applies plan benefits when the plan is not frozen', function () {

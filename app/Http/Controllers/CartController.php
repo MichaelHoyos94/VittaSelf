@@ -16,11 +16,7 @@ class CartController extends Controller
     {
         $userId = auth()->user()->id;
         $productId = $request['product_id'];
-        try {
-            $this->service->addProduct($userId, $productId);
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($userId, $productId);
 
         return back()->with('success', 'Product added to cart.');
     }

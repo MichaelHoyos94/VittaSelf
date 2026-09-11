@@ -70,7 +70,6 @@ export default function Create() {
     }, [selectedProducts]);
 
     useEffect(() => {
-        console.log(flash.error);
         setSuccessMessage(flash.success);
         setErrorMessage(flash.error);
 
