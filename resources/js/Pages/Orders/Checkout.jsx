@@ -10,6 +10,7 @@ import formatCurrency from "@/Utils/formatCurrency";
 
 export default function Checkout() {
     const { cart, user, flash, sanctions } = usePage().props;
+    console.log(flash);
     const planFreezeSanction = sanctions.some(
         (sanction) => sanction.FREEZE_PLAN,
     );
@@ -31,18 +32,12 @@ export default function Checkout() {
         payment_method: "",
         products: cart.products,
     });
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
-        post(route("orders.store"), {
-            onSuccess: () => {
-                console.log("Order created successfully");
-            },
-            onError: (errors) => {
-                console.log(errors);
-            },
-        });
+        post(route("orders.store"));
     };
+
     useEffect(() => {
         setSuccessMessage(flash.success);
         setErrorMessage(flash.error);
@@ -59,9 +54,11 @@ export default function Checkout() {
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <Head title="Checkout" />
-            <h2 className="text-2xl font-bold">Checkout</h2>
-            <p className="text-sm text-gray-500">Confirm the data.</p>
             <div>
+                <h2 className="text-2xl font-bold">Checkout</h2>
+                <p className="text-sm text-gray-500">Confirm the data.</p>
+            </div>
+            <div className="flex flex-col gap-y-2">
                 {successMessage && (
                     <div
                         className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
@@ -261,9 +258,13 @@ export default function Checkout() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
-                                                        <span>Total Points</span>
                                                         <span>
-                                                            {product.points * product.pivot.quantity}
+                                                            Total Points
+                                                        </span>
+                                                        <span>
+                                                            {product.points *
+                                                                product.pivot
+                                                                    .quantity}
                                                         </span>
                                                     </div>
                                                 )}

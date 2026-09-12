@@ -7,10 +7,12 @@ use Modules\Audits\Models\CashRegisterClosure;
 class CashRegisterClosureRepository
 {
     public function __construct() {}
+
     public function create($data)
     {
         return CashRegisterClosure::create($data);
     }
+
     public function getAll($search, $perPage = 10, $sortField = 'created_at', $sortDirection = 'desc')
     {
         $query = CashRegisterClosure::with(['cashRegister.costCenter', 'commercialAgent', 'audit']);
@@ -25,8 +27,17 @@ class CashRegisterClosureRepository
 
         return $query->orderBy($sortField, $sortDirection)->paginate($perPage);
     }
+
     public function getById($cashRegisterClosureId)
     {
         return CashRegisterClosure::with(['cashRegister.costCenter', 'commercialAgent'])->findOrFail($cashRegisterClosureId);
+    }
+
+    public function hasPendingAudit($cashRegisterId)
+    {
+        return CashRegisterClosure::query()
+            ->where('cash_register_id', $cashRegisterId)
+            ->whereDoesntHave('audit')
+            ->exists();
     }
 }

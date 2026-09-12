@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\ProductAlredyInCartException;
+use App\Exceptions\ProductNotInCartException;
 use App\Repositories\CartRepository;
-use Exception;
 
 class CartService
 {
@@ -23,7 +24,7 @@ class CartService
     {
         $cart = $this->repository->getByUserId($userId);
         if ($cart->products->contains('id', $productId)) {
-            throw new Exception('Product already in cart');
+            throw new ProductAlredyInCartException;
         } else {
             $cart->products()->attach($productId, ['quantity' => 1]);
         }
@@ -37,7 +38,7 @@ class CartService
             $product->pivot->quantity += 1;
             $product->pivot->save();
         } else {
-            throw new Exception('Product not found in cart');
+            throw new ProductNotInCartException;
         }
     }
 
@@ -49,7 +50,7 @@ class CartService
             $product->pivot->quantity -= 1;
             $product->pivot->save();
         } else {
-            throw new Exception('Product not found in cart');
+            throw new ProductNotInCartException;
         }
     }
 
@@ -59,7 +60,7 @@ class CartService
         if ($cart->products->contains('id', $productId)) {
             $cart->products()->detach($productId);
         } else {
-            throw new Exception('Product not found in cart');
+            throw new ProductNotInCartException;
         }
     }
 

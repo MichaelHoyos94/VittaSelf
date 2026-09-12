@@ -185,9 +185,7 @@ export default function Create() {
                         className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
                         role="alert"
                     >
-                        <span className="block sm:inline">
-                            {errorMessage}
-                        </span>
+                        <span className="block sm:inline">{errorMessage}</span>
                     </div>
                 )}
             </div>
@@ -206,10 +204,11 @@ export default function Create() {
                         return (
                             <div key={step} className="text-center">
                                 <h3
-                                    className={`text-sm font-semibold ${isActive
-                                        ? "text-primary-600"
-                                        : "text-gray-400"
-                                        }`}
+                                    className={`text-sm font-semibold ${
+                                        isActive
+                                            ? "text-primary-600"
+                                            : "text-gray-400"
+                                    }`}
                                 >
                                     {step}
                                 </h3>
@@ -250,10 +249,11 @@ export default function Create() {
                                 className="flex justify-center"
                             >
                                 <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${isActive
-                                        ? "border-primary-500 bg-primary-500 text-white"
-                                        : "border-gray-300 bg-white text-gray-400"
-                                        }`}
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold shadow-sm transition-colors duration-300 ${
+                                        isActive
+                                            ? "border-primary-500 bg-primary-500 text-white"
+                                            : "border-gray-300 bg-white text-gray-400"
+                                    }`}
                                 >
                                     {stepNumber}
                                 </span>
@@ -264,9 +264,7 @@ export default function Create() {
             </div>
             {/* Content */}
             <div>
-                <Form
-                    onSubmit={handleSubmit}
-                >
+                <Form onSubmit={handleSubmit}>
                     {/* Step 1 empresario*/}
                     <div
                         className={`border-2 rounded mt-6 p-4 mx-auto ${currentStep === 1 ? "block" : "hidden"}`}
@@ -344,7 +342,8 @@ export default function Create() {
                                                 plan
                                             </p>
                                             <p className="font-medium text-gray-700">
-                                                {userToOrder?.plan?.name || "This EUI has no plan."}
+                                                {userToOrder?.plan?.name ||
+                                                    "This EUI has no plan."}
                                             </p>
                                         </div>
                                     </div>
@@ -395,7 +394,9 @@ export default function Create() {
                                         <div className="flex flex-row flex-wrap justify-between gap-4">
                                             <h3>{product.name}</h3>
                                             <p>{product.description}</p>
-                                            <span>{formatCurrency(product.price)}</span>
+                                            <span>
+                                                {formatCurrency(product.price)}
+                                            </span>
                                             <br />
                                             <strong>
                                                 {product.points} points
@@ -477,7 +478,10 @@ export default function Create() {
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            {formatCurrency(product.price * product.quantity)}
+                                                            {formatCurrency(
+                                                                product.price *
+                                                                    product.quantity,
+                                                            )}
                                                         </div>
                                                         <div>
                                                             <button
@@ -633,7 +637,7 @@ export default function Create() {
                                                     </div>
                                                     <div>
                                                         {hasDiscount &&
-                                                            !planFreezeSanction ? (
+                                                        !planFreezeSanction ? (
                                                             <div className="flex flex-col items-end">
                                                                 <span>
                                                                     Total
@@ -711,10 +715,10 @@ export default function Create() {
                         <PrimaryButton
                             type="submit"
                             disabled={
-                                currentStep !== steps.length
-                                || selectedProducts.length === 0
-                                || !userToOrder
-                                || processing
+                                currentStep !== steps.length ||
+                                selectedProducts.length === 0 ||
+                                !userToOrder ||
+                                processing
                             }
                         >
                             {processing ? "Processing..." : "Submit Order"}

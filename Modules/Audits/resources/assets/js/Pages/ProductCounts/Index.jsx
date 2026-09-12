@@ -20,19 +20,27 @@ export default function Index() {
                     </div>
                     <div className="flex flex-col">
                         <span>{row.user.full_name}</span>
-                        <span className="text-sm text-gray-500">{row.user.email}</span>
-                        <span className="text-sm text-gray-500">{row.user.phone}</span>
+                        <span className="text-sm text-gray-500">
+                            {row.user.email}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                            {row.user.phone}
+                        </span>
                     </div>
                 </div>
             ),
         },
         {
             header: "Count Date",
-            render: (row) => <span>{new Date(row.count_date).toLocaleString('en-US', {
-                'year': 'numeric',
-                'month': 'long',
-                'day': 'numeric',
-            })}</span>
+            render: (row) => (
+                <span>
+                    {new Date(row.count_date).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })}
+                </span>
+            ),
         },
         {
             header: "Observations",
@@ -42,31 +50,49 @@ export default function Index() {
             header: "Audited",
             render: (row) => (
                 <Badge
-                    type={row.audit ? (
-                        row.audit.status === 'correct' ? 'success'
-                            : row.audit.status === 'correct with issues' ? 'warning'
-                                : 'error'
-                    ) : 'info'}
-                    text={row.audit ? row.audit.status : 'pending'}
+                    type={
+                        row.audit
+                            ? row.audit.status === "correct"
+                                ? "success"
+                                : row.audit.status === "correct with issues"
+                                  ? "warning"
+                                  : "error"
+                            : "info"
+                    }
+                    text={row.audit ? row.audit.status : "pending"}
                 />
+            ),
+        },
+        {
+            header: "Actions",
+            render: (row) => (
+                <div>
+                    <Link href={route("audits.product-counts.show", row.id)}>
+                        <PrimaryButton type="button">details</PrimaryButton>
+                    </Link>
+                </div>
             ),
         },
     ];
 
-    const handlePageChange = (url) => {
-
-    }
+    const handlePageChange = (url) => {};
 
     const handleSearchChange = (search) => {
-        router.get(route("audits.product-counts.index"), { search }, { preserveState: true, replace: true });
-    }
+        router.get(
+            route("audits.product-counts.index"),
+            { search },
+            { preserveState: true, replace: true },
+        );
+    };
 
     return (
         <div className="bg-white/80 p-6 rounded-xl shadow-lg backdrop-blur-lg min-h-full space-y-2">
             <Head title="Product Counts" />
             <div>
                 <h2 className="text-2xl font-bold">Product counts</h2>
-                <p className="text-sm text-gray-500">Daily product counts by cost center</p>
+                <p className="text-sm text-gray-500">
+                    Daily product counts by cost center
+                </p>
             </div>
             <div className="mb-4 flex flex-row gap-2 items-center justify-start">
                 <Link href={route("audits.product-counts.create")}>

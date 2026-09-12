@@ -14,9 +14,14 @@ use Modules\Audits\Services\PdfService;
 use Modules\Audits\Services\ProductCountAuditService;
 use Modules\Audits\Services\QualityChecklistAuditService;
 
+/**
+ * Controller for managing audits.
+ */
 class AuditsController extends Controller
 {
-
+    /**
+     * Instantiate a new controller instance.
+     */
     public function __construct(
         private QualityChecklistAuditService $service,
         private ProductCountAuditService $productCountAuditService,
@@ -26,7 +31,7 @@ class AuditsController extends Controller
     ) {}
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of all audits.
      */
     public function index(Request $request)
     {
@@ -34,6 +39,7 @@ class AuditsController extends Controller
         $productCountAudits = $this->productCountAuditService->getAll($search);
         $qualityChecklistAudits = $this->service->getAll($search);
         $cashRegisterClosuresAudits = $this->cashRegisterClosureAuditService->getAll($search);
+
         return Inertia::render('Audits/Audits/Index')->with([
             'productCountAudits' => $productCountAudits,
             'qualityChecklistAudits' => $qualityChecklistAudits,
@@ -42,7 +48,7 @@ class AuditsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created quality checklist audit in storage.
      */
     public function storeQualityChecklistAudit(QualityChecklistAuditRequest $request)
     {
@@ -50,7 +56,8 @@ class AuditsController extends Controller
         $audit = $this->service->create($validated);
         $pdfPath = $this->pdfService->generateQualityChecklistAuditPdf($audit);
         $audit->update(['pdf_path' => $pdfPath]);
-        return back()->with('success', 'Audit created successfully! ID: ' . $audit->id);
+
+        return redirect()->route('audits.history.index')->with('success', 'Quality checklist audit created successfully! ID: '.$audit->id);
     }
 
     /**
@@ -62,36 +69,55 @@ class AuditsController extends Controller
         $audit = $this->productCountAuditService->create($validated);
         $pdfPath = $this->pdfService->generateProductCountAuditPdf($audit);
         $audit->update(['pdf_path' => $pdfPath]);
-        return redirect()->route('audits.history.index')->with('success', 'Product count audit created successfully! ID: ' . $audit->id);
+
+        return redirect()->route('audits.history.index')->with('success', 'Product count audit created successfully! ID: '.$audit->id);
     }
 
+    /**
+     * Store a newly created cash register closure audit in storage.
+     */
     public function storeCashRegisterClosureAudit(CashRegisterClosureAuditRequest $request)
     {
         $validated = $request->validated();
         $audit = $this->cashRegisterClosureAuditService->create($validated);
         $audit->load(['cashRegisterClosure.commercialAgent']);
         $commercialAgentId = $audit->cashRegisterClosure->commercialAgent->id;
-        if ($audit->status === 'approved') $this->cashRegisterService->closeCashRegister($commercialAgentId);
+        if ($audit->status === 'approved') {
+            $this->cashRegisterService->closeCashRegister($commercialAgentId);
+        }
         $pdfPath = $this->pdfService->generateCashRegisterClosureAuditPdf($audit);
         $audit->update(['pdf_path' => $pdfPath]);
-        return redirect()->route('audits.history.index')->with('success', 'Cash register closure audit created successfully! ID: ' . $audit->id);
+
+        return redirect()->route('audits.history.index')->with('success', 'Cash register closure audit created successfully! ID: '.$audit->id);
     }
 
-    public function downloadProductCountAuditReport($id)
+    /**
+     * Download product count audit report.
+     */
+    public function downloadProductCountAuditReport(int $id)
     {
         $audit = $this->productCountAuditService->getById($id);
+
         return $this->pdfService->download($audit);
     }
 
-    public function downloadQualityChecklistAuditReport($id)
+    /**
+     * Download quality checklist audit report.
+     */
+    public function downloadQualityChecklistAuditReport(int $id)
     {
         $audit = $this->service->getById($id);
+
         return $this->pdfService->download($audit);
     }
 
-    public function downloadCashRegisterClosureAuditReport($id)
+    /**
+     * Download cash register closure audit report.
+     */
+    public function downloadCashRegisterClosureAuditReport(int $id)
     {
         $audit = $this->cashRegisterClosureAuditService->getById($id);
+
         return $this->pdfService->download($audit);
     }
 }

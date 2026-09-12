@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Exception;
+use App\Exceptions\OrderRestrictedBySanctionException;
 use Modules\Sanctions\Services\SanctionEnforcementService;
 
 class OrderProcessingService
@@ -25,7 +25,7 @@ class OrderProcessingService
 
         foreach ($sanctions as $sanction) {
             if (($sanction->FREEZE_ORDER ?? false) || ($sanction->BLOCK_ORDERS ?? false)) {
-                throw new Exception('This user is restricted from placing orders due to sanctions.');
+                throw new OrderRestrictedBySanctionException;
             }
 
             if ($sanction->FREEZE_POINTS) {

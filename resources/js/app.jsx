@@ -1,18 +1,24 @@
-import './bootstrap';
-import '../css/app.css';
-import '@flaticon/flaticon-uicons/css/regular/rounded.css';
+import "./bootstrap";
+import "../css/app.css";
+import "@flaticon/flaticon-uicons/css/regular/rounded.css";
 
-import { createRoot } from 'react-dom/client';
-import { createInertiaApp } from '@inertiajs/react';
+import { createRoot } from "react-dom/client";
+import { createInertiaApp, router } from "@inertiajs/react";
 
-const appName = import.meta.env.VITE_APP_NAME || 'VittaSelf';
+if (import.meta.env.PROD || import.meta.env.VITE_APP_ENV === "production") {
+    router.on("invalid", (e) => {
+        e.preventDefault();
+    });
+}
+
+const appName = import.meta.env.VITE_APP_NAME || "VittaSelf";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async (name) => {
         const pages = import.meta.glob([
-            './Pages/**/*.jsx',
-            '../../Modules/*/resources/assets/js/Pages/**/*.jsx',
+            "./Pages/**/*.jsx",
+            "../../Modules/*/resources/assets/js/Pages/**/*.jsx",
         ]);
 
         const loadPage = (path) => {
@@ -29,12 +35,12 @@ createInertiaApp({
             return appPage;
         }
 
-        const [moduleName, ...rest] = name.split('/');
-        const relative = rest.join('/');
+        const [moduleName, ...rest] = name.split("/");
+        const relative = rest.join("/");
 
         if (relative) {
             const modulePage = loadPage(
-                `../../Modules/${moduleName}/resources/assets/js/Pages/${relative}.jsx`
+                `../../Modules/${moduleName}/resources/assets/js/Pages/${relative}.jsx`,
             );
 
             if (modulePage) {
@@ -43,7 +49,7 @@ createInertiaApp({
         }
 
         throw new Error(
-            `Page not found: ${name}. Expected module pages in Modules/<Module>/resources/assets/js/Pages/**`
+            `Page not found: ${name}. Expected module pages in Modules/<Module>/resources/assets/js/Pages/**`,
         );
     },
     setup({ el, App, props }) {
@@ -52,6 +58,6 @@ createInertiaApp({
         root.render(<App {...props} />);
     },
     progress: {
-        color: 'rgb(100, 150, 100)',
+        color: "rgb(100, 150, 100)",
     },
 });

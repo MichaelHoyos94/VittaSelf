@@ -50,11 +50,15 @@ export default function MyCashRegister() {
     }, [flash.error, flash.success]);
 
     const handleOpenCashRegister = () => {
-        router.post(route("my-cash-register.open"), {}, {
-            onSuccess: () => {
-                closeModal();
-            }
-        });
+        router.post(
+            route("my-cash-register.open"),
+            {},
+            {
+                onSuccess: () => {
+                    closeModal();
+                },
+            },
+        );
     };
 
     const handleCloseCashRegister = (e) => {
@@ -62,7 +66,10 @@ export default function MyCashRegister() {
         post(route("audits.cash-register-closures.store"), {
             onSuccess: () => {
                 closeModal();
-            }
+            },
+            onError: () => {
+                closeModal();
+            },
         });
     };
 
@@ -207,7 +214,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.bills_100000}
                                         onChange={(e) =>
-                                            setData("bills_100000", e.target.value)
+                                            setData(
+                                                "bills_100000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -217,7 +227,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.bills_50000}
                                         onChange={(e) =>
-                                            setData("bills_50000", e.target.value)
+                                            setData(
+                                                "bills_50000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -227,7 +240,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.bills_20000}
                                         onChange={(e) =>
-                                            setData("bills_20000", e.target.value)
+                                            setData(
+                                                "bills_20000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -237,7 +253,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.bills_10000}
                                         onChange={(e) =>
-                                            setData("bills_10000", e.target.value)
+                                            setData(
+                                                "bills_10000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -247,7 +266,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.bills_5000}
                                         onChange={(e) =>
-                                            setData("bills_5000", e.target.value)
+                                            setData(
+                                                "bills_5000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -257,7 +279,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.bills_2000}
                                         onChange={(e) =>
-                                            setData("bills_2000", e.target.value)
+                                            setData(
+                                                "bills_2000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -267,7 +292,10 @@ export default function MyCashRegister() {
                                         min="0"
                                         value={data.coins_1000}
                                         onChange={(e) =>
-                                            setData("coins_1000", e.target.value)
+                                            setData(
+                                                "coins_1000",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <Input
@@ -318,7 +346,10 @@ export default function MyCashRegister() {
                                         step="0.01"
                                         value={data.bank_transfer}
                                         onChange={(e) =>
-                                            setData("bank_transfer", e.target.value)
+                                            setData(
+                                                "bank_transfer",
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                     <div className="col-span-2">
@@ -327,14 +358,22 @@ export default function MyCashRegister() {
                                             name="observations"
                                             value={data.observations}
                                             onChange={(e) =>
-                                                setData("observations", e.target.value)
+                                                setData(
+                                                    "observations",
+                                                    e.target.value,
+                                                )
                                             }
                                         />
                                     </div>
                                 </div>
                                 <div className="flex gap-4 flex-wrap items-center justify-end">
-                                    <PrimaryButton type="submit">close cash register</PrimaryButton>
-                                    <SecondaryButton type="button" onClick={closeModal}>
+                                    <PrimaryButton type="submit">
+                                        close cash register
+                                    </PrimaryButton>
+                                    <SecondaryButton
+                                        type="button"
+                                        onClick={closeModal}
+                                    >
                                         cancel
                                     </SecondaryButton>
                                 </div>
