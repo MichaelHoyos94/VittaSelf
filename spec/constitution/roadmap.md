@@ -35,6 +35,7 @@ Orden de las features.
 31. **031 . Dashboard**: Vista del dashboard para consultar metricas.
 32. **032 . Modificacion de colores en dashboard**: Paleta monocromatica `primary` aplicada a graficos, tarjetas y controles. Build cliente/SSR validado; revision visual manual pendiente en tasks.md.
 33. **033 . Documentacion y manual de uso**: README actualizado con contexto tecnico, instalacion, comandos, despliegue y guia funcional.
+34. **034 . Estilos del background de contenido**: Mejorar los estilos que envuelven el contenido principal.
 
 ## Siguiente 🏗️
 
