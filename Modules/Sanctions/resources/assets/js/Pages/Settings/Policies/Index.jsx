@@ -97,23 +97,20 @@ export default function Index() {
                 )}
             </div>
             {/* Dynamic cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <button type="button" onClick={() => openModal("create")}>
-                    <div className="flex flex-col items-center p-4 border-2 bg-white border-gray-300 border-dashed rounded-lg shadow-lg">
-                        <PlusCircleIcon className="h-32 w-32 text-primary-800" />
-                        <p>
-                            Add new{" "}
-                            <span className="font-extrabold">policie</span>
-                        </p>
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 min-h-full">
+                <button type="button" onClick={() => openModal("create")} className="flex h-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-4 shadow-lg">
+                    <PlusCircleIcon className="h-32 w-32 text-primary-800" />
+                    <p>
+                        Add new{" "}
+                        <span className="font-extrabold">policie</span>
+                    </p>
                 </button>
                 {policies.map((policy) => (
-                    <div className="p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+                    <div className="flex h-full flex-col p-4 border-2 border-gray-300 rounded-lg shadow-lg" key={policy.id}>
                         <div className="flex justify-between border-b-2 border-gray-200">
                             <h2>{policy.policy}</h2>
-                            {/* bg-primary-400 if active, bg-gray-400 if inactive */}
                             <div
-                                className={`h-4 w-4 rounded-full ${policy.active ? "bg-primary-400" : "bg-gray-400"}`}
+                                className={`size-4 shrink-0 rounded-full ${policy.active ? "bg-primary-400" : "bg-gray-400"}`}
                             ></div>
                         </div>
                         <div>
@@ -121,7 +118,7 @@ export default function Index() {
                                 {policy.description}
                             </p>
                             {/* Policy section + policy numeral */}
-                            <div className="flex justify-between mt-4">
+                            <div className="flex justify-between mt-4 gap-2">
                                 <p className="text-sm text-gray-500">
                                     {policy.section}
                                 </p>
@@ -268,7 +265,7 @@ export default function Index() {
                             </p>
                         </div>
                         {/* Footer */}
-                        <div className="flex flex-wrap justify-end mt-4 gap-4">
+                        <div className="flex flex-wrap justify-end my-4 mr-4 gap-4">
                             <PrimaryButton
                                 type="button"
                                 onClick={() =>
