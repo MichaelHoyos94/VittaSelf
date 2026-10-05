@@ -13,9 +13,12 @@ class ResolutionRepository
             ->with([
                 'sanctions',
                 'mitigations',
-                'disciplinaryCase.user',
+                'sanctionLevel',
+                'disciplinaryCase.user.plan',
                 'disciplinaryCase.admin',
-                'sanctionEnforcements'
+                'disciplinaryCase.policy',
+                'disciplinaryCase.complianceSource',
+                'sanctionEnforcements',
             ])
             ->when($search, function ($query, $search) {
                 $query->whereHas('disciplinaryCase', function ($q) use ($search) {
@@ -28,6 +31,7 @@ class ResolutionRepository
             ->orderBy($sortBy, $sortDirection)
             ->paginate($perPage);
     }
+
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -44,16 +48,20 @@ class ResolutionRepository
             return $resolution->load(['sanctions', 'mitigations', 'disciplinaryCase', 'sanctionLevel']);
         });
     }
+
     public function update($id, array $data)
     {
         $resolution = Resolution::findOrFail($id);
         $resolution->update($data);
+
         return $resolution;
     }
+
     public function delete($id)
     {
         $resolution = Resolution::findOrFail($id);
         $resolution->delete();
+
         return true;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Modules\Sanctions\Services;
 
+use Modules\Sanctions\Enums\ResolutionType;
+use Modules\Sanctions\Models\Resolution;
 use Modules\Sanctions\Repositories\ResolutionRepository;
 
 class ResolutionService
@@ -11,10 +13,27 @@ class ResolutionService
         protected SanctionEnforcementService $sanctionEnforcementService,
         protected DisciplinaryCaseService $disciplinaryCaseService
     ) {}
+
     public function getAll($search)
     {
-        return $this->repository->getAll($search);
+        return $this->repository->getAll($search)->through(function (Resolution $resolution) {
+            $resolution->setAttribute('enforcement_status', $this->getEnforcementStatus($resolution));
+
+            return $resolution;
+        });
     }
+
+    private function getEnforcementStatus(Resolution $resolution): string
+    {
+        $enforcement = $resolution->sanctionEnforcements->sortByDesc('applied_at')->first();
+
+        if ($resolution->resolution_type === ResolutionType::NOT_PROCEDE || $enforcement === null) {
+            return 'none';
+        }
+
+        return $this->sanctionEnforcementService->getStatus($enforcement);
+    }
+
     public function create($data)
     {
         $appliedAt = $data['applied_at'];
@@ -39,6 +58,7 @@ class ResolutionService
             ];
             $this->sanctionEnforcementService->create($sanctionEnforcementData);
         }
+
         return $resolution->load(['sanctionEnforcements']);
     }
 }

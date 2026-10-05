@@ -35,12 +35,13 @@ Orden de las features.
 31. **031 . Dashboard**: Vista del dashboard para consultar metricas.
 32. **032 . Modificacion de colores en dashboard**: Paleta monocromatica `primary` aplicada a graficos, tarjetas y controles. Build cliente/SSR validado; revision visual manual pendiente en tasks.md.
 33. **033 . Documentacion y manual de uso**: README actualizado con contexto tecnico, instalacion, comandos, despliegue y guia funcional.
-34. **034 . Estilos del background de contenido**: Mejorar los estilos que envuelven el contenido principal.
 
 ## Siguiente 🏗️
 
 25. **025 . Ingresos de inventario**: Operación que ingresa productos al `stock` de un `cost_center` y queda registrado como un `inventory-entry` para posteriores consultas.
 26. **026 . Transferencias de inventario**: Operacion que mueve productos del stock de un centro de costos origen a uno de destino.
+34. **034 . Estilos del background de contenido**: Mejorar los estilos que envuelven el contenido principal.
+35. **035 . Detalles de resolucion**: Realizar una modal donde se muestren los detalles de la resolucion de un caso disciplinario.
 
 ## Backlog / ideas 💡
 
