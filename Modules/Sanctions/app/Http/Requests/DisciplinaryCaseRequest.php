@@ -12,8 +12,8 @@ class DisciplinaryCaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'facts_description' => 'required|min:20',
-            'details' => 'required',
+            'facts_description' => 'required|min:20|max:255',
+            'details' => 'required|min:20|max:255',
             'user_id' => 'required|exists:users,id',
             'policy_id' => 'required|exists:cat_policies,id',
             'compliance_source_id' => 'required|exists:cat_compliance_sources,id',
@@ -25,8 +25,11 @@ class DisciplinaryCaseRequest extends FormRequest
         return [
             'facts_description.required' => 'Facts description are required.',
             'facts_description.min' => 'Facts description is too short.',
+            'facts_description.max' => 'Facts description is too long.',
 
             'details.required' => 'Details are required.',
+            'details.min' => 'Details are too short.',
+            'details.max' => 'Details are too long.',
             'user_id.required' => 'You must search an user.',
 
             'policy_id.required' => 'You must select a policy.',
