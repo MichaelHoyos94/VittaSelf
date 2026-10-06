@@ -12,7 +12,7 @@
 - [x] Ejecutar `./vendor/bin/pint` sobre los PHP modificados.
 - [x] Ejecutar `php artisan test` (filtrado y completo).
 - [x] Ejecutar `npm run build` (cliente y SSR) y `git diff --check`.
-- [ ] Revisar visualmente el modal en escritorio y movil (con/sin sanciones, texto largo, sin plan, `lifted_at` nulo).
+- [x] Revisar visualmente el modal en escritorio y movil (con/sin sanciones, texto largo, sin plan, `lifted_at` nulo).
 - [x] Marcar tareas y mover la feature a "Hecho" en `roadmap.md` (ya listada por el usuario).
 
 ## Cambios
