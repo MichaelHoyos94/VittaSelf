@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\User;
+use App\Repositories\PlanRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -17,12 +18,19 @@ class UserService
      */
     public function __construct(
         private UserRepository $userRepository,
-        private SanctionEnforcementService $sanctionEnforcementService
+        private SanctionEnforcementService $sanctionEnforcementService,
+        private PlanRepository $planRepository
     ) {}
 
     public function getAll($search)
     {
-        return $this->userRepository->getAll($search);
+        $firstPlan = $this->planRepository->getFirst();
+
+        return $this->userRepository->getAll($search)->through(function (User $user) use ($firstPlan) {
+            $user->setAttribute('next_plan', $user->plan ? $user->plan->nextPlan : $firstPlan);
+
+            return $user;
+        });
     }
 
     public function create($data)
