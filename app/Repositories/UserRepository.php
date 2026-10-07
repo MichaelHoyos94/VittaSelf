@@ -15,7 +15,11 @@ class UserRepository
     {
         return User::query()
             ->role('eui')
-            ->with(['representative:id,name,last_name,eui_code', 'plan:id,name'])
+            ->with([
+                'representative:id,name,last_name,eui_code',
+                'plan:id,name,next_plan_id',
+                'plan.nextPlan:id,name,min_points',
+            ])
             ->withCount([
                 'representedUsers' => fn ($query) => $query->role('eui'),
             ])

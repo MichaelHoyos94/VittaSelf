@@ -55,6 +55,25 @@ export default function Index() {
                                 text={row.plan?.name ?? "No Plan"}
                             />
                         </div>
+                        {row.next_plan ? (
+                            <div className="mt-1 space-y-1">
+                                <span className="block text-xs text-gray-500">
+                                    {Number(row.points)} /{" "}
+                                    {Number(row.next_plan.min_points)} pts ·{" "}
+                                    {row.next_plan.name}
+                                </span>
+                                <progress
+                                    value={Number(row.points)}
+                                    max={Number(row.next_plan.min_points)}
+                                    aria-label={`Progress to ${row.next_plan.name}`}
+                                    className="block h-1.5 w-32 overflow-hidden rounded-full [&::-moz-progress-bar]:bg-primary-500 [&::-webkit-progress-bar]:bg-gray-200 [&::-webkit-progress-value]:bg-primary-500"
+                                />
+                            </div>
+                        ) : (
+                            <span className="mt-1 block text-xs text-gray-500">
+                                {Number(row.points)} pts · Max plan
+                            </span>
+                        )}
                     </div>
                 </div>
             ),

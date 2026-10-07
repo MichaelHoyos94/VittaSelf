@@ -1,6 +1,6 @@
 import NavigationCard from "@/Components/NavigationCard"
 import MainLayout from "@/Layouts/MainLayout"
-import { DocumentTextIcon, ScaleIcon } from "@heroicons/react/16/solid"
+import { ClipboardDocumentCheckIcon, ClipboardDocumentIcon, DocumentTextIcon, EnvelopeIcon, ScaleIcon } from "@heroicons/react/16/solid"
 import { Head } from "@inertiajs/react"
 
 export default function Index() {
@@ -12,25 +12,25 @@ export default function Index() {
                 <h3 className="text-2xl font-bold">Settings</h3>
                 <p className="text-sm text-gray-500">Custom your catalogues in your sanctions process.</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 flex-shrink-0 items-center justify-evenly gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 flex-shrink-0 items-center justify-evenly gap-8 mt-4">
 
                 <a href="/sanctions/settings/policies">
                     <NavigationCard
-                        icon={DocumentTextIcon}
+                        icon={ClipboardDocumentCheckIcon}
                         title={"Policies"}
                         text={"Manage policies"}
                     />
                 </a>
-                <a href="">
+                <a href="/sanctions/settings/mitigations">
                     <NavigationCard
                         icon={ScaleIcon}
                         title={"Mitigations"}
                         text={"Manage mitigations"}
                     />
                 </a>
-                <a href="">
+                <a href="/sanctions/settings/compliance-sources">
                     <NavigationCard
-                        icon={ScaleIcon}
+                        icon={EnvelopeIcon}
                         title={"Sources"}
                         text={"Manage sources"}
                     />

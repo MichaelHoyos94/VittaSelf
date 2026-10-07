@@ -137,7 +137,7 @@ export default function Index() {
                             <h2>{complianceSource.source}</h2>
                             {/* bg-primary-400 if active, bg-gray-400 if inactive */}
                             <div
-                                className={`h-4 w-4 rounded-full ${complianceSource.active ? "bg-primary-400" : "bg-gray-400"}`}
+                                className={`size-4 shrink-0 rounded-full ${complianceSource.active ? "bg-primary-400" : "bg-gray-400"}`}
                             ></div>
                         </div>
                         <div>

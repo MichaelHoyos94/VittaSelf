@@ -1,187 +1,107 @@
-enum status_excellent_good_bad_critical_t {
+enum presentation_capsules_liquid_powder_tablets_others_t {
+	Capsules
+	Liquid
+	Powder
+	Tablets
+	Others
+}
+
+enum category_supplements_petcare_powder_tablets_personalcare_beauty_healthcare_merchandising_t {
+	Supplements
+	"Pet care"
+	Powder
+	Tablets
+	"Personal care"
+	Beauty
+	"Health care"
+	Merchandising
+}
+
+enum payment_method_cash_banktransfer_t {
+	cash
+	"bank transfer"
+}
+
+enum order_status_pending_paid_sended_delivered_t {
+	pending
+	paid
+	sended
+	delivered
+}
+
+enum benefit_type_t {
+	discount
+	shipping_discount
+	points_multiplier
+	number_of_partners
+}
+
+enum resolution_type_procede_not_procede_t {
+	procede
+	"not procede"
+}
+
+enum quality_status_excellent_good_bad_critical_t {
 	excellent
 	good
 	bad
 	critical
 }
 
-Table cat_policies [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	policy varchar(128) [ not null ]
-	section varchar(64) [ not null ]
-	numeral varchar(64) [ not null ]
-	active boolean [ not null, default: true ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-
-	Note: 'Catalogo de políticas de la empresa'
+enum product_count_status_correct_correctwithissues_incorrect_t {
+	correct
+	"correct with issues"
+	incorrect
 }
 
-Table cat_sanctions [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null ]
-	sanction varchar(128) [ not null ]
-	description varchar(255) [ not null ]
-	active boolean [ not null, default: true ]
-
-	Note: 'Catalogo de sanciones de la empresa'
+enum closure_status_approved_rejected_t {
+	approved
+	rejected
 }
 
-Table cat_mitigations [headercolor: #7a1717] {
+Table users [headercolor: #175e7a] {
 	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null ]
-	mitigation varchar(64) [ not null ]
-	description varchar(128)
-	active boolean [ not null, default: true ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-
-	Note: 'Catalogo de atenuantes de la empresa'
-}
-
-Table cat_compliance_sources [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null ]
-	source varchar(64) [ not null ]
-	description varchar(128) [ not null ]
-	active boolean [ not null ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-
-	Note: 'Fuentes de la investigación. Catalogo'
-}
-
-Table cat_sanctions_level [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null, note: 'MINOR | MODERATE | SERIOUS' ]
-	sanction_level varchar(64) [ not null, note: 'Leve | Moderada | Grave' ]
-	sanction_level_description varchar(128) [ not null ]
-
-	Note: 'Catalogo de niveles de sanción'
-}
-
-Table cat_case_statuses [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null, note: 'OPEN | AWAITING_EVIDENCES | ON_RESOLUTION | CLOSED' ]
-	case_status varchar(64) [ not null ]
-	case_status_description varchar(128) [ not null ]
-
-	Note: 'Catalogos de estado de proceso disciplinario'
-}
-
-Table disciplinary_cases [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	facts_description varchar(255) [ not null ]
-	details varchar(64)
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-	user_id integer [ not null, note: 'Usuario investigado' ]
-	admin_id integer [ not null, note: 'Administrador que lleva el caso' ]
-	policy_id integer [ not null ]
-	compliance_source_id integer [ not null ]
-	case_status_id integer [ not null ]
-}
-
-Table resolution [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	resolution_type resolution_type_procede_not_procede_t [ not null ]
-	resolution_text varchar(255) [ not null ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-	disciplinary_case_id integer [ not null ]
-	sanction_level_id integer [ not null ]
-
-	Note: 'Resolución emitida por el administrador'
-}
-
-Table sanction_enforcements [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	suspend_account boolean [ not null, default: false ]
-	suspend_benefits boolean [ not null, default: false ]
-	freeze_earnings boolean [ not null, default: false ]
-	block_qualification boolean [ not null, default: false ]
-	suspend_code boolean [ not null, default: false ]
-	applied_at datetime [ not null ]
-	lifted_at datetime
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-	resolution_id integer [ not null ]
-	user_id integer [ not null, note: 'Usuario al que se le aplican las sanciones' ]
-
-	Note: 'Sanciones activas del usuario. Punto central de la aplicación de sanciones'
-}
-
-Table user_evidences [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	file varchar(32) [ not null ]
-	description varchar(128) [ not null ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-	disciplinary_case_id integer [ not null ]
-
-	Note: 'Evidencias subidas por el usuario'
-}
-
-Table sanction_evidences [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	file varchar(32) [ not null ]
-	description varchar(128) [ not null ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
-	disciplinary_case_id integer [ not null ]
-
-	Note: 'Evidencias subidas por el administrador que lleva el caso'
-}
-
-Table resolution_sanctions [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	cat_sanction_id integer [ not null ]
-	resolution_id integer [ not null ]
-
-	indexes {
-		(cat_sanction_id, resolution_id) [ name: 'resolution_sanctions_index_0', unique ]
-	}
-
-	Note: 'Sanciones aplicadas en la resolución'
-}
-
-Table resolution_mitigations [headercolor: #7a1717] {
-	id integer [ pk, increment, not null, unique ]
-	resolution_id integer [ not null ]
-	cat_mitigation_id integer [ not null ]
-
-	indexes {
-		(resolution_id, cat_mitigation_id) [ name: 'resolution_mitigations_index_0', unique ]
-	}
-
-	Note: 'Atenuantes aplicadas en la resolucion'
-}
-
-Table user [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	name varchar(64) [ not null ]
-	last_name varchar(64) [ not null ]
-	full_name varchar(255) [ not null ]
-	document varchar(32) [ not null ]
-	avatar varchar(32) [ not null, default: 'avatar.png' ]
-	code varchar(64) [ not null ]
-	email varchar(64) [ not null ]
-	phone varchar(10) [ not null ]
-	rol rol_admin_staff_distributor_seller_t [ not null, note: 'ADMIN | STAFF | DISTRIBUTOR | SELLER' ]
-	created_at datetime [ not null ]
-	updated_at datetime [ not null ]
-	deleted_at datetime
+	eui_code varchar(255) [ unique, note: 'Codigo unico externo del usuario' ]
+	name varchar(255) [ not null ]
+	last_name varchar(255) [ not null ]
+	full_name varchar(255) [ note: 'Columna generada: CONCAT(name, \' \', last_name)' ]
+	document_number varchar(255) [ not null, unique ]
+	email varchar(255) [ not null, unique ]
+	phone varchar(255)
+	address varchar(255)
+	photo varchar(255) [ not null, default: 'avatar.png' ]
+	email_verified_at datetime
+	password varchar(255) [ not null ]
+	remember_token varchar(100)
+	points decimal(10,2) [ not null, default: 0 ]
 	plan_id integer
+	cost_center_id integer
+	representative_id integer [ note: 'Usuario representante (autorreferencia)' ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
 
 	Note: 'Usuarios del sistema'
+}
+
+Table password_reset_tokens [headercolor: #175e7a] {
+	email varchar(255) [ pk, not null ]
+	token varchar(255) [ not null ]
+	created_at datetime
+}
+
+Table sessions [headercolor: #175e7a] {
+	id varchar(255) [ pk, not null ]
+	user_id integer
+	ip_address varchar(45)
+	user_agent text
+	payload text [ not null ]
+	last_activity integer [ not null ]
+
+	indexes {
+		user_id [ name: 'sessions_user_id_index' ]
+		last_activity [ name: 'sessions_last_activity_index' ]
+	}
 }
 
 Table cost_centers [headercolor: #175e7a] {
@@ -194,98 +114,401 @@ Table cost_centers [headercolor: #175e7a] {
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
 	deleted_at datetime
-	user_id integer [ not null, note: 'Persona encargada del centro de costo' ]
 }
 
 Table products [headercolor: #175e7a] {
 	id integer [ pk, increment, not null, unique ]
-	name varchar(64) [ not null ]
-	cover varchar(255) [ not null, default: 'product.png' ]
-	price decimal [ not null ]
-	points integer [ not null, default: 1 ]
-	description varchar(128)
-	slug varchar(64) [ not null ]
-	presentation presentation_capsule_liquid_powder_tablet_dust_t [ not null ]
-	category category_pet_care_supplements_food_beverage_pharmacy_beauty_health_care_t [ not null ]
+	name varchar(255) [ not null ]
+	description text [ not null ]
+	cover varchar(255) [ not null, default: 'product.jpg' ]
+	price decimal(10,2) [ not null ]
+	points integer [ not null, default: 0 ]
+	slug varchar(255) [ not null, unique ]
+	presentation presentation_capsules_liquid_powder_tablets_others_t [ not null ]
+	category category_supplements_petcare_powder_tablets_personalcare_beauty_healthcare_merchandising_t [ not null ]
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
 	deleted_at datetime
 }
 
-Table product_counts [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	cost_center_id integer [ not null ]
-}
-
-Table cost_center_products [headercolor: #175e7a] {
+Table stocks [headercolor: #175e7a] {
 	id integer [ pk, increment, not null, unique ]
 	cost_center_id integer [ not null ]
 	product_id integer [ not null ]
 	quantity integer [ not null ]
-}
-
-Table product_counts_products [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	product_count_id integer [ not null ]
-	product_id integer [ not null ]
-	quantity integer [ not null ]
-	observations varchar(64)
-}
-
-Table plans [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null ]
-	name varchar(64) [ not null ]
-	logo varchar(64) [ not null, note: 'asteroide.png' ]
-	description varchar(255) [ not null ]
-	plan_level integer [ not null ]
-}
-
-Table plan_benefits [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	plan_id integer [ not null ]
-	benefit_id integer
-}
-
-Table benefits [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	code varchar(64) [ not null ]
-	name varchar(255) [ not null ]
-	description varchar(128) [ not null ]
-}
-
-Table orders [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	total numeric [ not null ]
+	batch varchar(255)
+	received_at date [ not null ]
+	expires_at date
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
-	user_id integer [ not null ]
-}
+	deleted_at datetime
 
-Table order_products [headercolor: #175e7a] {
-	id integer [ pk, increment, not null, unique ]
-	order_id integer [ not null ]
-	product_id integer [ not null ]
-	quantity integer [ not null ]
-	unit_price numeric [ not null ]
-	total_all_price numeric [ not null ]
+	Note: 'Existencias de producto por centro de costo (lotes)'
 }
 
 Table carts [headercolor: #175e7a] {
 	id integer [ pk, increment, not null, unique ]
-	total_on_cart numeric [ not null ]
+	user_id integer [ not null ]
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
-	user_id integer [ not null ]
 }
 
-Table cart_products [headercolor: #175e7a] {
+Table cart_product [headercolor: #175e7a] {
 	id integer [ pk, increment, not null, unique ]
 	cart_id integer [ not null ]
 	product_id integer [ not null ]
+	quantity integer [ not null, default: 1 ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+}
+
+Table orders [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	order_number varchar(255) [ unique ]
+	subtotal decimal(13,2) [ not null ]
+	total decimal(13,2) [ not null ]
+	payment_method payment_method_cash_banktransfer_t [ not null ]
+	status order_status_pending_paid_sended_delivered_t [ not null, default: 'pending' ]
+	shipping_address varchar(255)
+	email varchar(255)
+	phone varchar(255)
+	points decimal(10,2) [ not null ]
+	shipping_price decimal(10,2) [ not null, default: 0 ]
+	shipping_discount decimal(10,2) [ not null, default: 0 ]
+	discount decimal(10,2) [ not null, default: 0 ]
+	user_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Ordenes de compra realizadas por usuarios (tienda)'
+}
+
+Table order_product [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	order_id integer [ not null ]
+	product_id integer [ not null ]
 	quantity integer [ not null ]
-	unit_price numeric [ not null ]
-	total_all_price numeric [ not null ]
+	unit_price decimal(13,2) [ not null ]
+	discount decimal(13,2) [ not null, default: 0 ]
+	subtotal decimal(13,2) [ not null ]
+	total decimal(13,2) [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+}
+
+Table plans [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	name varchar(64) [ not null, unique ]
+	logo varchar(255) [ not null, default: 'logo.png' ]
+	description varchar(255)
+	min_points decimal(10,2) [ not null ]
+	next_plan_id integer [ note: 'Plan siguiente al alcanzar min_points (autorreferencia)' ]
+	previous_plan_id integer [ note: 'Plan anterior (autorreferencia)' ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Planes de fidelizacion por puntos'
+}
+
+Table benefits [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	name varchar(64) [ not null, unique ]
+	type benefit_type_t [ not null ]
+	description varchar(255)
+	value decimal(10,2)
+	config json
+	plan_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	indexes {
+		(plan_id, code, type) [ name: 'unique_plan_benefit', unique ]
+	}
+
+	Note: 'Beneficios asociados a un plan'
+}
+
+Table internal_orders [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	order_number varchar(255) [ unique ]
+	subtotal decimal(13,2) [ not null ]
+	total decimal(13,2) [ not null ]
+	status order_status_pending_paid_sended_delivered_t [ not null, default: 'pending' ]
+	payment_method payment_method_cash_banktransfer_t [ not null ]
+	shipping_address varchar(255) [ not null ]
+	phone varchar(10) [ not null ]
+	email varchar(255) [ not null ]
+	discount decimal(13,2) [ not null ]
+	points decimal(10,2) [ not null ]
+	shipping_price decimal(10,2) [ not null, default: 0 ]
+	shipping_discount decimal(10,2) [ not null, default: 0 ]
+	user_id integer [ not null, note: 'Cliente de la orden interna' ]
+	commercial_agent_id integer [ not null, note: 'Agente comercial que gestiona la venta' ]
+	cost_center_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Ordenes internas (ventas gestionadas por agentes comerciales en centros de costo)'
+}
+
+Table internal_order_product [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	internal_order_id integer [ not null ]
+	product_id integer [ not null ]
+	quantity integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+}
+
+Table cash_registers [headercolor: #175e7a] {
+	id integer [ pk, increment, not null, unique ]
+	name varchar(255) [ not null ]
+	code varchar(255) [ not null, unique ]
+	base decimal(13,2) [ not null, default: 100000 ]
+	cash decimal(13,2) [ not null, default: 0 ]
+	bank_transfer decimal(13,2) [ not null, default: 0 ]
+	is_open boolean [ not null, default: false ]
+	cost_center_id integer [ not null ]
+	commercial_agent_id integer
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Caja registradora por centro de costo'
+}
+
+Table permissions [headercolor: #5f3f7a] {
+	id integer [ pk, increment, not null, unique ]
+	name varchar(255) [ not null ]
+	guard_name varchar(255) [ not null ]
+	created_at datetime
+	updated_at datetime
+
+	indexes {
+		(name, guard_name) [ name: 'permissions_name_guard_name_unique', unique ]
+	}
+
+	Note: 'Spatie laravel-permission: permisos'
+}
+
+Table roles [headercolor: #5f3f7a] {
+	id integer [ pk, increment, not null, unique ]
+	name varchar(255) [ not null ]
+	guard_name varchar(255) [ not null ]
+	created_at datetime
+	updated_at datetime
+
+	indexes {
+		(name, guard_name) [ name: 'roles_name_guard_name_unique', unique ]
+	}
+
+	Note: 'Spatie laravel-permission: roles'
+}
+
+Table model_has_permissions [headercolor: #5f3f7a] {
+	permission_id integer [ not null ]
+	model_type varchar(255) [ not null ]
+	model_id integer [ not null ]
+
+	indexes {
+		(model_id, model_type) [ name: 'model_has_permissions_model_id_model_type_index' ]
+		(permission_id, model_id, model_type) [ pk ]
+	}
+
+	Note: 'Spatie laravel-permission: permisos asignados directamente a modelos (usuarios)'
+}
+
+Table model_has_roles [headercolor: #5f3f7a] {
+	role_id integer [ not null ]
+	model_type varchar(255) [ not null ]
+	model_id integer [ not null ]
+
+	indexes {
+		(model_id, model_type) [ name: 'model_has_roles_model_id_model_type_index' ]
+		(role_id, model_id, model_type) [ pk ]
+	}
+
+	Note: 'Spatie laravel-permission: roles asignados a modelos (usuarios)'
+}
+
+Table role_has_permissions [headercolor: #5f3f7a] {
+	permission_id integer [ not null ]
+	role_id integer [ not null ]
+
+	indexes {
+		(permission_id, role_id) [ pk ]
+	}
+
+	Note: 'Spatie laravel-permission: permisos asignados a roles'
+}
+
+Table cat_policies [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(100) [ not null, unique ]
+	policy varchar(128) [ not null, unique ]
+	section varchar(64) [ not null ]
+	numeral varchar(64) [ not null ]
+	description text
+	active boolean [ not null, default: true ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: catalogo de politicas de la empresa'
+}
+
+Table cat_sanctions [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	sanction varchar(128) [ not null, unique ]
+	description varchar(255) [ not null ]
+	active boolean [ not null, default: true ]
+
+	Note: 'Modulo Sanctions: catalogo de sanciones de la empresa'
+}
+
+Table cat_mitigations [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	mitigation varchar(64) [ not null, unique ]
+	description varchar(128)
+	active boolean [ not null, default: true ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: catalogo de atenuantes de la empresa'
+}
+
+Table cat_compliance_sources [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	source varchar(64) [ not null, unique ]
+	description varchar(128) [ not null ]
+	active boolean [ not null, default: true ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: fuentes de la investigacion. Catalogo'
+}
+
+Table cat_sanctions_level [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	sanction_level varchar(64) [ not null, unique ]
+	sanction_level_description varchar(128) [ not null ]
+
+	Note: 'Modulo Sanctions: catalogo de niveles de sancion'
+}
+
+Table cat_case_statuses [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	code varchar(64) [ not null, unique ]
+	case_status varchar(64) [ not null, unique ]
+	case_status_description varchar(128) [ not null ]
+	next_status_id integer [ note: 'Siguiente estado del flujo (autorreferencia)' ]
+
+	Note: 'Modulo Sanctions: catalogo de estado de proceso disciplinario'
+}
+
+Table disciplinary_cases [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	facts_description varchar(255) [ not null ]
+	details varchar(64)
+	user_id integer [ not null, note: 'Usuario investigado' ]
+	admin_id integer [ note: 'Administrador que lleva el caso' ]
+	policy_id integer [ not null ]
+	compliance_source_id integer [ not null ]
+	case_status_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: caso disciplinario abierto a un usuario'
+}
+
+Table resolution [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	resolution_type resolution_type_procede_not_procede_t [ not null ]
+	resolution_text varchar(255) [ not null ]
+	disciplinary_case_id integer [ not null, unique ]
+	sanction_level_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: resolucion emitida por el administrador (1:1 con disciplinary_cases)'
+}
+
+Table sanction_enforcements [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	SUSPEND_ACCOUNT boolean [ not null, default: false ]
+	FREEZE_PLAN boolean [ not null, default: false ]
+	FREEZE_BONUSES boolean [ not null, default: false ]
+	FREEZE_POINTS boolean [ not null, default: false ]
+	SUSPEND_CODE boolean [ not null, default: false ]
+	DOWNGRADE_PLAN boolean [ not null, default: false ]
+	TERMINATE_ACCOUNT boolean [ not null, default: false ]
+	BLOCK_ORDERS boolean [ not null, default: false ]
+	applied_at datetime [ not null ]
+	lifted_at datetime
+	resolution_id integer [ not null ]
+	user_id integer [ not null, note: 'Usuario al que se le aplican las sanciones' ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: sanciones activas del usuario. Punto central de la aplicacion de sanciones'
+}
+
+Table user_evidences [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	file varchar(128) [ not null ]
+	description varchar(128) [ not null ]
+	disciplinary_case_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: evidencias subidas por el usuario investigado'
+}
+
+Table sanction_evidences [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	file varchar(128) [ not null ]
+	description varchar(128) [ not null ]
+	disciplinary_case_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Sanctions: evidencias subidas por el administrador que lleva el caso'
+}
+
+Table resolution_sanctions [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	cat_sanction_id integer [ not null ]
+	resolution_id integer [ not null ]
+
+	indexes {
+		(cat_sanction_id, resolution_id) [ name: 'resolution_sanctions_index_0', unique ]
+	}
+
+	Note: 'Modulo Sanctions: sanciones aplicadas en la resolucion'
+}
+
+Table resolution_mitigations [headercolor: #7a1717] {
+	id integer [ pk, increment, not null, unique ]
+	resolution_id integer [ not null ]
+	cat_mitigation_id integer [ not null ]
+
+	indexes {
+		(resolution_id, cat_mitigation_id) [ name: 'resolution_mitigations_index_0', unique ]
+	}
+
+	Note: 'Modulo Sanctions: atenuantes aplicadas en la resolucion'
 }
 
 Table quality_checklist [headercolor: #82c292] {
@@ -297,162 +520,339 @@ Table quality_checklist [headercolor: #82c292] {
 	last_plague_control datetime [ not null ]
 	last_bathroom_sanitation datetime [ not null ]
 	humidity_percentage float [ not null ]
-	observations text(65535) [ note: 'Observaciones si las hay.' ]
+	observations text [ note: 'Observaciones si las hay' ]
 	checklist_date date [ not null, note: 'Fecha corta, unica por dia y centro de costos' ]
+	cost_center_id integer [ not null ]
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
-	cost_center_id integer [ not null ]
 
 	indexes {
 		(cost_center_id, checklist_date) [ name: 'quality_checklist_index_0', unique ]
 	}
 
-	Note: 'Auditoria de lista de checkeo de calidad en centros de costos. Una por dia y cost_center'
+	Note: 'Modulo Audits: lista de checkeo de calidad en centros de costos. Una por dia y cost_center'
 }
 
 Table quality_checklist_audit [headercolor: #82c292] {
 	id integer [ pk, increment, not null ]
-	status status_excellent_good_bad_critical_t [ not null, note: 'Lo elige el administrador segun su criterio y observaciones' ]
+	status quality_status_excellent_good_bad_critical_t [ not null, note: 'Lo elige el administrador segun su criterio y observaciones' ]
 	requires_actions boolean [ not null ]
-	corrective_actions text(65535)
+	corrective_actions text
+	report longtext [ note: 'Informe detallado de los hallazgos de la auditoria' ]
+	pdf_path varchar(255)
+	quality_checklist_id integer [ not null, unique ]
+	audited_by integer [ not null, note: 'Administrador que audito' ]
 	created_at datetime [ not null ]
 	updated_at datetime [ not null ]
-	quality_checklist_id integer [ not null ]
-	audited_by integer [ not null, note: 'Administrador que audito' ]
 
-	indexes {
-		(quality_checklist_id) [ name: 'quality_checklist_audit_index_0', unique ]
-	}
+	Note: 'Modulo Audits: auditoria de la lista de checkeo de calidad (1:1)'
 }
 
-Ref fk_user_id_disciplinary_cases {
-	user.id < disciplinary_cases.user_id [ delete: no action, update: no action ]
+Table product_counts [headercolor: #82c292] {
+	id integer [ pk, increment, not null, unique ]
+	cost_center_id integer [ not null ]
+	counted_by integer [ not null, note: 'Usuario que realizo el conteo' ]
+	count_date date [ not null ]
+	observations text
+	audited boolean [ not null, default: false ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+	deleted_at datetime
+
+	Note: 'Modulo Audits: conteo fisico de productos en un centro de costo'
 }
 
-Ref fk_admin_id_disciplinary_cases {
-	user.id < disciplinary_cases.admin_id [ delete: no action, update: no action ]
+Table product_quantities [headercolor: #82c292] {
+	id integer [ pk, increment, not null, unique ]
+	product_count_id integer [ not null ]
+	product_id integer [ not null ]
+	quantity integer [ not null ]
+	observations text
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Modulo Audits: cantidades contadas por producto dentro de un conteo'
 }
 
-Ref fk_cat_policies_id_disciplinary_cases {
+Table product_count_audits [headercolor: #82c292] {
+	id integer [ pk, increment, not null, unique ]
+	product_count_id integer [ not null ]
+	status product_count_status_correct_correctwithissues_incorrect_t [ not null ]
+	audited_by integer [ not null ]
+	audited_at datetime [ not null ]
+	total_expected_products integer [ not null ]
+	total_counted_products integer [ not null ]
+	total_difference integer [ not null ]
+	products_with_mismatch integer [ not null ]
+	products_with_observations integer [ not null ]
+	requires_recount boolean [ not null ]
+	report longtext [ note: 'Informe detallado de los hallazgos de la auditoria' ]
+	pdf_path varchar(255)
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Modulo Audits: auditoria de un conteo de productos'
+}
+
+Table cash_register_closures [headercolor: #82c292] {
+	id integer [ pk, increment, not null, unique ]
+	bills_100000 integer [ not null, default: 0 ]
+	bills_50000 integer [ not null, default: 0 ]
+	bills_20000 integer [ not null, default: 0 ]
+	bills_10000 integer [ not null, default: 0 ]
+	bills_5000 integer [ not null, default: 0 ]
+	bills_2000 integer [ not null, default: 0 ]
+	coins_1000 integer [ not null, default: 0 ]
+	coins_500 integer [ not null, default: 0 ]
+	coins_200 integer [ not null, default: 0 ]
+	coins_100 integer [ not null, default: 0 ]
+	coins_50 integer [ not null, default: 0 ]
+	bank_transfer decimal(13,2) [ not null ]
+	cash decimal(13,2) [ not null ]
+	observations varchar(255)
+	date date [ not null ]
+	cash_register_id integer [ not null ]
+	commercial_agent_id integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Modulo Audits: cierre de caja registradora (conteo fisico de efectivo)'
+}
+
+Table cash_register_closure_audits [headercolor: #82c292] {
+	id integer [ pk, increment, not null, unique ]
+	status closure_status_approved_rejected_t [ not null ]
+	expected_cash decimal(10,0) [ not null ]
+	counted_cash decimal(13,2) [ not null ]
+	expected_bank_transfer decimal(13,2) [ not null ]
+	counted_bank_transfer decimal(13,2) [ not null ]
+	observations varchar(255)
+	report text [ not null ]
+	pdf_path varchar(255)
+	cash_register_closure_id integer [ not null ]
+	audited_by integer [ not null ]
+	created_at datetime [ not null ]
+	updated_at datetime [ not null ]
+
+	Note: 'Modulo Audits: auditoria del cierre de caja registradora'
+}
+
+Ref fk_users_plan_id {
+	plans.id < users.plan_id [ delete: set null, update: no action ]
+}
+
+Ref fk_users_cost_center_id {
+	cost_centers.id < users.cost_center_id [ delete: set null, update: no action ]
+}
+
+Ref fk_users_representative_id {
+	users.id < users.representative_id [ delete: set null, update: no action ]
+}
+
+Ref fk_sessions_user_id {
+	users.id < sessions.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_stocks_cost_center_id {
+	cost_centers.id < stocks.cost_center_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_stocks_product_id {
+	products.id < stocks.product_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_carts_user_id {
+	users.id < carts.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_cart_product_cart_id {
+	carts.id < cart_product.cart_id [ delete: no action, update: no action ]
+}
+
+Ref fk_cart_product_product_id {
+	products.id < cart_product.product_id [ delete: no action, update: no action ]
+}
+
+Ref fk_orders_user_id {
+	users.id < orders.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_order_product_order_id {
+	orders.id < order_product.order_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_order_product_product_id {
+	products.id < order_product.product_id [ delete: no action, update: no action ]
+}
+
+Ref fk_plans_next_plan_id {
+	plans.id < plans.next_plan_id [ delete: set null, update: no action ]
+}
+
+Ref fk_plans_previous_plan_id {
+	plans.id < plans.previous_plan_id [ delete: set null, update: no action ]
+}
+
+Ref fk_benefits_plan_id {
+	plans.id < benefits.plan_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_internal_orders_user_id {
+	users.id < internal_orders.user_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_internal_orders_commercial_agent_id {
+	users.id < internal_orders.commercial_agent_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_internal_orders_cost_center_id {
+	cost_centers.id < internal_orders.cost_center_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_internal_order_product_internal_order_id {
+	internal_orders.id < internal_order_product.internal_order_id [ delete: no action, update: no action ]
+}
+
+Ref fk_internal_order_product_product_id {
+	products.id < internal_order_product.product_id [ delete: no action, update: no action ]
+}
+
+Ref fk_cash_registers_cost_center_id {
+	cost_centers.id < cash_registers.cost_center_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_cash_registers_commercial_agent_id {
+	users.id < cash_registers.commercial_agent_id [ delete: set null, update: no action ]
+}
+
+Ref fk_model_has_permissions_permission_id {
+	permissions.id < model_has_permissions.permission_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_model_has_roles_role_id {
+	roles.id < model_has_roles.role_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_role_has_permissions_permission_id {
+	permissions.id < role_has_permissions.permission_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_role_has_permissions_role_id {
+	roles.id < role_has_permissions.role_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_cat_case_statuses_next_status_id {
+	cat_case_statuses.id < cat_case_statuses.next_status_id [ delete: no action, update: no action ]
+}
+
+Ref fk_disciplinary_cases_user_id {
+	users.id < disciplinary_cases.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_disciplinary_cases_admin_id {
+	users.id < disciplinary_cases.admin_id [ delete: no action, update: no action ]
+}
+
+Ref fk_disciplinary_cases_policy_id {
 	cat_policies.id < disciplinary_cases.policy_id [ delete: no action, update: no action ]
 }
 
-Ref fk_cat_compliance_sources_id_disciplinary_cases {
+Ref fk_disciplinary_cases_compliance_source_id {
 	cat_compliance_sources.id < disciplinary_cases.compliance_source_id [ delete: no action, update: no action ]
 }
 
-Ref fk_cat_case_statuses_id_disciplinary_cases {
+Ref fk_disciplinary_cases_case_status_id {
 	cat_case_statuses.id < disciplinary_cases.case_status_id [ delete: no action, update: no action ]
 }
 
-Ref fk_disciplinary_cases_id_user_evidences {
-	disciplinary_cases.id < user_evidences.disciplinary_case_id [ delete: no action, update: no action ]
-}
-
-Ref fk_disciplinary_cases_id_sanction_evidences {
-	disciplinary_cases.id < sanction_evidences.disciplinary_case_id [ delete: no action, update: no action ]
-}
-
-Ref fk_disciplinary_cases_id_resolution {
+Ref fk_resolution_disciplinary_case_id {
 	disciplinary_cases.id - resolution.disciplinary_case_id [ delete: no action, update: no action ]
 }
 
-Ref fk_cat_sanctions_level_id_resolution {
+Ref fk_resolution_sanction_level_id {
 	cat_sanctions_level.id < resolution.sanction_level_id [ delete: no action, update: no action ]
 }
 
-Ref fk_resolution_id_resolution_sanctions {
-	resolution.id < resolution_sanctions.resolution_id [ delete: no action, update: no action ]
-}
-
-Ref fk_cat_sanctions_id_resolution_sanctions {
-	cat_sanctions.id < resolution_sanctions.cat_sanction_id [ delete: no action, update: no action ]
-}
-
-Ref fk_resolution_id_sanction_enforcements {
+Ref fk_sanction_enforcements_resolution_id {
 	resolution.id < sanction_enforcements.resolution_id [ delete: no action, update: no action ]
 }
 
-Ref fk_resolution_id_resolution_mitigations {
+Ref fk_sanction_enforcements_user_id {
+	users.id < sanction_enforcements.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_user_evidences_disciplinary_case_id {
+	disciplinary_cases.id < user_evidences.disciplinary_case_id [ delete: no action, update: no action ]
+}
+
+Ref fk_sanction_evidences_disciplinary_case_id {
+	disciplinary_cases.id < sanction_evidences.disciplinary_case_id [ delete: no action, update: no action ]
+}
+
+Ref fk_resolution_sanctions_cat_sanction_id {
+	cat_sanctions.id < resolution_sanctions.cat_sanction_id [ delete: no action, update: no action ]
+}
+
+Ref fk_resolution_sanctions_resolution_id {
+	resolution.id < resolution_sanctions.resolution_id [ delete: no action, update: no action ]
+}
+
+Ref fk_resolution_mitigations_resolution_id {
 	resolution.id < resolution_mitigations.resolution_id [ delete: no action, update: no action ]
 }
 
-Ref fk_cat_mitigations_id_resolution_mitigations {
+Ref fk_resolution_mitigations_cat_mitigation_id {
 	cat_mitigations.id < resolution_mitigations.cat_mitigation_id [ delete: no action, update: no action ]
 }
 
-Ref fk_cost_centers_id_product_counts {
-	cost_centers.id < product_counts.cost_center_id [ delete: no action, update: no action ]
-}
-
-Ref fk_cost_centers_id_cost_center_products {
-	cost_centers.id < cost_center_products.cost_center_id [ delete: no action, update: no action ]
-}
-
-Ref fk_products_id_cost_center_products {
-	products.id < cost_center_products.product_id [ delete: no action, update: no action ]
-}
-
-Ref fk_product_counts_products_product_id_products {
-	product_counts_products.product_id > products.id [ delete: no action, update: no action ]
-}
-
-Ref fk_user_id_cost_centers {
-	user.id - cost_centers.user_id [ delete: no action, update: no action ]
-}
-
-Ref fk_benefits_id_plan_benefits {
-	benefits.id < plan_benefits.benefit_id [ delete: no action, update: no action ]
-}
-
-Ref fk_plans_id_plan_benefits {
-	plans.id < plan_benefits.plan_id [ delete: no action, update: no action ]
-}
-
-Ref fk_plans_id_user {
-	plans.id < user.plan_id [ delete: no action, update: no action ]
-}
-
-Ref fk_user_id_orders {
-	user.id < orders.user_id [ delete: no action, update: no action ]
-}
-
-Ref fk_orders_id_order_products {
-	orders.id < order_products.order_id [ delete: no action, update: no action ]
-}
-
-Ref fk_products_id_order_products {
-	products.id < order_products.product_id [ delete: no action, update: no action ]
-}
-
-Ref fk_product_counts_id_product_counts_products {
-	product_counts.id < product_counts_products.product_count_id [ delete: no action, update: no action ]
-}
-
-Ref fk_user_id_carts {
-	user.id - carts.user_id [ delete: no action, update: no action ]
-}
-
-Ref fk_cart_products_cart_id_carts {
-	cart_products.cart_id > carts.id [ delete: no action, update: no action ]
-}
-
-Ref fk_cart_products_product_id_products {
-	cart_products.product_id > products.id [ delete: no action, update: no action ]
-}
-
-Ref fk_user_id_sanction_enforcements {
-	user.id < sanction_enforcements.user_id [ delete: no action, update: no action ]
-}
-
-Ref fk_cost_centers_id_quality_checklist {
+Ref fk_quality_checklist_cost_center_id {
 	cost_centers.id < quality_checklist.cost_center_id [ delete: no action, update: no action ]
 }
 
-Ref fk_quality_checklist_id_quality_checklist_audit {
+Ref fk_quality_checklist_audit_quality_checklist_id {
 	quality_checklist.id - quality_checklist_audit.quality_checklist_id [ delete: no action, update: no action ]
 }
 
-Ref fk_user_id_quality_checklist_audit {
-	user.id < quality_checklist_audit.audited_by [ delete: no action, update: no action ]
+Ref fk_quality_checklist_audit_audited_by {
+	users.id < quality_checklist_audit.audited_by [ delete: no action, update: no action ]
+}
+
+Ref fk_product_counts_cost_center_id {
+	cost_centers.id < product_counts.cost_center_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_product_counts_counted_by {
+	users.id < product_counts.counted_by [ delete: cascade, update: no action ]
+}
+
+Ref fk_product_quantities_product_count_id {
+	product_counts.id < product_quantities.product_count_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_product_quantities_product_id {
+	products.id < product_quantities.product_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_product_count_audits_product_count_id {
+	product_counts.id < product_count_audits.product_count_id [ delete: cascade, update: no action ]
+}
+
+Ref fk_product_count_audits_audited_by {
+	users.id < product_count_audits.audited_by [ delete: cascade, update: no action ]
+}
+
+Ref fk_cash_register_closures_cash_register_id {
+	cash_registers.id < cash_register_closures.cash_register_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_cash_register_closures_commercial_agent_id {
+	users.id < cash_register_closures.commercial_agent_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_cash_register_closure_audits_closure_id {
+	cash_register_closures.id < cash_register_closure_audits.cash_register_closure_id [ delete: restrict, update: no action ]
+}
+
+Ref fk_cash_register_closure_audits_audited_by {
+	users.id < cash_register_closure_audits.audited_by [ delete: restrict, update: no action ]
 }

@@ -4,12 +4,12 @@ export default function NavigationCard({ icon: Icon, title, text }) {
             <div className="flex sm:flex-col items-center">
                 {Icon && typeof Icon === "string" ? (
                     <div className="rounded-full bg-primary-100 p-3">
-                        <i className={`h-6 w-6 text-primary-800 ${Icon}`} />
+                        <i className={`size-6 text-primary-800 ${Icon}`} />
                     </div>
                 ) : (
                     <div className="rounded-full bg-primary-100 p-3">
                         <Icon
-                            className="h-16 w-16 text-primary-800"
+                            className="size-16 text-primary-800"
                             aria-hidden="true"
                         />
                     </div>

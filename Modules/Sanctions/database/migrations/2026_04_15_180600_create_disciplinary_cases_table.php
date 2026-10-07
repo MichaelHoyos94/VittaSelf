@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('disciplinary_cases', function (Blueprint $table) {
             $table->id();
             $table->string('facts_description', 255);
-            $table->string('details', 64)->nullable();
+            $table->string('details', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('user_id')->constrained('users');

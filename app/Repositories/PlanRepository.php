@@ -15,4 +15,11 @@ class PlanRepository
             ->orderByDesc('min_points')
             ->first();
     }
+
+    public function getFirst(): ?Plan
+    {
+        return Plan::query()
+            ->orderBy('min_points')
+            ->first(['id', 'name', 'min_points']);
+    }
 }

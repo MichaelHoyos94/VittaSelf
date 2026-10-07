@@ -37,6 +37,8 @@ export default function ManageCase() {
         lifted_at: "",
     });
 
+    const isNotProcede = data.resolution_type === "not procede";
+
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("progress");
     const [activeEvidenceIndex, setActiveEvidenceIndex] = useState(0);
@@ -475,12 +477,17 @@ export default function ManageCase() {
                                     label="Resolution"
                                     name="resolution_type"
                                     value={data.resolution_type}
-                                    onChange={(e) =>
-                                        setData(
-                                            "resolution_type",
-                                            e.target.value,
-                                        )
-                                    }
+                                    onChange={(e) => {
+                                        const resolutionType = e.target.value;
+                                        setData((current) => ({
+                                            ...current,
+                                            resolution_type: resolutionType,
+                                            ...(resolutionType === "not procede" && {
+                                                sanctions: [],
+                                                mitigations: [],
+                                            }),
+                                        }));
+                                    }}
                                     error={errors.resolution_type}
                                     options={[
                                         {
@@ -512,9 +519,18 @@ export default function ManageCase() {
                                     }))}
                                 />
                             </div>
-                            <div className="col-span-2">
+                            <fieldset
+                                disabled={isNotProcede}
+                                className="col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
                                 {/* Multi checkbox with the sanctions options */}
-                                <p className="mb-2">Sanctions</p>
+                                <legend className="mb-2">Sanctions</legend>
+                                {isNotProcede && (
+                                    <p className="mb-2 text-sm text-gray-500">
+                                        Not available when the resolution does
+                                        not proceed.
+                                    </p>
+                                )}
                                 {/* flex container avoiding to stack the checkboxes */}
                                 <div className="flex flex-wrap gap-2">
                                     {sanctions.map((sanction) => (
@@ -556,10 +572,19 @@ export default function ManageCase() {
                                         </label>
                                     ))}
                                 </div>
-                            </div>
-                            <div className="col-span-2">
+                            </fieldset>
+                            <fieldset
+                                disabled={isNotProcede}
+                                className="col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
                                 {/* Multi checkbox with the mitigation options */}
-                                <p className="mb-2">Mitigations</p>
+                                <legend className="mb-2">Mitigations</legend>
+                                {isNotProcede && (
+                                    <p className="mb-2 text-sm text-gray-500">
+                                        Not available when the resolution does
+                                        not proceed.
+                                    </p>
+                                )}
                                 {/* flex container avoiding to stack the checkboxes */}
                                 <div className="flex flex-wrap gap-2">
                                     {mitigations.map((mitigation) => (
@@ -601,7 +626,7 @@ export default function ManageCase() {
                                         </label>
                                     ))}
                                 </div>
-                            </div>
+                            </fieldset>
                             <div>
                                 <Input type="date"
                                     label="Applied At"

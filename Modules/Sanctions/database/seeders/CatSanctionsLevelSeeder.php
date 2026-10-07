@@ -15,17 +15,17 @@ class CatSanctionsLevelSeeder extends Seeder
         $records = [
             [
                 'code' => 'MINOR',
-                'sanction_level' => 'Menor',
+                'sanction_level' => 'Minor',
                 'sanction_level_description' => 'La infracción no genera ningun prejuicio a VittaSelf.',
             ],
             [
                 'code' => 'MODERATE',
-                'sanction_level' => 'MODERATE',
+                'sanction_level' => 'Moderate',
                 'sanction_level_description' => 'La infracción genera un prejuicio moderado a VittaSelf.',
             ],
             [
                 'code' => 'SERIOUS',
-                'sanction_level' => 'SERIOUS',
+                'sanction_level' => ' Serious',
                 'sanction_level_description' => 'La infracción genera un prejuicio grave a VittaSelf, resultando en perdidas econocicas o de reputación significativas.',
             ],
         ];
